@@ -1,26 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Switch, Route } from 'react-router-dom';
+import { Layout } from 'antd';
+
+import Analytics from './pages/analytics/analytics.component';
+import NewPatient from './pages/new-patient/new-patient.component';
+import PatientDashboard from './pages/patient-dashboard/patient-dashboard.component';
+import SignIn from './pages/sign-in/sign-in.component';
+
+import Header from './components/header/header.component';
+import Footer from './components/footer/footer.component';
+
+import './App.scss';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<div className='app grid-layout'>
+			<Layout>
+				<Layout.Header>
+					<Header />
+				</Layout.Header>
+				<Layout.Content>
+					<Switch>
+						<Route path='/' component={SignIn} />
+						<Route exact path='/analytics' component={Analytics} />
+						<Route exact path='/dashboard' component={PatientDashboard} />
+						<Route exact path='/new-patient' component={NewPatient} />
+					</Switch>
+				</Layout.Content>
+				<Layout.Footer>
+					<Footer />
+				</Layout.Footer>
+			</Layout>
+		</div>
+	);
 }
 
 export default App;

@@ -1,0 +1,11 @@
+.app {
+	margin: 0;
+}
+
+.grid-layout {
+	width: 100vw;
+	display: grid;
+
+	grid-template-rows: 15% 75% 10%;
+	grid-template-columns: repeat(1fr, 4);
+}
