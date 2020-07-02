@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Form, Input, Typography } from 'antd';
-import { useForm } from 'react-hook-form';
-
-import './sign-in.styles.scss';
+// import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+// import { useForm } from 'react-hook-form'; TODO
 
 const { Title } = Typography;
 
@@ -20,14 +20,16 @@ const tailLayout = {
 };
 
 function SignIn() {
-	const { register, setValue, handleSubmit, errors } = useForm<FormData>();
-
-	const onSubmit = handleSubmit(({ username, password }) => {
-		console.log(username, password);
-	});
+	let history = useHistory();
+	// const { register, setValue, handleSubmit, errors } = useForm<FormData>();
+	//
+	// const onSubmit = handleSubmit(({ username, password }) => {
+	// console.log(username, password);
+	// });
 
 	const onFinish = (values: any) => {
 		console.log('Success:', values);
+		history.push('/dashboard');
 	};
 
 	const onFinishFailed = (errorInfo: any) => {
@@ -35,8 +37,8 @@ function SignIn() {
 	};
 
 	return (
-		<div className='sign-in'>
-			<div className='welcome'>
+		<div>
+			<div>
 				<Title level={2}>Welcome to Grace Medical Village</Title>
 			</div>
 			<Form

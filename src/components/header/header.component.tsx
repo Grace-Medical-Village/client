@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 
 function Header() {
-	const [menuSelection, setMenuSelection] = useState('newPatient');
+	const [menuSelection, setMenuSelection] = useState('dashboard');
 	let history = useHistory();
 
 	const handleClick = (e: any) => {
@@ -34,7 +34,7 @@ function Header() {
 				<Menu.Item key='analytics' icon={<LineChartOutlined />} disabled>
 					Analytics
 				</Menu.Item>
-				<Menu.Item key='sign-in'>Log In</Menu.Item>
+				<Menu.Item key='welcome'>Sign Out</Menu.Item>
 			</Menu>
 		</nav>
 	);

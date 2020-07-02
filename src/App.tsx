@@ -17,10 +17,11 @@ function App() {
 			<Header />
 			<div>
 				<Switch>
-					<Route path='/' component={SignIn} />
+					<Route exact path='/' component={SignIn} />
 					<Route exact path='/analytics' component={Analytics} />
 					<Route exact path='/dashboard' component={PatientDashboard} />
 					<Route exact path='/new-patient' component={NewPatient} />
+					<Route exact path='/welcome' component={SignIn} />
 				</Switch>
 			</div>
 			<Footer />
