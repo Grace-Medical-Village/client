@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import { withRouter } from 'react-dom';
+import { useHistory, withRouter } from 'react-router-dom';
 import { Menu } from 'antd';
 import {
 	IdcardOutlined,
@@ -7,35 +7,36 @@ import {
 	UserAddOutlined,
 } from '@ant-design/icons';
 
-// import './header.styles.scss';
-
 function Header() {
 	const [menuSelection, setMenuSelection] = useState('newPatient');
+	let history = useHistory();
 
 	const handleClick = (e: any) => {
 		const { key } = e;
 		setMenuSelection(key);
-		// history.push('key');
+		history.push(key);
 	};
 
 	return (
-		<Menu
-			mode='horizontal'
-			onClick={handleClick}
-			selectedKeys={[menuSelection]}
-			theme='dark'
-		>
-			<Menu.Item key='new-patient' icon={<UserAddOutlined />}>
-				New Patient
-			</Menu.Item>
-			<Menu.Item key='dashboard' icon={<IdcardOutlined />}>
-				Patient Dashboard
-			</Menu.Item>
-			<Menu.Item key='analytics' icon={<LineChartOutlined />} disabled>
-				Analytics
-			</Menu.Item>
-			<Menu.Item key='sign-in'>Log In</Menu.Item>
-		</Menu>
+		<nav>
+			<Menu
+				mode='horizontal'
+				onClick={handleClick}
+				selectedKeys={[menuSelection]}
+				theme='light'
+			>
+				<Menu.Item key='new-patient' icon={<UserAddOutlined />}>
+					New Patient
+				</Menu.Item>
+				<Menu.Item key='dashboard' icon={<IdcardOutlined />}>
+					Patient Dashboard
+				</Menu.Item>
+				<Menu.Item key='analytics' icon={<LineChartOutlined />} disabled>
+					Analytics
+				</Menu.Item>
+				<Menu.Item key='sign-in'>Log In</Menu.Item>
+			</Menu>
+		</nav>
 	);
 }
 

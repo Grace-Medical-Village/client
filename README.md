@@ -8,3 +8,13 @@
 - Wait for prescriptions
 - Record pharmaceuticals (Rx)
 - End of Visit
+
+## To Do List
+
+### index.html
+
+- Add back `React.StrictMode` (antd issue)
+
+### Header Component
+
+- Test out light theme

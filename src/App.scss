@@ -1,11 +1,16 @@
-.app {
-	margin: 0;
-}
-
-.grid-layout {
+.app-grid {
 	width: 100vw;
 	display: grid;
+	grid-template-areas:
+		"header header header header"
+		"main main main main"
+		"main main main main"
+		"main main main main"
+		"footer footer footer footer";
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: 6% repeat(3, 1fr) 8vh;
+}
 
-	grid-template-rows: 15% 75% 10%;
-	grid-template-columns: repeat(1fr, 4);
+.grid-main {
+	grid-area: main;
 }

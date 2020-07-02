@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Layout } from 'antd';
 
 import Analytics from './pages/analytics/analytics.component';
 import NewPatient from './pages/new-patient/new-patient.component';
@@ -14,23 +13,17 @@ import './App.scss';
 
 function App() {
 	return (
-		<div className='app grid-layout'>
-			<Layout>
-				<Layout.Header>
-					<Header />
-				</Layout.Header>
-				<Layout.Content>
-					<Switch>
-						<Route path='/' component={SignIn} />
-						<Route exact path='/analytics' component={Analytics} />
-						<Route exact path='/dashboard' component={PatientDashboard} />
-						<Route exact path='/new-patient' component={NewPatient} />
-					</Switch>
-				</Layout.Content>
-				<Layout.Footer>
-					<Footer />
-				</Layout.Footer>
-			</Layout>
+		<div>
+			<Header />
+			<div>
+				<Switch>
+					<Route path='/' component={SignIn} />
+					<Route exact path='/analytics' component={Analytics} />
+					<Route exact path='/dashboard' component={PatientDashboard} />
+					<Route exact path='/new-patient' component={NewPatient} />
+				</Switch>
+			</div>
+			<Footer />
 		</div>
 	);
 }
