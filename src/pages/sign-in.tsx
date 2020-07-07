@@ -12,8 +12,8 @@ type FormData = {
 };
 
 const layout = {
-	labelCol: { span: 8 },
-	wrapperCol: { span: 16 },
+	labelCol: { span: 12 },
+	wrapperCol: { span: 12 },
 };
 const tailLayout = {
 	wrapperCol: { offset: 8, span: 16 },

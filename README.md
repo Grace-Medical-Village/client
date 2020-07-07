@@ -11,6 +11,11 @@
 
 ## To Do List
 
+- [ ] not logged in? don't show header
+- [ ] React Context for user logged in
+  - [ ] https://kentcdodds.com/blog/authentication-in-react-applications
+  - [ ] Delete Reference
+
 ### index.html
 
 - Add back `React.StrictMode` (antd issue)

@@ -23,7 +23,7 @@ function Header() {
 				mode='horizontal'
 				onClick={handleClick}
 				selectedKeys={[menuSelection]}
-				theme='light'
+				theme='dark'
 			>
 				<Menu.Item key='new-patient' icon={<UserAddOutlined />}>
 					New Patient

@@ -1,32 +1,13 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { lazy } from 'react';
+import { useAuth } from './context/auth-context';
 
-import Analytics from './pages/analytics/analytics.component';
-import NewPatient from './pages/new-patient/new-patient.component';
-import PatientDashboard from './pages/patient-dashboard/patient-dashboard.component';
-import SignIn from './pages/sign-in/sign-in.component';
-
-import Header from './components/header/header.component';
-import Footer from './components/footer/footer.component';
-
-import './App.scss';
+const AuthenticatedApp = lazy(() => import('./authenticated-app'));
+const UnauthenticatedApp = lazy(() => import('./unauthenticated-app'));
 
 function App() {
-	return (
-		<div>
-			<Header />
-			<div>
-				<Switch>
-					<Route exact path='/' component={SignIn} />
-					<Route exact path='/analytics' component={Analytics} />
-					<Route exact path='/dashboard' component={PatientDashboard} />
-					<Route exact path='/new-patient' component={NewPatient} />
-					<Route exact path='/welcome' component={SignIn} />
-				</Switch>
-			</div>
-			<Footer />
-		</div>
-	);
+	const user = useAuth();
+
+	return user ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }
 
 export default App;

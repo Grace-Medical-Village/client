@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Descriptions } from 'antd';
 
-import patientData from './patient.data';
+import patientData from '../assets/patient.data';
 
 const { firstName, gender, language, lastName, weight } = patientData;
 function PatientDashboard() {
