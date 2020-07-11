@@ -1,14 +1,36 @@
 import React from 'react';
-import { Button, DatePicker, Form, Input, Radio, Typography } from 'antd';
+import { Button, DatePicker, Form, Input, Radio, Row, Typography } from 'antd';
 
 const { Title } = Typography;
 
+const layout = {
+	labelCol: { span: 8 },
+	wrapperCol: { span: 12 },
+};
+
+const tailLayout = {
+	wrapperCol: { offset: 8, span: 12 },
+};
+
 function NewPatientForm() {
+	const [form] = Form.useForm();
 	const dateFormat = 'M/D/YYYY';
+
+	// TODO
+	const onFinish = () => console.log('TODO');
+	const onFinishFailed = () => console.log('TODO');
+
 	return (
 		<>
-			<Title>New Patient</Title>
-			<Form>
+			<Row justify='center'>
+				<Title level={3}>New Patient Form</Title>
+			</Row>
+			<Form
+				{...layout}
+				form={form}
+				onFinish={onFinish}
+				onFinishFailed={onFinishFailed}
+			>
 				<Form.Item
 					label='First Name'
 					name='firstName'
@@ -38,6 +60,7 @@ function NewPatientForm() {
 					<Radio.Group>
 						<Radio.Button value='male'>Male</Radio.Button>
 						<Radio.Button value='female'>Female</Radio.Button>
+						<Radio.Button value='other'>Other</Radio.Button>
 					</Radio.Group>
 				</Form.Item>
 				<Form.Item
@@ -53,7 +76,7 @@ function NewPatientForm() {
 				<Form.Item label='Primary Language' name='primaryLanguage'>
 					<Input disabled />
 				</Form.Item>
-				<Form.Item>
+				<Form.Item {...tailLayout}>
 					<Button type='primary' htmlType='submit'>
 						Submit
 					</Button>

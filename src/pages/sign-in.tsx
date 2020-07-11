@@ -16,17 +16,13 @@ function SignIn() {
 	let history = useHistory();
 	const [form] = Form.useForm();
 	const [, forceUpdate] = useState();
-	// const { register, setValue, handleSubmit, errors } = useForm<FormData>();
-	//
-	// const onSubmit = handleSubmit(({ username, password }) => {
-	// console.log(username, password);
-	// });
+
 	useEffect(() => {
 		forceUpdate({});
 	}, []);
 
 	const onFinish = (values: any) => {
-		console.log('Success:', values);
+		// TODO - Handle Auth
 		history.push('/dashboard');
 	};
 

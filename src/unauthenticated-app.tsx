@@ -7,10 +7,10 @@ import SignIn from './pages/sign-in';
 
 function UnauthenticatedApp() {
 	return (
-		<div>
+		<>
 			<Switch>
-				<Layout.Content className='layout'>
-					<Row justify='center'>
+				<Layout.Content>
+					<Row align='middle' justify='center' style={{ height: '100vh' }}>
 						<Col span={6} />
 						<Col span={12}>
 							<Route path='/' component={SignIn} />
@@ -19,7 +19,7 @@ function UnauthenticatedApp() {
 					</Row>
 				</Layout.Content>
 			</Switch>
-		</div>
+		</>
 	);
 }
 
