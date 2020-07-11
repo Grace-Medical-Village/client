@@ -1,5 +1,6 @@
-import React from 'react';
-import { Button, Form, Input, Typography } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Form, Input, Row, Typography } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 // import { withRouter } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 // import { useForm } from 'react-hook-form'; TODO
@@ -11,67 +12,67 @@ type FormData = {
 	password: string;
 };
 
-const layout = {
-	labelCol: { span: 12 },
-	wrapperCol: { span: 12 },
-};
-const tailLayout = {
-	wrapperCol: { offset: 8, span: 16 },
-};
-
 function SignIn() {
 	let history = useHistory();
+	const [form] = Form.useForm();
+	const [, forceUpdate] = useState();
 	// const { register, setValue, handleSubmit, errors } = useForm<FormData>();
 	//
 	// const onSubmit = handleSubmit(({ username, password }) => {
 	// console.log(username, password);
 	// });
+	useEffect(() => {
+		forceUpdate({});
+	}, []);
 
 	const onFinish = (values: any) => {
 		console.log('Success:', values);
 		history.push('/dashboard');
 	};
 
-	const onFinishFailed = (errorInfo: any) => {
-		console.log('Failed:', errorInfo);
-	};
-
 	return (
-		<div>
-			<div>
-				<Title level={2}>Welcome to Grace Medical Village</Title>
-			</div>
+		<>
+			<Row justify='start'>
+				<Title level={4}>Please sign in</Title>
+			</Row>
 			<Form
-				{...layout}
-				name='basic'
-				initialValues={{ remember: true }}
-				layout='horizontal'
+				form={form}
+				name='horizontal_login'
+				layout='inline'
 				onFinish={onFinish}
-				onFinishFailed={onFinishFailed}
 			>
 				<Form.Item
-					label='Username'
 					name='username'
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
-					<Input />
+					<Input
+						prefix={<UserOutlined className='site-form-item-icon' />}
+						placeholder='Username'
+					/>
 				</Form.Item>
-
 				<Form.Item
-					label='Password'
 					name='password'
 					rules={[{ required: true, message: 'Please input your password!' }]}
 				>
-					<Input.Password />
+					<Input
+						prefix={<LockOutlined className='site-form-item-icon' />}
+						type='password'
+						placeholder='Password'
+					/>
 				</Form.Item>
-
-				<Form.Item {...tailLayout}>
-					<Button type='primary' htmlType='submit'>
-						Submit
-					</Button>
+				<Form.Item shouldUpdate={true}>
+					{() => (
+						<Button
+							type='primary'
+							htmlType='submit'
+							disabled={!form.isFieldsTouched(true)}
+						>
+							Log in
+						</Button>
+					)}
 				</Form.Item>
 			</Form>
-		</div>
+		</>
 	);
 }
 

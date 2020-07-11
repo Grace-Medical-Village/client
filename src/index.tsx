@@ -8,11 +8,11 @@ import './index.css';
 
 ReactDOM.render(
 	// TODO - Strict Mode
-	// <React.StrictMode>
+	// TODO <React.StrictMode>
 	<BrowserRouter>
-		<AuthProvider>
-			<App />
-		</AuthProvider>
+		{/* <AuthProvider> */}
+		<App />
+		{/* </AuthProvider> */}
 	</BrowserRouter>,
 	// </React.StrictMode>,
 	document.getElementById('root')
