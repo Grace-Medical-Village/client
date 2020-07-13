@@ -12,15 +12,15 @@ import Error from './pages/error';
 import Header from './components/header';
 import Footer from './components/footer';
 
+const { Content } = Layout;
+
 function AuthenticatedApp() {
 	return (
 		<>
-			<Layout.Header>
+			<Layout style={{ minHeight: '100vh', overflow: 'auto' }}>
 				<Header />
-			</Layout.Header>
-			<div>
 				<Switch>
-					<Layout.Content>
+					<Content style={{ padding: '3rem' }}>
 						<Row align='middle' justify='center'>
 							<Col span={24}>
 								<Route exact path='/' component={SignIn} />
@@ -31,12 +31,10 @@ function AuthenticatedApp() {
 								<Redirect to='error' />
 							</Col>
 						</Row>
-					</Layout.Content>
+					</Content>
 				</Switch>
-			</div>
-			<Layout.Footer>
 				<Footer />
-			</Layout.Footer>
+			</Layout>
 		</>
 	);
 }

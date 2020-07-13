@@ -1,4 +1,6 @@
 import React, { lazy, Suspense } from 'react';
+import { Spin } from 'antd';
+import Loading from './components/loading';
 import { useAuth } from './context/auth-context';
 
 const AuthenticatedApp = lazy(() => import('./authenticated-app'));
@@ -8,7 +10,7 @@ function App() {
 	const user = useAuth();
 
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<Loading />}>
 			{!user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
 		</Suspense>
 	);

@@ -4,12 +4,12 @@ import { Button, DatePicker, Form, Input, Radio, Row, Typography } from 'antd';
 const { Title } = Typography;
 
 const layout = {
-	labelCol: { span: 8 },
-	wrapperCol: { span: 12 },
+	labelCol: { span: 6 },
+	wrapperCol: { span: 14 },
 };
 
 const tailLayout = {
-	wrapperCol: { offset: 8, span: 12 },
+	wrapperCol: { offset: 6, span: 14 },
 };
 
 function NewPatientForm() {

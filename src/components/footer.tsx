@@ -1,16 +1,18 @@
 import React from 'react';
-import { Row, Typography } from 'antd';
+import { Row, Typography, Layout } from 'antd';
 
 const { Text } = Typography;
 
 function Footer() {
 	return (
 		<>
-			<Row justify='center'>
-				<Text>
-					Do all things with <span role='img'>❤</span>️
-				</Text>
-			</Row>
+			<Layout.Footer>
+				<Row justify='center'>
+					<Text>
+						Do all things with <span role='img'>❤</span>️
+					</Text>
+				</Row>
+			</Layout.Footer>
 		</>
 	);
 }

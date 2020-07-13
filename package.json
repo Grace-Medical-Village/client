@@ -14,7 +14,11 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"predeploy:development": "npm run build:development",
+		"predeploy:production": "npm run build:production",
+		"deploy:development": "aws s3 sync build/ s3://gmv-client-dev --delete",
+		"deploy:production": "aws s3 sync build/ s3://gmv-client-prod --delete"
 	},
 	"eslintConfig": {
 		"extends": "react-app"

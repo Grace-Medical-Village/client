@@ -9,21 +9,17 @@ export default function Error() {
 	let history = useHistory();
 
 	useEffect(() => {
-		console.log(countdown);
-		if (countdown === 0) {
-			history.push('/dashboard');
-		}
+		if (countdown === 0) history.push('/dashboard');
 		const interval = setInterval(() => set(countdown - 1), 750);
-		console.log(countdown);
 		return () => clearInterval(interval);
 	}, [countdown, history]);
 
 	return (
 		<>
 			<Row justify='center'>
-				<Title level={3}>That's not quite right</Title>
+				<Title level={3}>Error</Title>
 			</Row>
-			<Row justify='center'>
+			<Row justify='center' style={{ paddingTop: '1rem' }}>
 				<Title level={4}>
 					Taking you back to the dashboard in {countdown}.
 				</Title>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useHistory, withRouter } from 'react-router-dom';
-import { Menu } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { Layout, Menu } from 'antd';
 import {
 	IdcardOutlined,
 	LineChartOutlined,
@@ -18,7 +18,7 @@ function Header() {
 	};
 
 	return (
-		<nav>
+		<Layout.Header>
 			<Menu
 				mode='horizontal'
 				onClick={handleClick}
@@ -36,8 +36,8 @@ function Header() {
 				</Menu.Item>
 				<Menu.Item key='welcome'>Sign Out</Menu.Item>
 			</Menu>
-		</nav>
+		</Layout.Header>
 	);
 }
 
-export default withRouter(Header);
+export default Header;
