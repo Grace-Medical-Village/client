@@ -10,8 +10,8 @@ function PatientDashboard() {
 	return (
 		<>
 			<PatientOverview patient={patient} />
-			<Medication />
 			<Triage />
+			<Medication />
 		</>
 	);
 }
