@@ -51,7 +51,7 @@ function Triage() {
 	return (
 		<>
 			<Typography.Title level={4}>Triage</Typography.Title>
-			<Table dataSource={dataSource} columns={columns} />;
+			<Table dataSource={dataSource} columns={columns} />
 		</>
 	);
 }

@@ -41,7 +41,7 @@ function Medication() {
 	return (
 		<>
 			<Typography.Title level={4}>Medication</Typography.Title>
-			<Table dataSource={dataSource} columns={columns} />;
+			<Table dataSource={dataSource} columns={columns} />
 		</>
 	);
 }
