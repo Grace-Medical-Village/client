@@ -1,3 +1,8 @@
+export type Blood = {
+	systolic: number;
+	diastolic: number;
+};
+
 export type Patient = {
 	firstName: string;
 	lastName: string;
@@ -15,9 +20,13 @@ export type Patient = {
 	visits: Visit[];
 };
 
-export type Blood = {
-	systolic: number;
-	diastolic: number;
+export type User = {
+	authenticated: boolean;
+	password: string;
+	user: string;
+	setAuthenticated: () => void;
+	setPassword: () => void;
+	setUser: () => void;
 };
 
 export enum Amount {

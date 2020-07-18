@@ -1,4 +1,4 @@
-import { Amount, Patient, State } from '../types';
+import { Amount, Patient, State } from '../utils/types';
 
 const patientData: Patient = {
 	firstName: 'Ignaz',

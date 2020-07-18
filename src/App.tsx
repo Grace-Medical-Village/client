@@ -1,17 +1,17 @@
-import React, { lazy, Suspense } from 'react';
-import { Spin } from 'antd';
+import React, { lazy, Suspense, useContext } from 'react';
 import Loading from './components/loading';
-import { useAuth } from './context/auth-context';
+import { AuthContext } from './context/auth-context';
 
 const AuthenticatedApp = lazy(() => import('./authenticated-app'));
-const UnauthenticatedApp = lazy(() => import('./unauthenticated-app'));
+// const UnauthenticatedApp = lazy(() => import('./unauthenticated-app'));
 
 function App() {
-	const user = useAuth();
+	const auth = useContext(AuthContext);
+	const { authenticated } = auth.state;
 
 	return (
 		<Suspense fallback={<Loading />}>
-			{!user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+			{authenticated ? <AuthenticatedApp /> : <AuthenticatedApp />}
 		</Suspense>
 	);
 }

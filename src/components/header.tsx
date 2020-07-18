@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import {
@@ -6,15 +6,25 @@ import {
 	LineChartOutlined,
 	UserAddOutlined,
 } from '@ant-design/icons';
+import { AuthContext } from '../context/auth-context';
 
 function Header() {
 	const [menuSelection, setMenuSelection] = useState('dashboard');
+	const auth = useContext(AuthContext);
 	let history = useHistory();
 
 	const handleClick = (e: any) => {
 		const { key } = e;
-		setMenuSelection(key);
-		history.push(key);
+		if (key === 'log-out') {
+			auth.update({
+				authenticated: false,
+				username: '',
+			});
+			history.push('/');
+		} else {
+			setMenuSelection(key);
+			history.push(key);
+		}
 	};
 
 	return (
@@ -34,7 +44,9 @@ function Header() {
 				<Menu.Item key='analytics' icon={<LineChartOutlined />} disabled>
 					Analytics
 				</Menu.Item>
-				<Menu.Item key='welcome'>Sign Out</Menu.Item>
+				<Menu.Item key='log-out' style={{ float: 'right' }}>
+					Log Out
+				</Menu.Item>
 			</Menu>
 		</Layout.Header>
 	);

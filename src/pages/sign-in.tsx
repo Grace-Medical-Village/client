@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React, { useContext } from 'react';
 import { Button, Form, Input, Row, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-// import { withRouter } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-// import { useForm } from 'react-hook-form'; TODO
+import { AuthContext } from '../context/auth-context';
+import '../styles/sign-in.css';
 
 const { Title } = Typography;
 
@@ -13,17 +14,13 @@ type FormData = {
 };
 
 function SignIn() {
+	const authCtx = useContext(AuthContext);
 	let history = useHistory();
-	const [form] = Form.useForm();
-	const [, forceUpdate] = useState();
-
-	useEffect(() => {
-		forceUpdate({});
-	}, []);
 
 	const onFinish = (values: any) => {
-		// TODO - Handle Auth
-		history.push('/dashboard');
+		authCtx.update({ authenticated: true, username: 'Brett' });
+		// TODO
+		if (values.username && values.password) history.push('/dashboard');
 	};
 
 	return (
@@ -32,14 +29,14 @@ function SignIn() {
 				<Title level={4}>Please sign in</Title>
 			</Row>
 			<Form
-				form={form}
-				name='horizontal_login'
-				layout='inline'
+				name='normal_login'
+				className='login-form'
+				initialValues={{ remember: true }}
 				onFinish={onFinish}
 			>
 				<Form.Item
 					name='username'
-					rules={[{ required: true, message: 'Please input your username!' }]}
+					rules={[{ required: true, message: 'Please input your Username!' }]}
 				>
 					<Input
 						prefix={<UserOutlined className='site-form-item-icon' />}
@@ -48,7 +45,7 @@ function SignIn() {
 				</Form.Item>
 				<Form.Item
 					name='password'
-					rules={[{ required: true, message: 'Please input your password!' }]}
+					rules={[{ required: true, message: 'Please input your Password!' }]}
 				>
 					<Input
 						prefix={<LockOutlined className='site-form-item-icon' />}
@@ -56,16 +53,14 @@ function SignIn() {
 						placeholder='Password'
 					/>
 				</Form.Item>
-				<Form.Item shouldUpdate={true}>
-					{() => (
-						<Button
-							type='primary'
-							htmlType='submit'
-							disabled={!form.isFieldsTouched(true)}
-						>
-							Log in
-						</Button>
-					)}
+				<Form.Item>
+					<Button
+						type='primary'
+						htmlType='submit'
+						className='login-form-button'
+					>
+						Log in
+					</Button>
 				</Form.Item>
 			</Form>
 		</>
