@@ -1,0 +1,21 @@
+.header {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-items: center;
+  width: 100vw;
+}
+
+.header-logo {
+  width: 2rem;
+  height: 2.3rem;
+  margin-right: 2rem;
+}
+
+.header-menu {
+  width: 100%;
+}
+
+.header-settings {
+  float: right;
+}

@@ -4,10 +4,10 @@ import PatientOverview from '../components/patient-overview';
 import Triage from '../components/triage';
 import Medication from '../components/medication';
 
-import patient from '../assets/patient.data';
+import { mockPatient as patient } from '../assets/patient.data';
 
 const { Title } = Typography;
-function PatientDashboard() {
+function Dashboard() {
 	return (
 		<>
 			<Title level={2}>Patient Dashboard</Title>
@@ -18,4 +18,4 @@ function PatientDashboard() {
 	);
 }
 
-export default PatientDashboard;
+export default Dashboard;

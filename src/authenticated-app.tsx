@@ -3,8 +3,8 @@ import React from 'react';
 import { Col, Layout, Row } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 
-import NewPatient from './pages/new-patient';
-import PatientDashboard from './pages/patient-dashboard';
+import Patient from './pages/patient';
+import Dashboard from './pages/dashboard';
 import Error from './pages/error';
 
 import Header from './components/header';
@@ -21,9 +21,8 @@ function AuthenticatedApp() {
 					<Row align='middle' justify='center'>
 						<Col span={24}>
 							<Switch>
-								<Route exact path='/' component={PatientDashboard} />
-								<Route exact path='/dashboard' component={PatientDashboard} />
-								<Route exact path='/new-patient' component={NewPatient} />
+								<Route exact path='/dashboard' component={Dashboard} />
+								<Route exact path='/patient' component={Patient} />
 								<Route component={Error} />
 							</Switch>
 						</Col>

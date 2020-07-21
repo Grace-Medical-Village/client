@@ -1,11 +1,10 @@
-import { Amount, Patient, State } from '../utils/types';
+import { Patient } from '../typings/patient.data';
 
-const patientData: Patient = {
+export const raj: Patient = {
 	firstName: 'Ignaz',
 	lastName: 'Semmelweis',
 	language: 'Hungarian',
 	city: 'Atlanta',
-	state: State.GA,
 	zipCode: '33033',
 	gender: 'M',
 	weight: 195,
@@ -44,5 +43,3 @@ const patientData: Patient = {
 		},
 	],
 };
-
-export default patientData;

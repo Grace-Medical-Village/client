@@ -3,22 +3,30 @@ import React from 'react';
 import { Col, Layout, Row } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 
+import Header from './components/header';
+import Footer from './components/footer';
 import SignIn from './pages/sign-in';
+
+const { Content } = Layout;
 
 function UnauthenticatedApp() {
 	return (
 		<>
-			<Switch>
-				<Layout.Content>
-					<Row align='middle' justify='center' style={{ height: '100vh' }}>
+			<Layout style={{ minHeight: '100vh', overflow: 'auto' }}>
+				<Header />
+				<Content>
+					<Row align='middle' justify='center' style={{ minHeight: '80vh' }}>
 						<Col span={6} />
 						<Col span={12}>
-							<Route path='/' component={SignIn} />
+							<Switch>
+								<Route path='/' component={SignIn} />
+							</Switch>
 						</Col>
 						<Col span={6} />
 					</Row>
-				</Layout.Content>
-			</Switch>
+				</Content>
+				<Footer />
+			</Layout>
 		</>
 	);
 }

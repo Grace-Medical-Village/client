@@ -3,7 +3,7 @@ import Loading from './components/loading';
 import { AuthContext } from './context/auth-context';
 
 const AuthenticatedApp = lazy(() => import('./authenticated-app'));
-// const UnauthenticatedApp = lazy(() => import('./unauthenticated-app'));
+const UnauthenticatedApp = lazy(() => import('./unauthenticated-app'));
 
 function App() {
 	const auth = useContext(AuthContext);
@@ -11,7 +11,7 @@ function App() {
 
 	return (
 		<Suspense fallback={<Loading />}>
-			{authenticated ? <AuthenticatedApp /> : <AuthenticatedApp />}
+			{authenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}
 		</Suspense>
 	);
 }
