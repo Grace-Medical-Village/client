@@ -1,19 +1,5 @@
 import React from 'react';
-import {
-	Button,
-	DatePicker,
-	Form,
-	Input,
-	Radio,
-	Row,
-	Typography,
-	Select,
-} from 'antd';
-
-import { countries, languages } from '../assets/patient.data';
-
-const { Option } = Select;
-const { Title } = Typography;
+import { Button, Form, Input } from 'antd';
 
 const layout = {
 	labelCol: { span: 6 },
@@ -27,25 +13,6 @@ const tailLayout = {
 function PatientSearch() {
 	const [form] = Form.useForm();
 
-	// TODO
-	function onChange(value: any) {
-		console.log(`selected ${value}`);
-	}
-
-	// TODO
-	function onBlur() {
-		console.log('blur');
-	}
-
-	// TODO
-	function onFocus() {
-		console.log('focus');
-	}
-
-	// TODO
-	function onSearch(val: any) {
-		console.log('search:', val);
-	}
 	// TODO
 	const onFinish = () => console.log('TODO');
 	// TODO

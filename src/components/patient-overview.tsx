@@ -2,12 +2,10 @@ import React from 'react';
 
 import { Statistic } from 'antd';
 
-function PatientOverview({ patient }: any) {
-	const { firstName, lastName } = patient;
-
+function PatientOverview() {
 	return (
 		<>
-			<Statistic title='Name' value={`${firstName} ${lastName}`} />
+			<Statistic title='Name' value='Brett Botto' />
 		</>
 	);
 }

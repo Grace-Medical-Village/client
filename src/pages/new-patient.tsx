@@ -10,7 +10,8 @@ import {
 	Select,
 } from 'antd';
 
-import { countries, languages } from '../assets/patient.data';
+import { countries } from '../assets/countries.data';
+import { languages } from '../assets/languages.data';
 
 const { Option } = Select;
 const { Title } = Typography;

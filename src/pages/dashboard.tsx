@@ -4,14 +4,12 @@ import PatientOverview from '../components/patient-overview';
 import Triage from '../components/triage';
 import Medication from '../components/medication';
 
-import { mockPatient as patient } from '../assets/patient.data';
-
 const { Title } = Typography;
 function Dashboard() {
 	return (
 		<>
 			<Title level={2}>Patient Dashboard</Title>
-			<PatientOverview patient={patient} />
+			<PatientOverview />
 			<Triage />
 			<Medication />
 		</>
