@@ -1,0 +1,20 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-gmv-frontend-dev-165501-authRole",
+            "UnauthRoleArn": "arn:aws:iam::435765244332:role/amplify-gmv-frontend-dev-165501-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::435765244332:role/amplify-gmv-frontend-dev-165501-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-gmv-frontend-dev-165501-deployment",
+            "UnauthRoleName": "amplify-gmv-frontend-dev-165501-unauthRole",
+            "StackName": "amplify-gmv-frontend-dev-165501",
+            "StackId": "arn:aws:cloudformation:us-east-1:435765244332:stack/amplify-gmv-frontend-dev-165501/27b92c60-ceb9-11ea-a5bd-1288d43a03c2",
+            "AmplifyAppId": "d1e13oyhn473sg"
+        },
+        "categories": {
+            "auth": {
+                "gmvfrontend1c5d3500": {}
+            }
+        }
+    }
+}
