@@ -1,41 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React, { useContext, useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { Button, Form, Input, Row, Typography } from 'antd';
-import { Auth } from 'aws-amplify';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
-import { AuthContext } from '../context/auth-context';
+import { useSignIn } from '../utils/hooks';
 import '../styles/sign-in.css';
 
 const { Title } = Typography;
 
 function SignIn() {
-  const authCtx = useContext(AuthContext);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  let history = useHistory();
-
-  useEffect(() => {
-    if (username.length > 0 && password.length > 0) {
-      signIn();
-    }
-  }, [username, password]);
-
-  async function signIn() {
-    try {
-      const user = await Auth.signIn(username, password);
-      if (user) {
-        authCtx.update({ authenticated: true, username });
-        history.push('/dashboard');
-      }
-    } catch (error) {
-      console.log('error signing in', error);
-    }
-  }
-
   const onFinish = ({ username, password }: any) => {
-    setUsername(username);
-    setPassword(password);
+    useSignIn(username, password);
   };
 
   return (

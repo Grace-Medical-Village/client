@@ -21,8 +21,10 @@
     "validate": "npm-run-all --parallel check-types lint build",
     "predeploy:development": "npm run build:development",
     "predeploy:production": "npm run build:production",
-    "deploy:development": "aws s3 sync build/ s3://gmv-client-dev --delete",
-    "deploy:production": "aws s3 sync build/ s3://gmv-client-prod --delete"
+    "deploy:development": "aws s3 sync build/ s3://gmv-dev-frontend-hosting-dev --delete",
+    "deploy:production": "aws s3 sync build/ s3://gmv-client-prod --delete",
+    "postdeploy:development": "aws cloudfront create-invalidation --distribution-id E1H3YVWMSBGUXT --paths '/*'",
+    "postdeploy:production": "aws cloudfront create-invalidation --distribution-id TODO --paths '/*'"
   },
   "eslintConfig": {
     "extends": "react-app"

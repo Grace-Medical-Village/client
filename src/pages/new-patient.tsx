@@ -3,6 +3,7 @@ import { Button, DatePicker, Form, Input, Radio, Select } from 'antd';
 
 import { countries } from '../assets/countries.data';
 import { languages } from '../assets/languages.data';
+import '../styles/new-patient.css';
 
 const { Option } = Select;
 
@@ -42,6 +43,9 @@ function NewPatientForm() {
   const onFinish = () => console.log('TODO');
   // TODO
   const onFinishFailed = () => console.log('TODO');
+  const onReset = () => {
+    form.resetFields();
+  };
 
   return (
     <>
@@ -155,8 +159,11 @@ function NewPatientForm() {
           </Select>
         </Form.Item>
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button className="submit-btn" type="primary" htmlType="submit">
             Submit
+          </Button>
+          <Button htmlType="button" onClick={onReset}>
+            Reset
           </Button>
         </Form.Item>
       </Form>
