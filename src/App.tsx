@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useContext } from 'react';
 import Amplify from 'aws-amplify';
-import awsconfig from './aws-exports';
+import awsconfig from './aws-exports.js';
 import Loading from './components/loading';
 import { AuthContext } from './context/auth-context';
 
