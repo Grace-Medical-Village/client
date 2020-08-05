@@ -38,7 +38,7 @@ function Header() {
 
   async function signOut() {
     try {
-      await Auth.signOut();
+      await true; // TODO
       auth.update({
         authenticated: false,
         username: '',

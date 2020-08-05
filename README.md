@@ -50,3 +50,5 @@
 - Entry for new data points
 - Type(s)
 - Drop downs for data (if available)
+
+aws cognito-idp admin-set-user-password --user-pool-id gmvfrontend1c5d3500_userpool_1c5d3500-dev --username brett.botto --password password --permanent

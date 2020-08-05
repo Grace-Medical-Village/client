@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Button, Form, Input, Row, Typography } from 'antd';
-import { Auth } from 'aws-amplify';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../context/auth-context';
@@ -22,7 +21,7 @@ function SignIn() {
 
   async function signIn() {
     try {
-      const user = await Auth.signIn(username, password);
+      const user = await true; // TODO
       if (user) {
         authCtx.update({ authenticated: true, username });
         history.push('/dashboard');
