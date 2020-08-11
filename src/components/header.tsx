@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
 import { Layout, Menu, Typography } from 'antd';
 import {
   IdcardOutlined,
