@@ -25,6 +25,41 @@ const data = [
     date: 'Jan 03, 2000',
     value: 42,
   },
+  {
+    metric: 'Height',
+    date: 'Jan 03, 2000',
+    value: '6\'0"',
+  },
+  {
+    metric: 'Weight',
+    date: 'Jan 03, 2000',
+    value: '200',
+  },
+  {
+    metric: 'Weight',
+    date: 'Jun 13, 2004',
+    value: '212',
+  },
+  {
+    metric: 'Weight',
+    date: 'Dec 1, 2014',
+    value: '228',
+  },
+  {
+    metric: 'Hemoglobin A1c',
+    date: 'Dec 1, 2014',
+    value: '4.5A',
+  },
+  {
+    metric: 'Cholesterol',
+    date: 'Dec 1, 2014',
+    value: '200',
+  },
+  {
+    metric: 'Blood Pressure',
+    date: 'Dec 1, 2014',
+    value: '120/60',
+  },
 ];
 
 export default function HealthMetrics() {
