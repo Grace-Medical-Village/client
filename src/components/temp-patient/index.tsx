@@ -1,7 +1,6 @@
 import React from 'react';
-import { Col, Row, Statistic, Typography } from 'antd';
+import { Col, Divider, Row, Statistic, Typography } from 'antd';
 import { PatientStat } from './types';
-import ChronicCare from '../chronic-care';
 import HealthMetrics from '../health-metrics';
 import Medications from '../medications';
 
@@ -29,21 +28,16 @@ export default function TempPatient() {
       title: 'Country of Origin',
       value: 'United States',
     },
-    // TODO
-    // {
-    //   title: 'Last Visit',
-    //   value: 'January 3, 2019',
-    // },
-    // {
-    //   title: 'Visit Count',
-    //   value: 3,
-    // },
+    {
+      title: 'Last Visit',
+      value: 'Jan 6, 2019',
+    },
   ];
   return (
     <>
       <div style={{ padding: '2rem' }}>
         <Row>
-          <Title level={2}>Patient Background</Title>
+          <Title level={3}>Patient Background</Title>
         </Row>
         <Row>
           {background.map((stat: PatientStat, index: number) => {
@@ -55,20 +49,16 @@ export default function TempPatient() {
             );
           })}
         </Row>
+        <Divider />
         <Row>
-          <Title level={2}>Patient Statistics</Title>
+          <Title level={3}>Metrics</Title>
         </Row>
         <Row>
           <HealthMetrics />
         </Row>
+        <Divider />
         <Row>
-          <Title level={2}>Chronic Care</Title>
-        </Row>
-        <Row>
-          <ChronicCare />
-        </Row>
-        <Row>
-          <Title level={2}>Medications</Title>
+          <Title level={3}>Medications</Title>
         </Row>
         <Row>
           <Medications />

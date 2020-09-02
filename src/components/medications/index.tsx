@@ -1,76 +1,41 @@
 import React from 'react';
-import { Table, Tag, Space } from 'antd';
+import { Table } from 'antd';
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text: any) => <a>{text}</a>,
+    title: 'Medication',
+    dataIndex: 'medication',
+    key: 'medication',
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: 'Strength',
+    dataIndex: 'strength',
+    key: 'strength',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: 'Form',
+    dataIndex: 'form',
+    key: 'form',
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (tags: any) => (
-      <>
-        {tags.map((tag: any) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    title: 'Expiration',
+    dataIndex: 'expiration',
+    key: 'expiration',
   },
   {
-    title: 'Action',
-    key: 'action',
-    render: (text: any, record: any) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
   },
 ];
 
 const data = [
   {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
+    medication: 'Acetamenophen',
+    strength: 'Acetamenophen',
+    form: 'Tab',
+    expiration: '20-Nov',
+    type: 'Pain',
   },
 ];
 
