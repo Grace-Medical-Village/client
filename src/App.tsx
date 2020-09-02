@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useContext } from 'react';
 import Loading from './components/loading';
-import { AuthContext } from './context/auth-context';
+import { AuthContext } from './context/auth';
 
 const AuthenticatedApp = lazy(() => import('./authenticated-app'));
 const UnauthenticatedApp = lazy(() => import('./unauthenticated-app'));
