@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Badge,
   Col,
@@ -8,6 +8,9 @@ import {
   Row,
   Statistic,
   Typography,
+  Empty,
+  Button,
+  Radio,
 } from 'antd';
 import HealthMetrics from '../health-metrics';
 // import Medications from '../medications';
@@ -18,6 +21,7 @@ const { Item } = Descriptions;
 const { Title } = Typography;
 
 export default function TempPatient() {
+  const [addMetric, toggle] = useState(true);
   const background: PatientStat[] = [
     {
       title: 'Patient',
@@ -100,13 +104,28 @@ export default function TempPatient() {
           <Title level={3}>Metrics</Title>
         </Row>
         <Row>
-          <HealthMetrics />
+          <Col span={12}>
+            <HealthMetrics />
+          </Col>
+          <Col span={12}>
+            <Row align="middle" justify="center">
+              <Radio.Group
+                value={addMetric}
+                onChange={() => toggle(!addMetric)}
+              >
+                <Radio.Button value={true}>Add Record</Radio.Button>
+                <Radio.Button value={false}>View Chart</Radio.Button>
+              </Radio.Group>
+              {addMetric ? (
+                <Row>
+                  <Button>Default</Button>
+                </Row>
+              ) : (
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              )}
+            </Row>
+          </Col>
         </Row>
-        <Divider />
-        <Row>
-          <Title level={3}>Medications</Title>
-        </Row>
-        <Row>{/* <Medications /> */}</Row>
       </div>
     </>
   );
