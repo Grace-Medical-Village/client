@@ -10,7 +10,7 @@ import {
   Typography,
 } from 'antd';
 import HealthMetrics from '../health-metrics';
-import Medications from '../medications';
+// import Medications from '../medications';
 import { PatientStat } from './types';
 
 const { Panel } = Collapse;
@@ -21,7 +21,7 @@ export default function TempPatient() {
   const background: PatientStat[] = [
     {
       title: 'Patient',
-      value: 'Theodore Roosevelt',
+      value: 'Teddy Roosevelt',
     },
     {
       title: 'Age',

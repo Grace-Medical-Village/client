@@ -63,7 +63,7 @@ function PatientSearch() {
       }
     });
   };
-  const onFinishFailed = () => console.log('TODO');
+  const onFinishFailed = () => null;
 
   return (
     <>

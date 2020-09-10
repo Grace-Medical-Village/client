@@ -37,10 +37,10 @@ function NewPatientForm() {
     'Excellent',
   ];
 
-  const onChange = (value: any) => console.log(`TODO ${value}`);
-  const onBlur = () => console.log('TODO');
-  const onFocus = () => console.log('TODO');
-  const onSearch = (val: any) => console.log('TODO:', val);
+  const onChange = () => null;
+  const onBlur = () => null;
+  const onFocus = () => null;
+  const onSearch = () => null;
 
   const onFinish = (data: Store) => {
     if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
@@ -77,7 +77,7 @@ function NewPatientForm() {
       }
     });
   };
-  const onFinishFailed = () => console.log('TODO');
+  const onFinishFailed = () => null;
 
   const onReset = () => form.resetFields();
 

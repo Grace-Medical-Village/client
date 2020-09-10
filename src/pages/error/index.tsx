@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Typography, Row } from 'antd';
 import { useHistory } from 'react-router-dom';
 
+import './styles.css';
+
 const { Title } = Typography;
 
 export default function Error() {
@@ -16,14 +18,16 @@ export default function Error() {
 
   return (
     <>
-      <Row justify="center">
-        <Title level={3}>Error</Title>
-      </Row>
-      <Row justify="center" style={{ paddingTop: '1rem' }}>
-        <Title level={4}>
-          Taking you back to the dashboard in {countdown}.
-        </Title>
-      </Row>
+      <div className="error">
+        <Row justify="center">
+          <Title level={2}>Error</Title>
+        </Row>
+        <Row justify="center">
+          <Title level={3}>
+            Taking you back to the dashboard in {countdown}.
+          </Title>
+        </Row>
+      </div>
     </>
   );
 }

@@ -16,9 +16,9 @@ function SignIn() {
   async function signIn() {
     try {
       const user = await true; // TODO
-      console.log(username, password);
       if (user) {
         authCtx.update({ authenticated: true, username });
+        console.log(password);
         history.push('/dashboard');
       }
     } catch (error) {

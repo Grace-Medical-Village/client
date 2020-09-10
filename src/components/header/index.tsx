@@ -43,7 +43,7 @@ function Header() {
     try {
       await true;
       auth.update({
-        authenticated: false,
+        authenticated: true,
         username: '',
       });
     } catch (error) {
