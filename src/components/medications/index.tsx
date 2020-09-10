@@ -50,6 +50,11 @@ const columns = [
     ),
   },
   {
+    title: 'Date Received',
+    dataIndex: 'dateReceived',
+    key: 'dateReceived',
+  },
+  {
     title: 'Expiration',
     dataIndex: 'expiration',
     key: 'expiration',
@@ -58,24 +63,27 @@ const columns = [
 
 const data = [
   {
+    expiration: '20-Nov',
+    dateReceived: 'Aug 5, 2020',
+    form: ['Tab'],
     medication: 'Acetamenophen',
     strength: '500mg',
-    form: ['Tab'],
-    expiration: '20-Nov',
     type: ['Pain'],
   },
   {
+    expiration: '21 May && 22 Apr',
+    dateReceived: 'Jun 1, 2020',
+    form: ['Liquid'],
     medication: 'Docusate Sodium',
     strength: '100mg',
-    form: ['Liquid'],
-    expiration: '21 May && 22 Apr',
     type: ['Gastric'],
   },
   {
+    expiration: '20-Feb',
+    dateReceived: 'Aug 5, 2020',
+    form: ['Tab'],
     medication: 'Adult',
     strength: null,
-    form: ['Tab'],
-    expiration: '20-Feb',
     type: ['Vitamins'],
   },
 ];

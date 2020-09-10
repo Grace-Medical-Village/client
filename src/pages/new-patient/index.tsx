@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Button, DatePicker, Form, Input, Radio, Select } from 'antd';
+import React, { useContext, useState } from 'react';
+import { Button, DatePicker, Form, Input, Radio, Rate, Select } from 'antd';
 
 import { post } from '../../services/api';
 import { PatientContext } from '../../context/patient';
@@ -26,8 +26,16 @@ const tailLayout = {
 function NewPatientForm() {
   const patientCtx = useContext(PatientContext);
   const [form] = Form.useForm();
+  const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
 
   const { REACT_APP_DEFAULT_KEY, REACT_APP_PATIENT_API } = process.env;
+  const nativeLiteracyRatings = [
+    'Poor',
+    'Below Average',
+    'Average',
+    'Above Average',
+    'Excellent',
+  ];
 
   const onChange = (value: any) => console.log(`TODO ${value}`);
   const onBlur = () => console.log('TODO');
@@ -114,16 +122,6 @@ function NewPatientForm() {
           </Radio.Group>
         </Form.Item>
         <Form.Item
-          label="Hispanic"
-          name="hispanic"
-          rules={[{ required: true, message: 'Ethnicity is required.' }]}
-        >
-          <Radio.Group>
-            <Radio.Button value="yes">Yes</Radio.Button>
-            <Radio.Button value="no">No</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
           label="Zip Code"
           name="zipCode5"
           rules={[{ required: true, message: 'Zip code is required.' }]}
@@ -132,8 +130,8 @@ function NewPatientForm() {
         </Form.Item>
         <Form.Item
           initialValue="English"
-          label="Primary Language"
-          name="language"
+          label="Native Language"
+          name="nativeLanguage"
         >
           <Select
             optionFilterProp="children"
@@ -155,6 +153,25 @@ function NewPatientForm() {
               </Option>
             ))}
           </Select>
+        </Form.Item>
+        <Form.Item
+          label="Native Language Literacy Rating"
+          name="nativeLiteracy"
+        >
+          <span>
+            <Rate
+              tooltips={nativeLiteracyRatings}
+              onChange={(v) => setNativeLiteracyRating(v)}
+              value={nativeLiteracyRating}
+            />
+            {nativeLiteracyRating ? (
+              <span className="ant-rate-text">
+                {nativeLiteracyRatings[nativeLiteracyRating - 1]}
+              </span>
+            ) : (
+              ''
+            )}
+          </span>
         </Form.Item>
         <Form.Item
           initialValue="United States"
