@@ -15,7 +15,7 @@ function createCtx<A>(defaultValue: A) {
 }
 
 const [ctx, AuthProvider] = createCtx({
-  authenticated: true,
+  authenticated: false,
   username: '',
 });
 const AuthContext = ctx;

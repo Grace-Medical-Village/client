@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { Button, Form, Input, Row, Typography } from 'antd';
+import React, { useContext } from 'react';
+import { Auth } from 'aws-amplify';
+import { message, Button, Form, Input, Row, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../../context/auth';
@@ -9,28 +10,23 @@ const { Title } = Typography;
 
 function SignIn() {
   const authCtx = useContext(AuthContext);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   let history = useHistory();
 
-  async function signIn() {
+  async function signIn(usernameEntered: string, passwordEntered: string) {
     try {
-      const user = await true; // TODO
-      if (user) {
-        authCtx.update({ authenticated: true, username });
-        console.log(password);
-        history.push('/dashboard');
-      }
-    } catch (error) {
-      console.error('error signing in', error);
+      const user = await Auth.signIn(usernameEntered, passwordEntered);
+      const { username } = user;
+      authCtx.update({ authenticated: true, username });
+      history.push('/patient');
+    } catch (e) {
+      console.log(e);
+      message.error('Login Credentials are Incorrect');
     }
   }
 
-  const onFinish = ({ username, password }: any) => {
-    setUsername(username);
-    setPassword(password);
-    signIn();
-  };
+  function onFinish({ username, password }: any) {
+    signIn(username, password);
+  }
 
   return (
     <>
