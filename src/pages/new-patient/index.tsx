@@ -1,5 +1,14 @@
 import React, { useContext, useState } from 'react';
-import { Button, DatePicker, Form, Input, Radio, Rate, Select } from 'antd';
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Radio,
+  Rate,
+  Select,
+  message,
+} from 'antd';
 
 import { post } from '../../services/api';
 import { PatientContext } from '../../context/patient';
@@ -9,8 +18,9 @@ import {
   idGenerator,
 } from '../../services/patient/index';
 import { monthDayYear, yearMonthDay } from '../../services/date/index';
-import './styles.css';
 import { Store } from 'antd/lib/form/interface';
+import { NewPatient } from './types';
+import './styles.css';
 
 const { Option } = Select;
 
@@ -37,49 +47,64 @@ function NewPatientForm() {
     'Excellent',
   ];
 
+  // TODO
   const onChange = () => null;
   const onBlur = () => null;
   const onFocus = () => null;
   const onSearch = () => null;
+  const onFinishFailed = () => null;
+  const onReset = () => form.resetFields();
 
-  const onFinish = (data: Store) => {
-    if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
+  function onFinish(data: Store) {
     data.birthdate = data.birthdate.format(yearMonthDay);
     data.id = idGenerator(data.birthdate, data.firstName, data.lastName);
     data.key = REACT_APP_DEFAULT_KEY ?? 'general';
+    postNewPatient(data);
+  }
+  function postNewPatient(data: any): void {
+    if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
-    // TODO - Refactor
     post(REACT_APP_PATIENT_API, data).then((status) => {
-      if (status === 200) {
-        const {
-          birthdate,
-          country,
-          firstName,
-          gender,
-          id,
-          key,
-          language,
-          lastName,
-          zipCode5,
-        } = data;
-
-        patientCtx.update({
-          birthdate,
-          country,
-          firstName,
-          gender,
-          id,
-          key,
-          language,
-          lastName,
-          zipCode5,
-        });
+      // TODO Refactor
+      const postSuccess: boolean = status === 200;
+      if (postSuccess) {
+        setPatient(data);
+        message.success('New Patient Added');
+      } else {
+        message.error('Unable to Add New Patient');
       }
     });
-  };
-  const onFinishFailed = () => null;
+  }
 
-  const onReset = () => form.resetFields();
+  function setPatient(data: NewPatient) {
+    const {
+      birthdate,
+      country,
+      email,
+      firstName,
+      gender,
+      id,
+      key,
+      language,
+      literacy,
+      lastName,
+      zipCode5,
+    } = data;
+
+    patientCtx.update({
+      birthdate,
+      country,
+      email,
+      firstName,
+      gender,
+      id,
+      key,
+      language,
+      literacy,
+      lastName,
+      zipCode5,
+    });
+  }
 
   return (
     <>
@@ -101,6 +126,9 @@ function NewPatientForm() {
           name="lastName"
           rules={[{ required: true, message: 'Last name is required.' }]}
         >
+          <Input />
+        </Form.Item>
+        <Form.Item label="Email" name="email">
           <Input />
         </Form.Item>
         <Form.Item

@@ -26,13 +26,7 @@ function PatientOverview({
 
   return (
     <>
-      <div className="patient-flex">
-        <Statistic title="Name" value={`${firstName} ${lastName}`} />
-        <Statistic title="Age" value={age} />
-        <Statistic title="Gender" value={capitalize(gender)} />
-        <Statistic title="Language" value={capitalize(language)} />
-        <Statistic title="Country" value={country} />
-      </div>
+      <div className="patient-flex">TODO</div>
     </>
   );
 }

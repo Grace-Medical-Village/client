@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { Button, Form, Input, DatePicker } from 'antd';
+import { Button, Form, Input, DatePicker, message } from 'antd';
+import { useHistory } from 'react-router-dom';
 
 import { PatientContext } from '../../context/patient';
 import { get } from '../../services/api';
@@ -20,9 +21,12 @@ const tailLayout = {
 function PatientSearch() {
   const patientCtx = useContext(PatientContext);
   const [form] = Form.useForm();
+  let history = useHistory();
 
   const { REACT_APP_DEFAULT_KEY, REACT_APP_PATIENT_API } = process.env;
 
+  const onReset = () => form.resetFields();
+  const onFinishFailed = () => null;
   const onFinish = (data: Store) => {
     if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
@@ -40,30 +44,35 @@ function PatientSearch() {
         const {
           birthdate,
           country,
+          email,
           firstName,
           gender,
           id,
           key,
           language,
           lastName,
+          literacy,
           zipCode5,
         } = res.data;
 
         patientCtx.update({
           birthdate,
           country,
+          email,
           firstName,
           gender,
           id,
           key,
           language,
           lastName,
+          literacy,
           zipCode5,
         });
+        message.success('Patient Found');
+        history.push('/dashboard');
       }
     });
   };
-  const onFinishFailed = () => null;
 
   return (
     <>
@@ -95,8 +104,11 @@ function PatientSearch() {
           <DatePicker format={monthDayYear} />
         </Form.Item>
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button className="submit-btn" type="primary" htmlType="submit">
             Submit
+          </Button>
+          <Button htmlType="button" onClick={onReset}>
+            Reset
           </Button>
         </Form.Item>
       </Form>

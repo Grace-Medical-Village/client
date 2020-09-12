@@ -17,12 +17,14 @@ function createCtx<A>(defaultValue: A) {
 const [ctx, PatientProvider] = createCtx({
   birthdate: '',
   country: '',
+  email: '',
   firstName: '',
   gender: '',
   id: '',
   key: '',
   language: '',
   lastName: '',
+  literacy: '',
   zipCode5: '',
 });
 const PatientContext = ctx;
