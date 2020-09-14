@@ -48,10 +48,6 @@ function NewPatientForm() {
   ];
 
   // TODO
-  const onChange = () => null;
-  const onBlur = () => null;
-  const onFocus = () => null;
-  const onSearch = () => null;
   const onFinishFailed = () => null;
   const onReset = () => form.resetFields();
 
@@ -85,7 +81,7 @@ function NewPatientForm() {
       gender,
       id,
       key,
-      language,
+      nativeLanguage,
       literacy,
       lastName,
       zipCode5,
@@ -99,7 +95,7 @@ function NewPatientForm() {
       gender,
       id,
       key,
-      language,
+      nativeLanguage,
       literacy,
       lastName,
       zipCode5,
@@ -163,10 +159,6 @@ function NewPatientForm() {
         >
           <Select
             optionFilterProp="children"
-            onChange={onChange}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onSearch={onSearch}
             placeholder="Select a person"
             showSearch
             style={{ textTransform: 'capitalize', width: 200 }}
@@ -208,10 +200,6 @@ function NewPatientForm() {
         >
           <Select
             optionFilterProp="children"
-            onChange={onChange}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onSearch={onSearch}
             placeholder="Select a country"
             showSearch
             style={{ width: 200 }}

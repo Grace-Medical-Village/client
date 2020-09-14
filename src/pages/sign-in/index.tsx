@@ -34,7 +34,7 @@ function SignIn() {
         <Title level={4}>Please sign in</Title>
       </Row>
       <Form
-        name="normal_login"
+        name="loginForm"
         className="login-form"
         initialValues={{ remember: true }}
         onFinish={onFinish}

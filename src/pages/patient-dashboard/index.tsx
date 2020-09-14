@@ -1,34 +1,49 @@
 import React, { useContext } from 'react';
-import PatientOverview from '../../components/patient-overview';
-// import NoPatient from '../../components/no-patient'; TODO
-import NoPatient from '../../components/temp-patient';
-import { PatientContext } from '../../context/patient';
+import { Divider } from 'antd';
 
+import PatientBackground from '../../components/patient-background';
+import PatientMetrics from '../../components/patient-metrics';
+import NoPatient from '../../components/no-patient';
+import { PatientContext } from '../../context/patient';
 import './styles.css';
 
 function PatientDashboard() {
-  const { state } = useContext(PatientContext);
+  const patientCtx = useContext(PatientContext);
+
   const {
     birthdate,
     country,
     firstName,
     gender,
     id,
-    language,
+    nativeLanguage,
     lastName,
-  } = state;
+  } = patientCtx.state;
 
   const patientBackground = {
     birthdate,
     country,
     firstName,
     gender,
-    id,
-    language,
+    nativeLanguage,
     lastName,
   };
 
-  return id ? <PatientOverview {...patientBackground} /> : <NoPatient />;
+  return (
+    <>
+      <div style={{ padding: '2rem' }}>
+        {id ? (
+          <>
+            <PatientBackground {...patientBackground} />
+            <Divider />
+            <PatientMetrics />
+          </>
+        ) : (
+          <NoPatient />
+        )}
+      </div>
+    </>
+  );
 }
 
 export default PatientDashboard;

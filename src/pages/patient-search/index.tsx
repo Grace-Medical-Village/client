@@ -49,7 +49,7 @@ function PatientSearch() {
           gender,
           id,
           key,
-          language,
+          nativeLanguage,
           lastName,
           literacy,
           zipCode5,
@@ -63,13 +63,15 @@ function PatientSearch() {
           gender,
           id,
           key,
-          language,
+          nativeLanguage,
           lastName,
           literacy,
           zipCode5,
         });
         message.success('Patient Found');
         history.push('/dashboard');
+      } else {
+        message.warn('Unable to Find Patient');
       }
     });
   };

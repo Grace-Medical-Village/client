@@ -1,3 +1,5 @@
+import { Metric } from './types';
+
 export const idGenerator = (
   birthdate: string,
   firstName: string,
@@ -6,6 +8,65 @@ export const idGenerator = (
 
 export const capitalize = (s: string): string =>
   s.charAt(0).toUpperCase() + s.slice(1);
+
+export const metrics: Metric[] = [
+  {
+    key: 'noMetric',
+    name: '',
+    disabled: true,
+  },
+  {
+    key: 'bloodPressure',
+    name: 'Blood Pressure',
+    type: ' mm Hg',
+    disabled: false,
+    max: 300,
+    min: 0,
+    default: 100,
+    step: 1,
+  },
+  {
+    key: 'cholesterolTotal',
+    name: 'Cholesterol (Total)',
+    type: ' mmol/L',
+    disabled: false,
+    max: 300,
+    min: 0,
+    default: 120,
+    step: 1,
+  },
+  {
+    key: 'heartRate',
+    name: 'Heart Rate',
+    type: 'bpm',
+    disabled: false,
+    max: 300,
+    min: 0,
+    default: 60,
+    step: 1,
+  },
+  {
+    key: 'hemoglobinA1c',
+    name: 'Hemoglobin A1c',
+    type: '%',
+    disabled: false,
+    max: 50,
+    min: 0,
+    default: 5.0,
+    step: 0.1,
+  },
+  {
+    key: 'weight',
+    name: 'Weight',
+    type: ' lbs',
+    disabled: false,
+    max: 800,
+    default: 150,
+    min: 0,
+    step: 0.1,
+    precision: 1,
+  },
+];
 
 export const languages: string[] = [
   'english',
