@@ -15,14 +15,14 @@ import './styles.css';
 const { SubMenu } = Menu;
 const { Title } = Typography;
 
-function Header() {
+function Header(): JSX.Element {
   const [menuSelection, setMenuSelection] = useState('dashboard');
   const auth = useContext(AuthContext);
   const { state } = useContext(PatientContext);
   const { firstName, lastName } = state;
   const { authenticated } = auth.state;
-  let history = useHistory();
-  let location = useLocation();
+  const history = useHistory();
+  const location = useLocation();
 
   const handleClick = (event: any) => {
     const { key } = event;
@@ -47,7 +47,7 @@ function Header() {
         username: '',
       });
     } catch (error) {
-      console.log('error signing out: ', error);
+      console.error('error signing out: ', error);
     }
   }
 

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Amplify } from 'aws-amplify';
 import { AuthProvider } from './context/auth';
+import { MetricsProvider } from './context/metrics';
 import { PatientProvider } from './context/patient';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -15,9 +16,11 @@ ReactDOM.render(
   // TODO <React.StrictMode>
   <AuthProvider>
     <PatientProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <MetricsProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </MetricsProvider>
     </PatientProvider>
   </AuthProvider>,
   document.getElementById('root')

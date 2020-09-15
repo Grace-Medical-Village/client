@@ -2,12 +2,15 @@ import React, { useContext } from 'react';
 import { Button, Form, Input, DatePicker, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 
+import { MetricsContext } from '../../context/metrics';
 import { PatientContext } from '../../context/patient';
 import { get } from '../../services/api';
 import { monthDayYear, yearMonthDay } from '../../services/date';
 import { idGenerator } from '../../services/patient';
 import { Store } from 'antd/lib/form/interface';
 import { PatientId } from './types';
+import { getMetrics } from '../../services/metrics';
+import { MetricItem } from '../../services/metrics/types';
 
 const layout = {
   labelCol: { span: 6 },
@@ -18,10 +21,11 @@ const tailLayout = {
   wrapperCol: { offset: 6, span: 14 },
 };
 
-function PatientSearch() {
+function PatientSearch(): JSX.Element {
+  const metricsCtx = useContext(MetricsContext);
   const patientCtx = useContext(PatientContext);
   const [form] = Form.useForm();
-  let history = useHistory();
+  const history = useHistory();
 
   const { REACT_APP_DEFAULT_KEY, REACT_APP_PATIENT_API } = process.env;
 
@@ -38,7 +42,6 @@ function PatientSearch() {
       key: REACT_APP_DEFAULT_KEY ?? 'general',
     };
 
-    // TODO - Refactor
     get(REACT_APP_PATIENT_API, params).then((res) => {
       if (res.status === 200) {
         const {
@@ -68,6 +71,7 @@ function PatientSearch() {
           literacy,
           zipCode5,
         });
+        getPatientMetrics(id);
         message.success('Patient Found');
         history.push('/dashboard');
       } else {
@@ -75,6 +79,18 @@ function PatientSearch() {
       }
     });
   };
+
+  const getPatientMetrics = (id: string): void => {
+    const metricItems: MetricItem[] = getMetrics(id);
+    console.log(metricItems);
+    addMetricsToState(metricItems);
+  };
+
+  function addMetricsToState(items: MetricItem[]): void {
+    const oldState = metricsCtx.state.metrics;
+    const newState: MetricItem[] = [...oldState, ...items];
+    metricsCtx.update({ metrics: newState });
+  }
 
   return (
     <>

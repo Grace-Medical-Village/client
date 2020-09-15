@@ -3,14 +3,15 @@ import { Auth } from 'aws-amplify';
 import { message, Button, Form, Input, Row, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
+
 import { AuthContext } from '../../context/auth';
 import './styles.css';
 
 const { Title } = Typography;
 
-function SignIn() {
+function SignIn(): JSX.Element {
   const authCtx = useContext(AuthContext);
-  let history = useHistory();
+  const history = useHistory();
 
   async function signIn(usernameEntered: string, passwordEntered: string) {
     try {
@@ -19,7 +20,7 @@ function SignIn() {
       authCtx.update({ authenticated: true, username });
       history.push('/patient');
     } catch (e) {
-      console.log(e);
+      console.error(e);
       message.error('Login Credentials are Incorrect');
     }
   }
@@ -31,7 +32,7 @@ function SignIn() {
   return (
     <>
       <Row justify="start">
-        <Title level={4}>Please sign in</Title>
+        <Title level={4}>Sign In</Title>
       </Row>
       <Form
         name="loginForm"
@@ -41,7 +42,7 @@ function SignIn() {
       >
         <Form.Item
           name="username"
-          rules={[{ required: true, message: 'Please input your Username!' }]}
+          rules={[{ required: true, message: 'Input your Username' }]}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
@@ -50,7 +51,7 @@ function SignIn() {
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: 'Please input your Password!' }]}
+          rules={[{ required: true, message: 'Input your Password' }]}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}

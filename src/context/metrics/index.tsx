@@ -1,4 +1,5 @@
 import React from 'react';
+import { MetricItem } from '../../services/metrics/types';
 
 function createCtx<A>(defaultValue: A) {
   type UpdateType = React.Dispatch<React.SetStateAction<typeof defaultValue>>;
@@ -14,10 +15,7 @@ function createCtx<A>(defaultValue: A) {
   return [ctx, Provider] as const;
 }
 
-const [ctx, AuthProvider] = createCtx({
-  authenticated: false,
-  username: '',
-});
-const AuthContext = ctx;
+const [ctx, MetricsProvider] = createCtx({ metrics: [] as MetricItem[] });
+const MetricsContext = ctx;
 
-export { AuthProvider, AuthContext };
+export { MetricsProvider, MetricsContext };

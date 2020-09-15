@@ -12,7 +12,7 @@ import Footer from './components/footer';
 
 const { Content } = Layout;
 
-function AuthenticatedApp() {
+function AuthenticatedApp(): JSX.Element {
   return (
     <>
       <Layout style={{ minHeight: '100vh', overflow: 'auto' }}>

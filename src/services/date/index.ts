@@ -1,7 +1,7 @@
 export const yearMonthDay = 'YYYY-MM-DD';
 export const monthDayYear = 'M-D-YYYY';
 
-export const todayAsYearMonthDay = (date: Date) =>
+export const todayAsYearMonthDay = (date: Date): string =>
   date.toISOString().split('T')[0];
 
 export const getAge = (birthdate: string): number => {

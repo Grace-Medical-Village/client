@@ -1,11 +1,16 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Form, Select, InputNumber, Button, Row, message } from 'antd';
 
+import { MetricsContext } from '../../context/metrics';
 import { PatientContext } from '../../context/patient';
-import { post } from '../../services/api';
 import { todayAsYearMonthDay } from '../../services/date';
-import { metrics } from '../../services/patient';
+import { allMetrics, postMetric } from '../../services/metrics';
 import { Store } from 'antd/lib/form/interface';
+import {
+  MetricItem,
+  MetricBuilderOption,
+  PostMetricItem,
+} from '../../services/metrics/types';
 const { Option } = Select;
 
 const layout = {
@@ -22,51 +27,68 @@ const noMetric = {
   type: '',
 };
 
-export default function MetricsBuilder() {
+export default function MetricsBuilder(): JSX.Element {
+  const metricsCtx = useContext(MetricsContext);
   const patientCtx = useContext(PatientContext);
+  const { metrics } = metricsCtx.state;
   const { id } = patientCtx.state;
-  const [metric, set] = useState(noMetric);
+
+  const [metric, set] = useState<MetricBuilderOption>(noMetric);
+  const [buttonText, setButtonText] = useState<string>('Submit');
+
   const [form] = Form.useForm();
 
-  const { REACT_APP_PATIENT_API } = process.env;
+  const date = todayAsYearMonthDay(new Date());
 
   const onChange = (metricKey: string) => {
-    const m: any = metrics.filter(({ key }) => metricKey === key)[0];
+    const m: MetricBuilderOption = allMetrics.filter(
+      ({ key }) => metricKey === key
+    )[0];
     set(m);
   };
-  const onReset = () => form.resetFields();
+
+  useEffect(() => {
+    const o = metrics.filter(
+      (m: any) => m.date === date && m.metric === metric
+    );
+    if (o.length >= 1) setButtonText('Update');
+    else setButtonText('Submit');
+  }, [metrics]);
+
+  const onReset = () => {
+    form.resetFields();
+    setButtonText('Submit');
+  };
   const onFinish = (data: Store) => {
     const { metricName, metricValue } = data;
-    console.log(data);
-    saveRecord(metricName, metricValue);
-  };
+    if (!metricName) message.warn('Select a Metric');
+    else if (!metricValue) message.warn(`Provide a Value for ${metric.name}`);
 
-  const saveRecord = (metricName: string, metricValue: number) => {
-    if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
-
-    const date = todayAsYearMonthDay(new Date());
-    const data = {
+    const postItem: PostMetricItem = {
       id: id,
       key: metricName,
       [date]: metricValue,
     };
-    if (metricName && metricValue) {
-      post(REACT_APP_PATIENT_API, data).then((status) => {
-        // TODO Refactor
-        const postSuccess: boolean = status === 200;
-        if (postSuccess) {
-          message.success('Metric Saved');
-          onReset();
-        } else {
-          message.error('Unable to Save Metric');
-        }
-      });
-    } else if (!metricName) {
-      message.warn('Select a Metric');
-    } else if (!metricValue) {
-      message.warn(`Provide a Value for ${metric.name}`);
+
+    const postSuccess = postMetric(postItem);
+    if (postSuccess) {
+      const metricItem: MetricItem = {
+        id: id,
+        key: metricName,
+        date,
+        value: metricValue,
+      };
+
+      addMetricToState(metricItem);
+      onReset();
     }
   };
+
+  function addMetricToState(item: MetricItem): void {
+    const oldState = metricsCtx.state.metrics;
+    const newState: MetricItem[] = [...oldState, item];
+    metricsCtx.update({ metrics: newState });
+  }
 
   return (
     <>
@@ -78,7 +100,7 @@ export default function MetricsBuilder() {
             placeholder="Select a Metric"
             showSearch
           >
-            {metrics
+            {allMetrics
               .filter((m) => m.disabled === false)
               .map(({ key, name }) => (
                 <Option key={key} value={key}>
@@ -105,7 +127,7 @@ export default function MetricsBuilder() {
               htmlType="submit"
               style={{ marginRight: '0.5rem' }}
             >
-              Submit
+              {buttonText}
             </Button>
             <Button htmlType="button" onClick={onReset}>
               Reset

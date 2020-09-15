@@ -7,7 +7,7 @@ function createCtx<A>(defaultValue: A) {
     state: defaultValue,
     update: defaultUpdate,
   });
-  function Provider(props: React.PropsWithChildren<{}>) {
+  function Provider(props: React.PropsWithChildren<unknown>) {
     const [state, update] = React.useState(defaultValue);
     return <ctx.Provider value={{ state, update }} {...props} />;
   }

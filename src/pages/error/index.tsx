@@ -8,7 +8,7 @@ const { Title } = Typography;
 
 export default function Error() {
   const [countdown, set] = useState(3);
-  let history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     if (countdown === 0) history.push('/dashboard');

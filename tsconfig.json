@@ -15,6 +15,6 @@
     "strict": true,
     "target": "es5"
   },
-  "include": ["src", "types.ts", ".archive/"],
+  "include": ["src", "types.ts", ".archive/", ".archive/chronic-care"],
   "exclude": ["node_modules", "build"]
 }

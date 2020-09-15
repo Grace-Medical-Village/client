@@ -13,7 +13,7 @@
       "version": "detect"
     }
   },
-  "plugins": ["@typescript-eslint/eslint-plugin"],
+  "plugins": ["@typescript-eslint/eslint-plugin", "eslint-plugin-react-hooks"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",

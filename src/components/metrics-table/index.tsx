@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Table } from 'antd';
 
-export default function MetricsTable({ patientHistory }: any) {
-  const [data, set] = useState([{}]);
+import { MetricsContext } from '../../context/metrics';
+import { MetricItem, TableMetric } from '../../services/metrics/types';
+
+export default function MetricsTable(): JSX.Element {
+  const [data, set] = useState<TableMetric[]>([]);
+  const metricsCtx = useContext(MetricsContext);
+  const { metrics } = metricsCtx.state;
 
   useEffect(() => {
-    let d = {};
-    if (Object.entries(patientHistory).length !== 0) {
-      patientHistory.map((m: any) => {
-        console.log(m);
-      });
-    }
-  }, [patientHistory]);
+    console.log(metrics);
+    metrics.forEach((m: MetricItem) => console.log(m));
+  }, [metrics]);
 
   const columns = [
     {
       title: 'Metric',
-      dataIndex: 'metric',
-      key: 'metric',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'Value',
