@@ -23,7 +23,7 @@ const tailLayout = {
 };
 
 function PatientSearch(): JSX.Element {
-  const { state, update } = useContext(MetricsContext);
+  const metricsCtx = useContext(MetricsContext);
   const patientCtx = useContext(PatientContext);
   const [form] = Form.useForm();
   const history = useHistory();
@@ -73,8 +73,11 @@ function PatientSearch(): JSX.Element {
           zipCode5,
         });
 
-        const metrics: MetricObject = getMetrics(id);
-        update(metrics);
+        // const metrics: MetricObject = getMetrics(id).then(
+        //   (res: MetricObject) => res
+        // );
+
+        // metricsCtx.update(metrics);
 
         message.success('Patient Found');
         history.push('/dashboard');

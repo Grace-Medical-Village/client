@@ -9,8 +9,6 @@ function App(): JSX.Element {
   const auth = useContext(AuthContext);
   const { authenticated } = auth.state;
 
-  console.log(process.env);
-
   return (
     <Suspense fallback={<Loading />}>
       {authenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}
