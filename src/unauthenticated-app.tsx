@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Col, Layout, Row } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 
@@ -9,7 +9,6 @@ import SignIn from './pages/sign-in';
 const { Content } = Layout;
 
 function UnauthenticatedApp(): JSX.Element {
-  useEffect(() => console.log('YOU ARE HERE'));
   return (
     <>
       <Layout style={{ minHeight: '100vh', overflow: 'auto' }}>

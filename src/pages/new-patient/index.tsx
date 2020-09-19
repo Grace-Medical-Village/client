@@ -33,12 +33,12 @@ const tailLayout = {
   wrapperCol: { offset: 6, span: 14 },
 };
 
-function NewPatientForm() {
+function NewPatientForm(): JSX.Element {
   const patientCtx = useContext(PatientContext);
   const [form] = Form.useForm();
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
 
-  const { REACT_APP_DEFAULT_KEY, REACT_APP_PATIENT_API } = process.env;
+  const { REACT_APP_DEFAULT_PATIENT_KEY, REACT_APP_PATIENT_API } = process.env;
   const nativeLiteracyRatings = [
     'Poor',
     'Below Average',
@@ -54,7 +54,7 @@ function NewPatientForm() {
   function onFinish(data: Store) {
     data.birthdate = data.birthdate.format(yearMonthDay);
     data.id = idGenerator(data.birthdate, data.firstName, data.lastName);
-    data.key = REACT_APP_DEFAULT_KEY ?? 'general';
+    data.key = REACT_APP_DEFAULT_PATIENT_KEY ?? 'general';
     postNewPatient(data);
   }
   function postNewPatient(data: any): void {

@@ -13,18 +13,18 @@ const { REACT_APP_PATIENT_API } = process.env;
 
 // TODO
 // Convert to promise (sequential vs parallel)
-export async function getMetric(item: Item): Promise<MetricItem> {
+export function getMetric(item: Item): Promise<MetricItem> {
   if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
-  const res = await get(REACT_APP_PATIENT_API, item).then(
-    ({ data, status }) => {
+  const res = Promise.resolve(
+    get(REACT_APP_PATIENT_API, item).then(({ data, status }) => {
       if (status === 200) return data;
-    }
+    })
   );
   return res;
 }
 
-export function getMetrics(id: string): MetricObject {
+export function getMetrics(id: string): Promise<MetricObject | void> {
   const requests: Promise<MetricItem>[] = [];
   for (const metric in MetricId) {
     const item: Item = {
@@ -34,18 +34,20 @@ export function getMetrics(id: string): MetricObject {
     requests.push(getMetric(item));
   }
 
-  const metrics: MetricObject = {};
-  Promise.all(requests)
-    .then((results: MetricItem[]): void => {
-      results.forEach((res: MetricItem) => {
-        const { key } = res;
-        metrics[key] = res;
-      });
-    })
-    .catch((error: Error) => console.error(error))
-    .finally(() => console.log(metrics));
-  console.log(metrics);
-  return metrics;
+  return Promise.allSettled(requests)
+    .then(
+      (results: PromiseSettledResult<MetricItem>[]): MetricObject => {
+        const metrics: MetricObject = {};
+        results.forEach((res: PromiseSettledResult<MetricItem>) => {
+          if (res.status === 'fulfilled') {
+            const { key } = res.value;
+            metrics[key] = res.value;
+          }
+        });
+        return metrics;
+      }
+    )
+    .catch((error: Error) => console.error(error));
 }
 
 export async function postMetric(item: MetricItem): Promise<boolean> {

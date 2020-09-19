@@ -11,7 +11,6 @@ import { Store } from 'antd/lib/form/interface';
 import { PatientId } from './types';
 import { getMetrics } from '../../services/metrics';
 import { MetricObject } from '../../services/metrics/types';
-import { Metric } from '../../services/patient/types';
 
 const layout = {
   labelCol: { span: 6 },
@@ -73,13 +72,9 @@ function PatientSearch(): JSX.Element {
           zipCode5,
         });
 
-        const metrics: MetricObject = getMetrics(id);
-        console.log(metrics);
-        // const metrics: MetricObject = getMetrics(id).then(
-        //   (res: MetricObject) => res
-        // );
-
-        // metricsCtx.update(metrics);
+        getMetrics(id).then((res: MetricObject | void) => {
+          if (res) metricsCtx.update(res);
+        });
 
         message.success('Patient Found');
         history.push('/dashboard');
@@ -89,11 +84,6 @@ function PatientSearch(): JSX.Element {
     });
   };
 
-  // const getPatientMetrics = (id: string): void => {
-  // const metricItems: MetricObject = getMetrics(id);
-  // update(metricItems);
-  // };
-  //
   return (
     <>
       <Form
