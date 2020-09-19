@@ -24,7 +24,7 @@ export async function getMetric(item: Item): Promise<MetricItem> {
 }
 
 export async function getMetrics(id: string): Promise<MetricObject> {
-  const requests = [];
+  const requests: Promise<MetricItem>[] = [];
   for (const metric in MetricId) {
     const item: Item = {
       id,

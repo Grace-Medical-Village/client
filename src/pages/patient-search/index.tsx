@@ -73,7 +73,8 @@ function PatientSearch(): JSX.Element {
           zipCode5,
         });
 
-        getMetrics(id).then((obj: MetricObject) => update(obj));
+        const metrics: MetricObject = getMetrics(id);
+        update(metrics);
 
         message.success('Patient Found');
         history.push('/dashboard');
