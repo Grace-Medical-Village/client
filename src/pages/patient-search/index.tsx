@@ -73,6 +73,8 @@ function PatientSearch(): JSX.Element {
           zipCode5,
         });
 
+        const metrics: MetricObject = getMetrics(id);
+        console.log(metrics);
         // const metrics: MetricObject = getMetrics(id).then(
         //   (res: MetricObject) => res
         // );
