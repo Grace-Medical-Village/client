@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, Select, InputNumber, Button, Row, message } from 'antd';
 
 import { MetricsContext } from '../../context/metrics';
@@ -9,7 +9,7 @@ import { Store } from 'antd/lib/form/interface';
 import {
   MetricItem,
   MetricBuilderOption,
-  PostMetricItem,
+  MetricObject,
 } from '../../services/metrics/types';
 const { Option } = Select;
 
@@ -28,9 +28,8 @@ const noMetric = {
 };
 
 export default function MetricsBuilder(): JSX.Element {
-  const metricsCtx = useContext(MetricsContext);
+  const { state, update } = useContext(MetricsContext);
   const patientCtx = useContext(PatientContext);
-  const { metrics } = metricsCtx.state;
   const { id } = patientCtx.state;
 
   const [metric, set] = useState<MetricBuilderOption>(noMetric);
@@ -47,48 +46,34 @@ export default function MetricsBuilder(): JSX.Element {
     set(m);
   };
 
-  useEffect(() => {
-    const o = metrics.filter(
-      (m: any) => m.date === date && m.metric === metric
-    );
-    if (o.length >= 1) setButtonText('Update');
-    else setButtonText('Submit');
-  }, [metrics]);
-
   const onReset = () => {
     form.resetFields();
     setButtonText('Submit');
   };
   const onFinish = (data: Store) => {
     const { metricName, metricValue } = data;
-    if (!metricName) message.warn('Select a Metric');
-    else if (!metricValue) message.warn(`Provide a Value for ${metric.name}`);
+    if (!metricName) {
+      message.warn('Select a Metric');
+      throw new Error('Metric Name Required');
+    } else if (!metricValue) {
+      message.warn(`Provide a Value for ${metric.name}`);
+      throw new Error('Metric Value Required');
+    }
 
-    const postItem: PostMetricItem = {
+    const metricItem: MetricItem = {
       id: id,
       key: metricName,
       [date]: metricValue,
     };
 
-    const postSuccess = postMetric(postItem);
+    const postSuccess = postMetric(metricItem);
     if (postSuccess) {
-      const metricItem: MetricItem = {
-        id: id,
-        key: metricName,
-        date,
-        value: metricValue,
-      };
-
-      addMetricToState(metricItem);
+      const newState: MetricObject = { ...state };
+      newState[metricName] = { ...newState[metricName], ...metricItem };
+      update(newState);
       onReset();
     }
   };
-
-  function addMetricToState(item: MetricItem): void {
-    const oldState = metricsCtx.state.metrics;
-    const newState: MetricItem[] = [...oldState, item];
-    metricsCtx.update({ metrics: newState });
-  }
 
   return (
     <>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { MetricItem } from '../../services/metrics/types';
+import { MetricObject } from '../../services/metrics/types';
 
-function createCtx<A>(defaultValue: A) {
+function createCtx<A>(defaultValue: MetricObject) {
   type UpdateType = React.Dispatch<React.SetStateAction<typeof defaultValue>>;
   const defaultUpdate: UpdateType = () => defaultValue;
   const ctx = React.createContext({
@@ -15,7 +15,7 @@ function createCtx<A>(defaultValue: A) {
   return [ctx, Provider] as const;
 }
 
-const [ctx, MetricsProvider] = createCtx({ metrics: [] as MetricItem[] });
+const [ctx, MetricsProvider] = createCtx({});
 const MetricsContext = ctx;
 
 export { MetricsProvider, MetricsContext };

@@ -5,58 +5,54 @@ import {
   MetricName,
   MetricId,
   Item,
-  PostMetricItem,
+  MetricObject,
   MetricBuilderOption,
 } from './types';
 
 const { REACT_APP_PATIENT_API } = process.env;
 
-export function getMetrics(id: string): MetricItem[] {
+// TODO
+export async function getMetric(item: Item): Promise<MetricItem> {
   if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
-  const patientMetrics: MetricItem[] = [];
+  const res = await get(REACT_APP_PATIENT_API, item).then(
+    ({ data, status }) => {
+      if (status === 200) return data;
+    }
+  );
+  return res;
+}
+
+export async function getMetrics(id: string): Promise<MetricObject> {
+  const requests = [];
   for (const metric in MetricId) {
-    const params: Item = {
+    const item: Item = {
       id,
       key: metric,
     };
-
-    get(REACT_APP_PATIENT_API, params).then((res) => {
-      if (res.status === 200) {
-        const { data } = res;
-        const regex = new RegExp(
-          /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
-        );
-        const { id, key } = data;
-        Object.keys(data).forEach((k: string) => {
-          if (regex.test(k)) {
-            const record: MetricItem = {
-              id: id,
-              key: key,
-              value: data[k],
-              date: k,
-            };
-            patientMetrics.push(record);
-          }
-        });
-      }
-    });
+    requests.push(getMetric(item));
   }
 
-  console.log(patientMetrics);
+  const patientMetrics: MetricObject = {};
+  Promise.all(requests).then((results: MetricItem[]): void => {
+    results.forEach((res: MetricItem) => {
+      const { key } = res;
+      patientMetrics[key] = res;
+    });
+  });
   return patientMetrics;
 }
 
-export function postMetric(item: PostMetricItem): boolean {
-  let postSuccess = false;
+export async function postMetric(item: MetricItem): Promise<boolean> {
   if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
-  post(REACT_APP_PATIENT_API, item).then((status) => {
+  let postSuccess = false;
+  await post(REACT_APP_PATIENT_API, item).then((status) => {
     postSuccess = status === 200;
     if (postSuccess) {
       message.success('Metric Saved');
     } else {
-      message.error('Unable to Save Metric');
+      message.error('Failed to Save Metric');
     }
   });
 

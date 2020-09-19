@@ -12,13 +12,10 @@ export interface Item {
 }
 
 export interface MetricItem extends Item {
-  date: string;
-  value: string;
+  [date: string]: MetricValue;
 }
 
-export interface PostMetricItem extends Item {
-  [x: string]: MetricValue;
-}
+export type MetricObject = Record<string, MetricItem>;
 
 export enum MetricName {
   bloodPressure = 'Blood Pressure',
@@ -43,6 +40,10 @@ export interface MetricBuilderOption {
   precision?: number;
 }
 
-export interface TableMetric extends MetricItem {
-  name: string;
+export interface TableMetric {
+  date: string;
+  key: string;
+  metric: MetricName;
+  metricId: MetricId;
+  value: MetricValue;
 }

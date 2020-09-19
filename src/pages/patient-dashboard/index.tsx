@@ -7,7 +7,7 @@ import NoPatient from '../../components/no-patient';
 import { PatientContext } from '../../context/patient';
 import './styles.css';
 
-function PatientDashboard() {
+function PatientDashboard(): JSX.Element {
   const patientCtx = useContext(PatientContext);
 
   const {

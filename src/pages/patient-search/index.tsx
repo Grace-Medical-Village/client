@@ -10,7 +10,8 @@ import { idGenerator } from '../../services/patient';
 import { Store } from 'antd/lib/form/interface';
 import { PatientId } from './types';
 import { getMetrics } from '../../services/metrics';
-import { MetricItem } from '../../services/metrics/types';
+import { MetricObject } from '../../services/metrics/types';
+import { Metric } from '../../services/patient/types';
 
 const layout = {
   labelCol: { span: 6 },
@@ -22,7 +23,7 @@ const tailLayout = {
 };
 
 function PatientSearch(): JSX.Element {
-  const metricsCtx = useContext(MetricsContext);
+  const { state, update } = useContext(MetricsContext);
   const patientCtx = useContext(PatientContext);
   const [form] = Form.useForm();
   const history = useHistory();
@@ -37,12 +38,12 @@ function PatientSearch(): JSX.Element {
     const { firstName, lastName } = data;
     const birthdate = data.birthdate.format(yearMonthDay);
     const id = idGenerator(birthdate, firstName, lastName);
-    const params: PatientId = {
+    const item: PatientId = {
       id,
       key: REACT_APP_DEFAULT_KEY ?? 'general',
     };
 
-    get(REACT_APP_PATIENT_API, params).then((res) => {
+    get(REACT_APP_PATIENT_API, item).then((res) => {
       if (res.status === 200) {
         const {
           birthdate,
@@ -71,7 +72,9 @@ function PatientSearch(): JSX.Element {
           literacy,
           zipCode5,
         });
-        getPatientMetrics(id);
+
+        getMetrics(id).then((obj: MetricObject) => update(obj));
+
         message.success('Patient Found');
         history.push('/dashboard');
       } else {
@@ -80,18 +83,11 @@ function PatientSearch(): JSX.Element {
     });
   };
 
-  const getPatientMetrics = (id: string): void => {
-    const metricItems: MetricItem[] = getMetrics(id);
-    console.log(metricItems);
-    addMetricsToState(metricItems);
-  };
-
-  function addMetricsToState(items: MetricItem[]): void {
-    const oldState = metricsCtx.state.metrics;
-    const newState: MetricItem[] = [...oldState, ...items];
-    metricsCtx.update({ metrics: newState });
-  }
-
+  // const getPatientMetrics = (id: string): void => {
+  // const metricItems: MetricObject = getMetrics(id);
+  // update(metricItems);
+  // };
+  //
   return (
     <>
       <Form
