@@ -5,7 +5,7 @@ import { AuthContext } from './context/auth';
 const AuthenticatedApp = lazy(() => import('./authenticated-app'));
 const UnauthenticatedApp = lazy(() => import('./unauthenticated-app'));
 
-function App() {
+function App(): JSX.Element {
   const auth = useContext(AuthContext);
   const { authenticated } = auth.state;
 

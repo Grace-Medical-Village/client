@@ -12,12 +12,12 @@
 # misc
 .DS_Store
 .env.local
-.env.development
-.env.development.local
-.env.test.local
-.env.production
-.env.production.local
-.env*
+# .env.development
+# .env.development.local
+# .env.test.local
+# .env.production
+# .env.production.local
+# .env*
 
 npm-debug.log*
 yarn-debug.log*
@@ -27,4 +27,3 @@ yarn-error.log*
 
 .archive
 .vscode
-.env.development
