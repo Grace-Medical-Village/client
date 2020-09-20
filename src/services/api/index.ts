@@ -1,11 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
+import { Metric, MetricItem } from '../metrics/types';
+import { PatientBackground, PatientId } from '../patient/types';
 
 export const get = async (
   url: string,
-  params: any
-): Promise<AxiosResponse<any>> => {
+  params: Metric | PatientId
+): Promise<AxiosResponse<MetricItem | PatientBackground | any>> => {
   try {
-    const response: AxiosResponse<any> = await axios({
+    const response: AxiosResponse<
+      MetricItem | PatientBackground | any
+    > = await axios({
       method: 'get',
       url,
       params,
@@ -17,7 +21,10 @@ export const get = async (
   }
 };
 
-export const post = async (url: string, data: any): Promise<number> => {
+export const post = async (
+  url: string,
+  data: MetricItem | PatientBackground
+): Promise<number> => {
   try {
     const response: AxiosResponse = await axios({
       method: 'post',

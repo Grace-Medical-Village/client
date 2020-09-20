@@ -8,9 +8,9 @@ import { get } from '../../services/api';
 import { monthDayYear, yearMonthDay } from '../../services/date';
 import { idGenerator } from '../../services/patient';
 import { Store } from 'antd/lib/form/interface';
-import { PatientId } from './types';
 import { getMetrics } from '../../services/metrics';
 import { MetricObject } from '../../services/metrics/types';
+import { PatientBackground, PatientId } from '../../services/patient/types';
 
 const layout = {
   labelCol: { span: 6 },
@@ -44,38 +44,10 @@ function PatientSearch(): JSX.Element {
 
     get(REACT_APP_PATIENT_API, item).then((res) => {
       if (res.status === 200) {
-        const {
-          birthdate,
-          country,
-          email,
-          firstName,
-          gender,
-          id,
-          key,
-          nativeLanguage,
-          lastName,
-          literacy,
-          zipCode5,
-        } = res.data;
-
-        patientCtx.update({
-          birthdate,
-          country,
-          email,
-          firstName,
-          gender,
-          id,
-          key,
-          nativeLanguage,
-          lastName,
-          literacy,
-          zipCode5,
-        });
-
-        getMetrics(id).then((res: MetricObject | void) => {
-          if (res) metricsCtx.update(res);
-        });
-
+        patientCtx.update(res.data as PatientBackground);
+        // getMetrics(id).then((res: MetricObject | void) => {
+        //   if (res) metricsCtx.update(res);
+        // });
         message.success('Patient Found');
         history.push('/dashboard');
       } else {

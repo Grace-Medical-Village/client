@@ -6,12 +6,12 @@ export enum MetricId {
   weight = 'weight',
 }
 
-export interface Item {
+export interface Metric {
   id: string;
   key: string | MetricId;
 }
 
-export interface MetricItem extends Item {
+export interface MetricItem extends Metric {
   [date: string]: MetricValue;
 }
 

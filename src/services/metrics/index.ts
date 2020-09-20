@@ -4,30 +4,27 @@ import {
   MetricItem,
   MetricName,
   MetricId,
-  Item,
+  Metric,
   MetricObject,
   MetricBuilderOption,
 } from './types';
 
 const { REACT_APP_PATIENT_API } = process.env;
 
-// TODO
-// Convert to promise (sequential vs parallel)
-export function getMetric(item: Item): Promise<MetricItem> {
+export function getMetric(item: Metric): Promise<MetricItem> {
   if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
-  const res = Promise.resolve(
+  return Promise.resolve(
     get(REACT_APP_PATIENT_API, item).then(({ data, status }) => {
       if (status === 200) return data;
     })
   );
-  return res;
 }
 
 export function getMetrics(id: string): Promise<MetricObject | void> {
   const requests: Promise<MetricItem>[] = [];
   for (const metric in MetricId) {
-    const item: Item = {
+    const item: Metric = {
       id,
       key: metric,
     };
