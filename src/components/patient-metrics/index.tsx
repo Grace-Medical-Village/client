@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row, Typography } from 'antd';
-import MetricsBuilder from '../metrics-builder';
-import MetricsTable from '../metrics-table';
+import MetricsBuilder from '../../../.archive/metrics-builder';
+import MetricsTable from '../../../.archive/metrics-table';
 
 const { Title } = Typography;
 

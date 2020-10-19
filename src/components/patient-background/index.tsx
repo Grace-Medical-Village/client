@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Statistic, Row, Typography, Col } from 'antd';
 
-import { PatientGeneralDetails, PatientStat } from './types';
-import { getAge } from '../../services/date';
+import { getAge } from '../../services/dates';
 import { capitalize } from '../../services/patient';
 
 import './styles.css';
+import {
+  PatientGeneralDetails,
+  PatientStatistic,
+} from '../../services/patient/types';
 const { Title } = Typography;
 
 function PatientBackground({
@@ -14,12 +17,12 @@ function PatientBackground({
   gender,
   nativeLanguage,
   lastName,
-}: PatientGeneralDetails) {
+}: PatientGeneralDetails): JSX.Element {
   const [age, setAge] = useState(0);
 
   useEffect(() => setAge(getAge(birthdate)), [birthdate]);
 
-  const background: PatientStat[] = [
+  const background: PatientStatistic[] = [
     {
       title: 'Patient',
       value: `${firstName} ${lastName}`,

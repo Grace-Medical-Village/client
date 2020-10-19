@@ -1,15 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
-import { Metric, MetricItem } from '../metrics/types';
-import { PatientBackground, PatientId } from '../patient/types';
+import { Id, Item } from './types';
 
 export const get = async (
   url: string,
-  params: Metric | PatientId
-): Promise<AxiosResponse<MetricItem | PatientBackground | any>> => {
+  params: Id | Item
+): Promise<AxiosResponse<any>> => {
   try {
-    const response: AxiosResponse<
-      MetricItem | PatientBackground | any
-    > = await axios({
+    const response: AxiosResponse<any> = await axios({
       method: 'get',
       url,
       params,
@@ -21,10 +18,7 @@ export const get = async (
   }
 };
 
-export const post = async (
-  url: string,
-  data: MetricItem | PatientBackground
-): Promise<number> => {
+export const post = async (url: string, data: any): Promise<number> => {
   try {
     const response: AxiosResponse = await axios({
       method: 'post',

@@ -5,12 +5,12 @@ import { useHistory } from 'react-router-dom';
 import { MetricsContext } from '../../context/metrics';
 import { PatientContext } from '../../context/patient';
 import { get } from '../../services/api';
-import { monthDayYear, yearMonthDay } from '../../services/date';
+import { monthDayYear, yearMonthDay } from '../../services/dates';
 import { idGenerator } from '../../services/patient';
 import { Store } from 'antd/lib/form/interface';
 import { getMetrics } from '../../services/metrics';
 import { MetricObject } from '../../services/metrics/types';
-import { PatientBackground, PatientId } from '../../services/patient/types';
+import { PatientGeneralDetails, PatientId } from '../../services/patient/types';
 
 const layout = {
   labelCol: { span: 6 },
@@ -44,7 +44,7 @@ function PatientSearch(): JSX.Element {
 
     get(REACT_APP_PATIENT_API, item).then((res) => {
       if (res.status === 200) {
-        patientCtx.update(res.data as PatientBackground);
+        patientCtx.update(res.data as PatientGeneralDetails);
         // getMetrics(id).then((res: MetricObject | void) => {
         //   if (res) metricsCtx.update(res);
         // });

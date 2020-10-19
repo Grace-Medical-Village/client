@@ -1,27 +1,22 @@
-export interface Item {
-  id: string;
-  key: string;
-}
+import { Item } from '../api/types';
 
-export interface PatientItem extends Item {
-  [k: string]: number | string | boolean;
+export interface PatientNote extends Item {
+  author: string;
+  note: string;
 }
-
-export interface PatientId {
-  id: string;
-  key: string;
-}
-
-export interface PatientBackground {
+export interface PatientGeneralDetails extends Item {
   birthdate: string;
   country: string;
   email: string;
   firstName: string;
   gender: string;
-  id: string;
-  key: string;
   nativeLanguage: string;
   literacy: string;
   lastName: string;
   zipCode5: string;
+}
+
+export interface PatientStatistic {
+  title: string;
+  value: string;
 }

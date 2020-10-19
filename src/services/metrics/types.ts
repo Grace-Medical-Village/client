@@ -1,3 +1,5 @@
+import { Item } from '../api/types';
+
 export enum MetricId {
   bloodPressure = 'bloodPressure',
   cholesterolTotal = 'cholesterolTotal',
@@ -6,13 +8,8 @@ export enum MetricId {
   weight = 'weight',
 }
 
-export interface Metric {
-  id: string;
-  key: string | MetricId;
-}
-
-export interface MetricItem extends Metric {
-  [date: string]: MetricValue;
+export interface MetricItem extends Item {
+  [attribute: string]: MetricValue;
 }
 
 export type MetricObject = Record<string, MetricItem>;

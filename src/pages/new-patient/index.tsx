@@ -17,7 +17,7 @@ import {
   languages,
   idGenerator,
 } from '../../services/patient/index';
-import { monthDayYear, yearMonthDay } from '../../services/date/index';
+import { monthDayYear, yearMonthDay } from '../../services/dates/index';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
 import { PatientBackground } from '../../services/patient/types';
