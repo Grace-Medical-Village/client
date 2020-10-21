@@ -46,7 +46,7 @@
 - Need charts over time
 - Create 2/4 Mock patients
 - Types in the top right
-- Name, Gender, Age
+- Name, Gender, Age, telephone (replace email address)
 - Entry for new data points
 - Type(s)
 - Drop downs for data (if available)
