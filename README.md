@@ -42,7 +42,7 @@
 - **Name search functionality**
 - Don't always do bloodwork -> boolean logic to show if available
 - Clean up form
-- Track Hyptertension, Cholesterol, Diabetes
+- Track Hyptertension, Cholesterol, Diabetes (A1c and Blood Sugar level)
 - Need charts over time
 - Create 2/4 Mock patients
 - Types in the top right
