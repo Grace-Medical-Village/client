@@ -2,15 +2,16 @@ import React, { useContext } from 'react';
 import { Button, Form, Input, DatePicker, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 
-import { MetricsContext } from '../../context/metrics';
+// import { MetricsContext } from '../../context/metrics';
 import { PatientContext } from '../../context/patient';
 import { get } from '../../services/api';
 import { monthDayYear, yearMonthDay } from '../../services/dates';
 import { idGenerator } from '../../services/patient';
 import { Store } from 'antd/lib/form/interface';
-import { getMetrics } from '../../services/metrics';
-import { MetricObject } from '../../services/metrics/types';
-import { PatientGeneralDetails, PatientId } from '../../services/patient/types';
+// import { getMetrics } from '../../services/metrics';
+// import { MetricObject } from '../../services/metrics/types';
+import { PatientGeneralDetails } from '../../services/patient/types';
+import { Item } from '../../services/api/types';
 
 const layout = {
   labelCol: { span: 6 },
@@ -22,7 +23,7 @@ const tailLayout = {
 };
 
 function PatientSearch(): JSX.Element {
-  const metricsCtx = useContext(MetricsContext);
+  // const metricsCtx = useContext(MetricsContext);
   const patientCtx = useContext(PatientContext);
   const [form] = Form.useForm();
   const history = useHistory();
@@ -37,7 +38,7 @@ function PatientSearch(): JSX.Element {
     const { firstName, lastName } = data;
     const birthdate = data.birthdate.format(yearMonthDay);
     const id = idGenerator(birthdate, firstName, lastName);
-    const item: PatientId = {
+    const item: Item = {
       id,
       key: REACT_APP_DEFAULT_KEY ?? 'general',
     };

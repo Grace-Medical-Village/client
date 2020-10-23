@@ -18,5 +18,5 @@ export interface PatientGeneralDetails extends Item {
 
 export interface PatientStatistic {
   title: string;
-  value: string;
+  value: string | number;
 }

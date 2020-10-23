@@ -1,7 +1,5 @@
 import React from 'react';
 import { Col, Row, Typography } from 'antd';
-import MetricsBuilder from '../../../.archive/metrics-builder';
-import MetricsTable from '../../../.archive/metrics-table';
 
 const { Title } = Typography;
 
@@ -12,12 +10,8 @@ export default function PatientMetrics(): JSX.Element {
         <Title level={3}>Metrics</Title>
       </Row>
       <Row>
-        <Col span={12}>
-          <MetricsBuilder />
-        </Col>
-        <Col span={12}>
-          <MetricsTable />
-        </Col>
+        <Col span={12}>{/* <MetricsBuilder /> */}</Col>
+        <Col span={12}>{/* <MetricsTable /> */}</Col>
       </Row>
     </>
   );

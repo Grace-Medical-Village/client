@@ -11,6 +11,7 @@ import { AuthContext } from '../../context/auth';
 import { PatientContext } from '../../context/patient';
 import logo from '../../assets/gmv-logo-white-heart.png';
 import './styles.css';
+import { Auth } from 'aws-amplify';
 
 const { SubMenu } = Menu;
 const { Title } = Typography;
@@ -38,12 +39,11 @@ function Header(): JSX.Element {
     setMenuSelection(location.pathname.substring(1));
   }, [location]);
 
-  // TODO - Refactor and fix Auth
   async function signOut() {
     try {
-      await true;
+      await Auth.signOut();
       auth.update({
-        authenticated: true,
+        authenticated: false,
         username: '',
       });
     } catch (error) {

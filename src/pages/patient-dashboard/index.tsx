@@ -6,6 +6,7 @@ import PatientMetrics from '../../components/patient-metrics';
 import NoPatient from '../../components/no-patient';
 import { PatientContext } from '../../context/patient';
 import './styles.css';
+import { PatientGeneralDetails } from '../../services/patient/types';
 
 function PatientDashboard(): JSX.Element {
   const patientCtx = useContext(PatientContext);
@@ -25,6 +26,7 @@ function PatientDashboard(): JSX.Element {
     country,
     firstName,
     gender,
+    id,
     nativeLanguage,
     lastName,
   };

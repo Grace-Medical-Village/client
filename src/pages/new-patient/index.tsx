@@ -20,7 +20,7 @@ import {
 import { monthDayYear, yearMonthDay } from '../../services/dates/index';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
-import { PatientBackground } from '../../services/patient/types';
+import { PatientGeneralDetails } from '../../services/patient/types';
 
 const { Option } = Select;
 
@@ -55,9 +55,9 @@ function NewPatientForm(): JSX.Element {
     data.birthdate = data.birthdate.format(yearMonthDay);
     data.id = idGenerator(data.birthdate, data.firstName, data.lastName);
     data.key = REACT_APP_DEFAULT_PATIENT_KEY ?? 'general';
-    postNewPatient(data as PatientBackground);
+    postNewPatient(data as PatientGeneralDetails);
   }
-  function postNewPatient(data: PatientBackground): void {
+  function postNewPatient(data: PatientGeneralDetails): void {
     if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
     post(REACT_APP_PATIENT_API, data).then((status) => {
@@ -69,7 +69,7 @@ function NewPatientForm(): JSX.Element {
     });
   }
 
-  function setPatient(data: PatientBackground) {
+  function setPatient(data: PatientGeneralDetails) {
     const {
       birthdate,
       country,

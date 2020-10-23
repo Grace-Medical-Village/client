@@ -4,14 +4,13 @@ import {
   MetricItem,
   MetricName,
   MetricId,
-  Metric,
   MetricObject,
   MetricBuilderOption,
 } from './types';
 
 const { REACT_APP_PATIENT_API } = process.env;
 
-export function getMetric(item: Metric): Promise<MetricItem> {
+export function getMetric(item: MetricItem): Promise<MetricItem> {
   if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
   return Promise.resolve(
@@ -24,7 +23,7 @@ export function getMetric(item: Metric): Promise<MetricItem> {
 export function getMetrics(id: string): Promise<MetricObject | void> {
   const requests: Promise<MetricItem>[] = [];
   for (const metric in MetricId) {
-    const item: Metric = {
+    const item: MetricItem = {
       id,
       key: metric,
     };

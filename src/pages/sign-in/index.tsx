@@ -10,14 +10,13 @@ import './styles.css';
 const { Title } = Typography;
 
 function SignIn(): JSX.Element {
-  const authCtx = useContext(AuthContext);
+  const { update } = useContext(AuthContext);
   const history = useHistory();
 
   async function signIn(usernameEntered: string, passwordEntered: string) {
     try {
       const user = await Auth.signIn(usernameEntered, passwordEntered);
-      const { username } = user;
-      authCtx.update({ authenticated: true, username });
+      update({ authenticated: true, username: user.username });
       history.push('/patient');
     } catch (e) {
       console.error(e);
