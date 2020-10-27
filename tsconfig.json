@@ -15,6 +15,6 @@
     "strict": true,
     "target": "es5"
   },
-  "include": ["src", "types.ts", ".archive/", ".archive/chronic-care", ".archive/metrics-table", ".archive/metrics-chart", ".archive/metrics-builder", ".archive/medications"],
-  "exclude": ["node_modules", "build"]
+  "include": ["src", "types.ts"],
+  "exclude": ["node_modules", "build", ".archive/**/*"]
 }

@@ -9,18 +9,15 @@ const UnauthenticatedApp = lazy(() => import('./unauthenticated-app'));
 function App(): JSX.Element {
   const { state, update } = useContext(AuthContext);
 
-  useEffect(() => {
-    onLoad();
-  }, []);
+  useEffect(onLoad, []);
 
-  async function onLoad(): Promise<void> {
-    try {
-      await Auth.currentSession();
-      const newState = { ...state, authenticated: true };
-      update(newState);
-    } catch (e) {
-      console.error(e);
-    }
+  function onLoad(): void {
+    Auth.currentSession()
+      .then(() => {
+        const newState = { ...state, authenticated: true };
+        update(newState);
+      })
+      .catch((e) => console.error(e));
   }
 
   return (

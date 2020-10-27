@@ -2,14 +2,11 @@ import React, { useContext } from 'react';
 import { Button, Form, Input, DatePicker, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 
-// import { MetricsContext } from '../../context/metrics';
 import { PatientContext } from '../../context/patient';
-import { get } from '../../services/api';
+import { getItem } from '../../services/api';
 import { monthDayYear, yearMonthDay } from '../../services/dates';
 import { idGenerator } from '../../services/patient';
 import { Store } from 'antd/lib/form/interface';
-// import { getMetrics } from '../../services/metrics';
-// import { MetricObject } from '../../services/metrics/types';
 import { PatientGeneralDetails } from '../../services/patient/types';
 import { Item } from '../../services/api/types';
 
@@ -23,7 +20,6 @@ const tailLayout = {
 };
 
 function PatientSearch(): JSX.Element {
-  // const metricsCtx = useContext(MetricsContext);
   const patientCtx = useContext(PatientContext);
   const [form] = Form.useForm();
   const history = useHistory();
@@ -42,13 +38,11 @@ function PatientSearch(): JSX.Element {
       id,
       key: REACT_APP_DEFAULT_KEY ?? 'general',
     };
+    console.log(item);
 
-    get(REACT_APP_PATIENT_API, item).then((res) => {
-      if (res.status === 200) {
-        patientCtx.update(res.data as PatientGeneralDetails);
-        // getMetrics(id).then((res: MetricObject | void) => {
-        //   if (res) metricsCtx.update(res);
-        // });
+    getItem(REACT_APP_PATIENT_API, item).then(({ data: any }) => {
+      if (data.statusCode === 200) {
+        patientCtx.update(data.body as PatientGeneralDetails);
         message.success('Patient Found');
         history.push('/dashboard');
       } else {

@@ -7,7 +7,7 @@ export interface PatientNote extends Item {
 export interface PatientGeneralDetails extends Item {
   birthdate: string;
   country: string;
-  email: string;
+  mobileNumber: string;
   firstName: string;
   gender: string;
   nativeLanguage: string;

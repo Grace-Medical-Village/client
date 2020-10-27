@@ -10,7 +10,7 @@ import {
   message,
 } from 'antd';
 
-import { post } from '../../services/api';
+import { postItem } from '../../services/api';
 import { PatientContext } from '../../context/patient';
 import {
   countries,
@@ -60,12 +60,12 @@ function NewPatientForm(): JSX.Element {
   function postNewPatient(data: PatientGeneralDetails): void {
     if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
-    post(REACT_APP_PATIENT_API, data).then((status) => {
+    postItem(REACT_APP_PATIENT_API, data).then((success: boolean) => {
       // TODO Refactor
-      if (status === 200) {
+      if (success) {
         setPatient(data);
-        message.success('New Patient Added');
-      } else message.error('Unable to Add New Patient');
+        message.success('Success: Record Saved');
+      } else message.error('Error: Failed to Save Record');
     });
   }
 
@@ -73,7 +73,7 @@ function NewPatientForm(): JSX.Element {
     const {
       birthdate,
       country,
-      email,
+      mobileNumber,
       firstName,
       gender,
       id,
@@ -87,7 +87,7 @@ function NewPatientForm(): JSX.Element {
     patientCtx.update({
       birthdate,
       country,
-      email,
+      mobileNumber,
       firstName,
       gender,
       id,
@@ -121,7 +121,7 @@ function NewPatientForm(): JSX.Element {
         >
           <Input />
         </Form.Item>
-        <Form.Item label="Email" name="email">
+        <Form.Item label="Mobile Number" name="mobileNumber">
           <Input />
         </Form.Item>
         <Form.Item
@@ -171,10 +171,7 @@ function NewPatientForm(): JSX.Element {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label="Native Language Literacy Rating"
-          name="nativeLiteracy"
-        >
+        <Form.Item label="Native Language Literacy" name="nativeLiteracy">
           <span>
             <Rate
               tooltips={nativeLiteracyRatings}

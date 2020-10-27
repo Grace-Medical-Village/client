@@ -17,7 +17,7 @@ function createCtx<A>(defaultValue: A) {
 const [ctx, PatientProvider] = createCtx({
   birthdate: '',
   country: '',
-  email: '',
+  mobileNumber: '',
   firstName: '',
   gender: '',
   id: '',

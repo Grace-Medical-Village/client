@@ -1,41 +1,44 @@
 import axios, { AxiosResponse } from 'axios';
 import { Id, Item } from './types';
 
-export const get = async (
+export const getItem = async (
   url: string,
   params: Item
 ): Promise<AxiosResponse<unknown>> => {
   try {
-    const response: AxiosResponse<unknown> = await axios({
+    const response: AxiosResponse<any> = await axios({
       method: 'get',
       url,
       params,
     });
-    return response;
+    return JSON.parse(response.data.body);
   } catch (error) {
     console.error(error);
     return error;
   }
 };
 
-export const query = async (
+export const getItems = async (
   url: string,
   params: Id
 ): Promise<AxiosResponse<unknown>> => {
   try {
-    const response: AxiosResponse<unknown> = await axios({
+    const response: AxiosResponse<any> = await axios({
       method: 'get',
       url,
       params,
     });
-    return response;
+    return JSON.parse(response.data.body);
   } catch (error) {
     console.error(error);
     return error;
   }
 };
 
-export const post = async (url: string, data: unknown): Promise<number> => {
+export const postItem = async (
+  url: string,
+  data: unknown
+): Promise<boolean> => {
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
@@ -43,14 +46,17 @@ export const post = async (url: string, data: unknown): Promise<number> => {
       data,
     });
     const { status } = await response;
-    return +status;
+    return +status === 201;
   } catch (error) {
     console.error(error);
-    return 400;
+    return false;
   }
 };
 
-export const update = async (url: string, data: unknown): Promise<number> => {
+export const updateItem = async (
+  url: string,
+  data: unknown
+): Promise<boolean> => {
   try {
     const response: AxiosResponse = await axios({
       method: 'put',
@@ -58,17 +64,14 @@ export const update = async (url: string, data: unknown): Promise<number> => {
       data,
     });
     const { status } = await response;
-    return +status;
+    return +status === 200;
   } catch (error) {
     console.error(error);
-    return 400;
+    return false;
   }
 };
 
-export const deleteRecord = async (
-  url: string,
-  data: Item
-): Promise<number> => {
+export const deleteItem = async (url: string, data: Item): Promise<boolean> => {
   try {
     const response: AxiosResponse = await axios({
       method: 'delete',
@@ -76,9 +79,9 @@ export const deleteRecord = async (
       data,
     });
     const { status } = await response;
-    return +status;
+    return +status === 200;
   } catch (error) {
     console.error(error);
-    return 400;
+    return false;
   }
 };

@@ -2,7 +2,7 @@ export const idGenerator = (
   birthdate: string,
   firstName: string,
   lastName: string
-): string => `${lastName}${firstName}${birthdate}`.toLowerCase().trim();
+): string => `${lastName}${firstName}_${birthdate}`.toLowerCase().trim();
 
 export const capitalize = (s: string): string =>
   s.charAt(0).toUpperCase() + s.slice(1);
