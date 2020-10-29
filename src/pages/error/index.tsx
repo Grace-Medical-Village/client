@@ -6,12 +6,12 @@ import './styles.css';
 
 const { Title } = Typography;
 
-export default function Error() {
+export default function Error(): JSX.Element {
   const [countdown, set] = useState(3);
   const history = useHistory();
 
   useEffect(() => {
-    if (countdown === 0) history.push('/dashboard');
+    if (countdown === 0) history.push('/patient');
     const interval = setInterval(() => set(countdown - 1), 750);
     return () => clearInterval(interval);
   }, [countdown, history]);
@@ -23,9 +23,7 @@ export default function Error() {
           <Title level={2}>Error</Title>
         </Row>
         <Row justify="center">
-          <Title level={3}>
-            Taking you back to the dashboard in {countdown}.
-          </Title>
+          <Title level={3}>Taking you back {countdown}.</Title>
         </Row>
       </div>
     </>

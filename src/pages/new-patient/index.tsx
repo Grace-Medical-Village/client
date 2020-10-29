@@ -20,7 +20,7 @@ import {
 import { monthDayYear, yearMonthDay } from '../../services/dates/index';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
-import { PatientGeneralDetails } from '../../services/patient/types';
+import { PatientGeneralDetails } from '../../services/types';
 
 const { Option } = Select;
 
@@ -61,7 +61,6 @@ function NewPatientForm(): JSX.Element {
     if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
     postItem(REACT_APP_PATIENT_API, data).then((success: boolean) => {
-      // TODO Refactor
       if (success) {
         setPatient(data);
         message.success('Success: Record Saved');

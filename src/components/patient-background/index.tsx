@@ -5,7 +5,7 @@ import { getAge } from '../../services/dates';
 import { capitalize } from '../../services/patient';
 
 import './styles.css';
-import { PatientStatistic } from '../../services/patient/types';
+import { PatientStatistic } from '../../services/types';
 const { Title } = Typography;
 
 export default function PatientBackground({
@@ -33,7 +33,7 @@ export default function PatientBackground({
       value: capitalize(gender),
     },
     {
-      title: 'Primary Language',
+      title: 'Language',
       value: nativeLanguage,
     },
     {

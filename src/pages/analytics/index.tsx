@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Analytics() {
+function Analytics(): JSX.Element {
   return <h1>Analytics Component</h1>;
 }
 

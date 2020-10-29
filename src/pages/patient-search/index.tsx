@@ -7,8 +7,7 @@ import { getItem } from '../../services/api';
 import { monthDayYear, yearMonthDay } from '../../services/dates';
 import { idGenerator } from '../../services/patient';
 import { Store } from 'antd/lib/form/interface';
-import { PatientGeneralDetails } from '../../services/patient/types';
-import { Item } from '../../services/api/types';
+import { Item } from '../../services/types';
 
 const layout = {
   labelCol: { span: 6 },
@@ -24,25 +23,20 @@ function PatientSearch(): JSX.Element {
   const [form] = Form.useForm();
   const history = useHistory();
 
-  const { REACT_APP_DEFAULT_KEY, REACT_APP_PATIENT_API } = process.env;
-
   const onReset = () => form.resetFields();
   const onFinishFailed = () => null;
   const onFinish = (data: Store) => {
-    if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
-
     const { firstName, lastName } = data;
     const birthdate = data.birthdate.format(yearMonthDay);
     const id = idGenerator(birthdate, firstName, lastName);
     const item: Item = {
       id,
-      key: REACT_APP_DEFAULT_KEY ?? 'general',
+      key: 'background',
     };
-    console.log(item);
 
-    getItem(REACT_APP_PATIENT_API, item).then(({ data: any }) => {
-      if (data.statusCode === 200) {
-        patientCtx.update(data.body as PatientGeneralDetails);
+    getItem(item).then((body: any) => {
+      if (Object.entries(body).length > 0) {
+        patientCtx.update(body);
         message.success('Patient Found');
         history.push('/dashboard');
       } else {

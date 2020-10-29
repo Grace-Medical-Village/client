@@ -21,8 +21,8 @@ function AuthenticatedApp(): JSX.Element {
           <Row align="middle" justify="center">
             <Col span={24}>
               <Switch>
-                <Route exact path="/dashboard" component={PatientDashboard} />
                 <Route exact path="/patient" component={Patient} />
+                <Route exact path="/dashboard" component={PatientDashboard} />
                 <Route component={Error} />
               </Switch>
             </Col>
