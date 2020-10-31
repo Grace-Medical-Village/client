@@ -18,7 +18,7 @@ function Footer(): JSX.Element {
             <a href="mailto:dev@gracemedicalvillage.com">
               dev@gracemedicalvillage.com
             </a>{' '}
-            with bugs and suggestions.
+            with suggestions.
           </Text>
         </Row>
       </Layout.Footer>

@@ -13,7 +13,7 @@ const layout = {
   wrapperCol: { span: 14 },
 };
 
-function Patient() {
+function Patient(): JSX.Element {
   const [newPatient, toggle] = useState(false);
 
   const onChange = () => {

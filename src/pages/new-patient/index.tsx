@@ -20,7 +20,6 @@ import {
 import { monthDayYear, yearMonthDay } from '../../services/dates/index';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
-import { PatientGeneralDetails } from '../../services/types';
 
 const { Option } = Select;
 
@@ -38,7 +37,6 @@ function NewPatientForm(): JSX.Element {
   const [form] = Form.useForm();
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
 
-  const { REACT_APP_DEFAULT_PATIENT_KEY, REACT_APP_PATIENT_API } = process.env;
   const nativeLiteracyRatings = [
     'Poor',
     'Below Average',
@@ -54,13 +52,13 @@ function NewPatientForm(): JSX.Element {
   function onFinish(data: Store) {
     data.birthdate = data.birthdate.format(yearMonthDay);
     data.id = idGenerator(data.birthdate, data.firstName, data.lastName);
-    data.key = REACT_APP_DEFAULT_PATIENT_KEY ?? 'general';
-    postNewPatient(data as PatientGeneralDetails);
+    data.key = 'background';
+    postNewPatient(data);
   }
-  function postNewPatient(data: PatientGeneralDetails): void {
-    if (!REACT_APP_PATIENT_API) throw new Error('Patient API URL is undefined');
 
-    postItem(REACT_APP_PATIENT_API, data).then((success: boolean) => {
+  // TODO type
+  function postNewPatient(data: any): void {
+    postItem(data).then((success: boolean) => {
       if (success) {
         setPatient(data);
         message.success('Success: Record Saved');
@@ -68,7 +66,8 @@ function NewPatientForm(): JSX.Element {
     });
   }
 
-  function setPatient(data: PatientGeneralDetails) {
+  // TODO type
+  function setPatient(data: any) {
     const {
       birthdate,
       country,

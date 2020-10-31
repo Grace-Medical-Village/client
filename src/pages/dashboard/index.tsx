@@ -2,12 +2,13 @@ import React, { useContext } from 'react';
 import { Divider } from 'antd';
 
 import PatientBackground from '../../components/patient-background';
-// import PatientMetrics from '../../components/patient-metrics';
 import NoPatient from '../../components/no-patient';
+import Notes from '../../components/notes';
 import { PatientContext } from '../../context/patient';
 import './styles.css';
+import { DashboardBackground } from '../../services/types';
 
-function PatientDashboard(): JSX.Element {
+export default function Dashboard(): JSX.Element {
   const patientCtx = useContext(PatientContext);
 
   const {
@@ -20,12 +21,11 @@ function PatientDashboard(): JSX.Element {
     lastName,
   } = patientCtx.state;
 
-  const patientBackground = {
+  const patientBackground: DashboardBackground = {
     birthdate,
     country,
     firstName,
     gender,
-    id,
     nativeLanguage,
     lastName,
   };
@@ -37,7 +37,7 @@ function PatientDashboard(): JSX.Element {
           <>
             <PatientBackground {...patientBackground} />
             <Divider />
-            {/* <PatientMetrics /> */}
+            <Notes />
           </>
         ) : (
           <NoPatient />
@@ -46,5 +46,3 @@ function PatientDashboard(): JSX.Element {
     </>
   );
 }
-
-export default PatientDashboard;

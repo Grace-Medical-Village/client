@@ -4,7 +4,7 @@ import { Col, Layout, Row } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 
 import Patient from './pages/patient';
-import PatientDashboard from './pages/patient-dashboard';
+import Dashboard from './pages/dashboard';
 import Error from './pages/error';
 
 import Header from './components/header';
@@ -22,7 +22,7 @@ function AuthenticatedApp(): JSX.Element {
             <Col span={24}>
               <Switch>
                 <Route exact path="/patient" component={Patient} />
-                <Route exact path="/dashboard" component={PatientDashboard} />
+                <Route exact path="/dashboard" component={Dashboard} />
                 <Route component={Error} />
               </Switch>
             </Col>

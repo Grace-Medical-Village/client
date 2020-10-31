@@ -5,7 +5,7 @@ import { getAge } from '../../services/dates';
 import { capitalize } from '../../services/patient';
 
 import './styles.css';
-import { PatientStatistic } from '../../services/types';
+import { DashboardBackground, PatientStatistic } from '../../services/types';
 const { Title } = Typography;
 
 export default function PatientBackground({
@@ -14,15 +14,17 @@ export default function PatientBackground({
   gender,
   nativeLanguage,
   lastName,
-}: any): JSX.Element {
+}: DashboardBackground): JSX.Element {
   const [age, setAge] = useState(0);
 
-  useEffect(() => setAge(getAge(birthdate)), [birthdate]);
+  useEffect(() => {
+    if (birthdate) setAge(getAge(birthdate));
+  }, [birthdate]);
 
   const background: PatientStatistic[] = [
     {
       title: 'Patient',
-      value: `${firstName} ${lastName}`,
+      value: firstName && lastName ? `${firstName} ${lastName}` : 'N/A',
     },
     {
       title: 'Age',
@@ -30,11 +32,11 @@ export default function PatientBackground({
     },
     {
       title: 'Gender',
-      value: capitalize(gender),
+      value: gender ? capitalize(gender) : 'N/A',
     },
     {
       title: 'Language',
-      value: nativeLanguage,
+      value: nativeLanguage ?? 'N/A',
     },
     {
       title: 'Last Visit',

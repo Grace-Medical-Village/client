@@ -4,16 +4,32 @@ export interface Id {
 
 export interface Item extends Id {
   key: string;
+  type?: ItemType;
   createdAt?: number;
+  modifiedAt?: number;
 }
 
-// TODO -> Improve ResponseBody
-export interface Response {
-  body?: ResponseBody;
-  error?: string;
-  statusCode?: number;
+export enum ItemType {
+  PATIENT = 'patient',
+  NOTE = 'note',
+  METRIC = 'metric',
+  MEDICATION = 'medication',
 }
+
 export type ResponseBody = string;
+export interface Response {
+  body: ResponseBody;
+  error: string;
+  statusCode: number;
+}
+
+export type NoteBuilder = (note: string) => Note;
+
+export type PostData = Note;
+export type GetItem = (p: Item) => Promise<Partial<Response>>;
+export type GetItems = (p: Id) => Promise<Partial<Response>>;
+export type PostItem = (data: PostData) => Promise<boolean>;
+export type PutItem = (data: unknown) => Promise<boolean>;
 
 export interface Medication extends Item {
   medicationName: string;
@@ -31,11 +47,11 @@ export enum MetricId {
   weight = 'weight',
 }
 
-export interface MetricItem extends Item {
-  [attribute: string]: MetricValue;
-}
+// export interface MetricItem extends Item {
+//   [attribute: string]: MetricValue;
+// }
 
-export type MetricObject = Record<string, MetricItem>;
+// export type MetricObject = Record<string, MetricItem>;
 
 export enum MetricName {
   bloodPressure = 'Blood Pressure',
@@ -68,12 +84,11 @@ export interface TableMetric {
   value: MetricValue;
 }
 
-export interface PatientNote extends Item {
-  type: 'note';
+export interface Note extends Item {
   staff: string;
   note: string;
 }
-export interface PatientGeneralDetails extends Item {
+export interface PatientBackground extends Item {
   birthdate: string;
   country: string;
   mobileNumber: string;
@@ -84,6 +99,8 @@ export interface PatientGeneralDetails extends Item {
   lastName: string;
   zipCode5: string;
 }
+
+export type DashboardBackground = Partial<PatientBackground>;
 
 export interface PatientStatistic {
   title: string;

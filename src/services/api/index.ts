@@ -1,24 +1,35 @@
 import axios, { AxiosResponse } from 'axios';
-import { Id, Item, Response } from '../types';
+import { GetItem, GetItems, Item, PostItem, PutItem } from '../types';
 
 const { REACT_APP_API } = process.env;
 
-export const getItem = async (params: Item): Promise<Response> => {
-  if (!REACT_APP_API) throw new Error('API URL is undefined');
+export const getItem: GetItem = async (params) => {
+  if (!REACT_APP_API) throw new Error('API URL is undefined'); // TODO DRY
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
       url: `${REACT_APP_API}/patient`,
       params,
     });
-    return JSON.parse(response?.data?.body) ?? {};
+    const res = JSON.parse(response?.data?.body) ?? {};
+
+    if (Object.entries(res).length > 0) res.statusCode = 200;
+    else res.statusCode = 404;
+
+    return res;
   } catch (error) {
     console.error(error);
-    return error;
+    const { status, statusText } = error?.response;
+    const e = {
+      statusCode: status ?? 500,
+      error: statusText ?? 'Error',
+    };
+    console.log(e);
+    return e;
   }
 };
 
-export const getItems = async (url: string, params: Id): Promise<Response> => {
+export const getItems: GetItems = async (params) => {
   if (!REACT_APP_API) throw new Error('API URL is undefined');
   try {
     const response: AxiosResponse = await axios({
@@ -33,10 +44,7 @@ export const getItems = async (url: string, params: Id): Promise<Response> => {
   }
 };
 
-export const postItem = async (
-  url: string,
-  data: unknown
-): Promise<boolean> => {
+export const postItem: PostItem = async (data) => {
   if (!REACT_APP_API) throw new Error('API URL is undefined');
   try {
     const response: AxiosResponse = await axios({
@@ -44,15 +52,14 @@ export const postItem = async (
       url: `${REACT_APP_API}/patient`,
       data,
     });
-    const { status } = await response;
-    return +status === 201;
+    return +response?.data?.statusCode === 201 ?? false;
   } catch (error) {
     console.error(error);
     return false;
   }
 };
 
-export const putItem = async (data: unknown): Promise<boolean> => {
+export const putItem: PutItem = async (data) => {
   if (!REACT_APP_API) throw new Error('API URL is undefined');
   try {
     const response: AxiosResponse = await axios({
@@ -60,8 +67,7 @@ export const putItem = async (data: unknown): Promise<boolean> => {
       url: `${REACT_APP_API}/patient`,
       data,
     });
-    const { status } = await response;
-    return +status === 200;
+    return +response?.data?.statusCode === 200 ?? false;
   } catch (error) {
     console.error(error);
     return false;

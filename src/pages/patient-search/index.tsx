@@ -34,14 +34,13 @@ function PatientSearch(): JSX.Element {
       key: 'background',
     };
 
-    getItem(item).then((body: any) => {
-      if (Object.entries(body).length > 0) {
-        patientCtx.update(body);
+    // TODO type improvement
+    getItem(item).then((res: any) => {
+      if (res?.statusCode === 200) {
+        patientCtx.update(res);
         message.success('Patient Found');
         history.push('/dashboard');
-      } else {
-        message.warn('Unable to Find Patient');
-      }
+      } else message.warn('Unable to Find Patient');
     });
   };
 

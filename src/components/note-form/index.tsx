@@ -2,50 +2,70 @@ import React from 'react';
 import { Button, Form, Input, message, Row } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Store } from 'antd/lib/form/interface';
-import { Auth } from 'aws-amplify';
-import { PatientNote } from '../../services/types';
+import { ItemType, Note, NoteBuilder } from '../../services/types';
 import { postItem } from '../../services/api';
+import { useId } from '../../hooks';
 
 const { TextArea } = Input;
 
 export default function NoteForm(): JSX.Element {
   const [form] = useForm();
+  const id = useId();
 
   const layout = {
-    wrapperCol: { span: 12 },
+    wrapperCol: { span: 24 },
   };
 
   function onReset() {
     form.resetFields();
   }
 
+  const noteBuilder: NoteBuilder = (note) => {
+    const timestamp = Date.now();
+    return {
+      id,
+      key: `note-${timestamp}`,
+      type: ItemType.NOTE,
+      staff: 'Dr. Waldman', // TODO
+      note: note.trim(),
+      createdAt: timestamp,
+      modifiedAt: timestamp,
+    };
+  };
+
   function onFinish(data: Store) {
-    const { patientNote } = data;
-    if (!patientNote) {
+    const { note } = data;
+    if (!note) {
       message.warn('Note is empty');
     }
-    const item: PatientNote = {
-      id: 'todo',
-      key: 'todo',
-      type: 'note',
-      staff: 'Dr. Waldman',
-      note: patientNote,
-      createdAt: Date.now(),
-    }
+    const item: Note = noteBuilder(note);
     postItem(item)
-    // post Item to backend
-    // on success update context
-    // on failure notify handler error
+      .then((success: boolean): void => {
+        if (success) {
+          message.success('Note Saved');
+          onReset();
+        } else message.warn('Unable to Save Note');
+      })
+      .catch((e: Error): void => {
+        console.error(e);
+        message.warn('Unable to Connect to Server');
+      });
   }
 
   return (
-    <Form {...layout} form={form} name="noteForm" onFinish={onFinish}>
-      <Form.Item name="patientNote">
+    <Form
+      {...layout}
+      form={form}
+      layout="vertical"
+      name="noteForm"
+      onFinish={onFinish}
+    >
+      <Form.Item label="Note" name="note" style={{ margin: 0 }}>
         <TextArea
           autoSize={{ minRows: 2, maxRows: 5 }}
           placeholder="Take a note about the patient"
           showCount={true}
-          maxLength={360}
+          maxLength={500}
         />
       </Form.Item>
       <Form.Item>
