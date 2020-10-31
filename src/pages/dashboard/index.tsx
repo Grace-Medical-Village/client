@@ -3,7 +3,8 @@ import { Divider } from 'antd';
 
 import PatientBackground from '../../components/patient-background';
 import NoPatient from '../../components/no-patient';
-import Notes from '../../components/notes';
+import History from '../../components/history';
+import NoteForm from '../../components/note-form';
 import { PatientContext } from '../../context/patient';
 import './styles.css';
 import { DashboardBackground } from '../../services/types';
@@ -37,7 +38,8 @@ export default function Dashboard(): JSX.Element {
           <>
             <PatientBackground {...patientBackground} />
             <Divider />
-            <Notes />
+            <History />
+            <NoteForm />
           </>
         ) : (
           <NoPatient />
