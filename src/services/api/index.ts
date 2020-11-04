@@ -19,10 +19,9 @@ export const getItem: GetItem = async (params) => {
     return res;
   } catch (error) {
     console.error(error);
-    const { status, statusText } = error?.response;
     const e = {
-      statusCode: status ?? 500,
-      error: statusText ?? 'Error',
+      statusCode: error?.response?.status ?? 500,
+      error: error?.response?.statusText ?? 'Error',
     };
     console.log(e);
     return e;

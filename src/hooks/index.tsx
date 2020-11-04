@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { PatientContext } from '../context/patient';
+import { BackgroundContext } from '../context/background';
 
 function useId(): string {
-  const { state } = useContext(PatientContext);
+  const { state } = useContext(BackgroundContext);
   return state.id;
 }
 

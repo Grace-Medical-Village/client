@@ -11,7 +11,7 @@ import {
 } from 'antd';
 
 import { postItem } from '../../services/api';
-import { PatientContext } from '../../context/patient';
+import { BackgroundContext } from '../../context/background';
 import {
   countries,
   languages,
@@ -33,7 +33,7 @@ const tailLayout = {
 };
 
 function NewPatientForm(): JSX.Element {
-  const patientCtx = useContext(PatientContext);
+  const backgroundCtx = useContext(BackgroundContext);
   const [form] = Form.useForm();
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
 
@@ -82,7 +82,7 @@ function NewPatientForm(): JSX.Element {
       zipCode5,
     } = data;
 
-    patientCtx.update({
+    backgroundCtx.update({
       birthdate,
       country,
       mobileNumber,

@@ -1,5 +1,6 @@
-import { Badge, Collapse, Descriptions, Typography } from 'antd';
+import { Collapse, Descriptions, Typography } from 'antd';
 import React from 'react';
+import Conditions from '../conditions';
 
 const { Panel } = Collapse;
 const { Item } = Descriptions;
@@ -10,16 +11,8 @@ export default function History(): JSX.Element {
     <>
       <Title level={5}>Patient History</Title>
       <Collapse defaultActiveKey={['1']}>
-        <Panel header="Chronic Care" key="1">
-          <Descriptions layout="vertical" bordered>
-            <Item label="Condition">
-              <Badge color="red" text="Diabetic" />
-              <br />
-              <Badge color="orange" text="High Blood Cholesterol" />
-              <br />
-              <Badge color="lime" text="Hypertension" />
-            </Item>
-          </Descriptions>
+        <Panel header="Conditions" key="1">
+          <Conditions />
         </Panel>
         <Panel header="Past Notes" key="2">
           <Collapse>
@@ -46,7 +39,6 @@ export default function History(): JSX.Element {
           </Collapse>
         </Panel>
       </Collapse>
-      e
     </>
   );
 }

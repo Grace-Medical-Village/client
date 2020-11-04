@@ -14,7 +14,7 @@ function createCtx<A>(defaultValue: A) {
   return [ctx, Provider] as const;
 }
 
-const [ctx, PatientProvider] = createCtx({
+const [ctx, BackgroundProvider] = createCtx({
   birthdate: '',
   country: '',
   mobileNumber: '',
@@ -27,6 +27,6 @@ const [ctx, PatientProvider] = createCtx({
   literacy: '',
   zipCode5: '',
 });
-const PatientContext = ctx;
+const BackgroundContext = ctx;
 
-export { PatientProvider, PatientContext };
+export { BackgroundProvider, BackgroundContext };

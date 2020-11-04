@@ -3,7 +3,6 @@ import { Col, Layout, Row } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 
 import Header from './components/header';
-import Footer from './components/footer';
 import SignIn from './pages/sign-in';
 
 const { Content } = Layout;
@@ -24,7 +23,6 @@ function UnauthenticatedApp(): JSX.Element {
             <Col span={6} />
           </Row>
         </Content>
-        <Footer />
       </Layout>
     </>
   );

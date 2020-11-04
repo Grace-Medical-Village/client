@@ -6,8 +6,8 @@
 
 ## Code
 
-- Create hook for local storage state management
 - Finish History Section
+- Create hook for local storage state management
 - Add Metrics Builder back in
 - Add Metrics Table
 - ...Alpha Review...

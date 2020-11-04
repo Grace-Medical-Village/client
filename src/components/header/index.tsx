@@ -8,7 +8,7 @@ import {
   UserAddOutlined,
 } from '@ant-design/icons';
 import { AuthContext } from '../../context/auth';
-import { PatientContext } from '../../context/patient';
+import { BackgroundContext } from '../../context/background';
 import logo from '../../assets/gmv-logo-white-heart.png';
 import './styles.css';
 import { Auth } from 'aws-amplify';
@@ -19,7 +19,7 @@ const { Title } = Typography;
 function Header(): JSX.Element {
   const [menuSelection, setMenuSelection] = useState('dashboard');
   const auth = useContext(AuthContext);
-  const { state } = useContext(PatientContext);
+  const { state } = useContext(BackgroundContext);
   const { firstName, lastName } = state;
   const { authenticated } = auth.state;
   const history = useHistory();

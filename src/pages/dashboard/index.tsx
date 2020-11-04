@@ -5,12 +5,12 @@ import PatientBackground from '../../components/patient-background';
 import NoPatient from '../../components/no-patient';
 import History from '../../components/history';
 import NoteForm from '../../components/note-form';
-import { PatientContext } from '../../context/patient';
+import { BackgroundContext } from '../../context/background';
 import './styles.css';
 import { DashboardBackground } from '../../services/types';
 
 export default function Dashboard(): JSX.Element {
-  const patientCtx = useContext(PatientContext);
+  const backgroundCtx = useContext(BackgroundContext);
 
   const {
     birthdate,
@@ -20,7 +20,7 @@ export default function Dashboard(): JSX.Element {
     id,
     nativeLanguage,
     lastName,
-  } = patientCtx.state;
+  } = backgroundCtx.state;
 
   const patientBackground: DashboardBackground = {
     birthdate,

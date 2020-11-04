@@ -1,3 +1,5 @@
+import { CONDITIONS } from '../conditions';
+
 export interface Id {
   id: string;
 }
@@ -11,10 +13,17 @@ export interface Item extends Id {
 
 export enum ItemType {
   PATIENT = 'patient',
+  CONDITION = 'conditions',
   NOTE = 'note',
   METRIC = 'metric',
   MEDICATION = 'medication',
 }
+
+export interface ConditionItem extends Item, ConditionValue {}
+
+export type ConditionValue = {
+  [key in Condition]?: boolean;
+};
 
 export type ResponseBody = string;
 export interface Response {
@@ -25,7 +34,7 @@ export interface Response {
 
 export type NoteBuilder = (note: string) => Note;
 
-export type PostData = Note;
+export type PostData = Note | ConditionItem;
 export type GetItem = (p: Item) => Promise<Partial<Response>>;
 export type GetItems = (p: Id) => Promise<Partial<Response>>;
 export type PostItem = (data: PostData) => Promise<boolean>;
@@ -106,3 +115,16 @@ export interface PatientStatistic {
   title: string;
   value: string | number;
 }
+
+// todo
+// export type ConditionTuple = typeof CONDITIONS;
+// export type Condition = ConditionTuple[number];
+export type Condition = 'diabetes' | 'highCholesterol' | 'hypertension';
+export interface ConditionMap {
+  name: string;
+  value: Condition;
+}
+
+export type PatientConditions = string[];
+
+export type Conditions = Condition[];

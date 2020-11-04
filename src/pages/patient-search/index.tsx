@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Button, Form, Input, DatePicker, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 
-import { PatientContext } from '../../context/patient';
+import { BackgroundContext } from '../../context/background';
 import { getItem } from '../../services/api';
 import { monthDayYear, yearMonthDay } from '../../services/dates';
 import { idGenerator } from '../../services/patient';
@@ -19,7 +19,7 @@ const tailLayout = {
 };
 
 function PatientSearch(): JSX.Element {
-  const patientCtx = useContext(PatientContext);
+  const backgroundCtx = useContext(BackgroundContext);
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -34,10 +34,10 @@ function PatientSearch(): JSX.Element {
       key: 'background',
     };
 
-    // TODO type improvement
+    // todo type improvement
     getItem(item).then((res: any) => {
       if (res?.statusCode === 200) {
-        patientCtx.update(res);
+        backgroundCtx.update(res);
         message.success('Patient Found');
         history.push('/dashboard');
       } else message.warn('Unable to Find Patient');
