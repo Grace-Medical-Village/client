@@ -5,7 +5,7 @@ const {
   REACT_APP_COGNITO_USER_POOL_ID,
 } = process.env;
 
-const local = {
+export const config = {
   Auth: {
     region: REACT_APP_COGNITO_REGION,
     userPoolId: REACT_APP_COGNITO_USER_POOL_ID,
@@ -14,16 +14,3 @@ const local = {
     authenticationFlowType: 'USER_PASSWORD_AUTH',
   },
 };
-
-const development = {
-  Auth: {
-    region: 'us-east-1',
-    userPoolId: 'us-east-1_Pku3BZzNi',
-    userPoolWebClientId: '35o3hsapruk3c6r7iqsuhk9n1j',
-    domain: 'ttps://gmv-auth-dev.auth.us-east-1.amazoncognito.com',
-    authenticationFlowType: 'USER_PASSWORD_AUTH',
-  },
-};
-
-export const config =
-  process.env.REACT_APP_STAGE === 'development' ? development : local;
