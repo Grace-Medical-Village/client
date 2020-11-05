@@ -3,7 +3,7 @@ import { message, Select } from 'antd';
 import { Condition, ConditionItem, Item, ItemType } from '../../services/types';
 import { useId } from '../../hooks';
 import { getItem, postItem } from '../../services/api';
-import { CONDITIONS } from '../../services/conditions';
+// import { CONDITIONS } from '../../services/conditions';
 
 const { Option } = Select;
 
@@ -17,11 +17,12 @@ export default function Conditions(): JSX.Element {
     getItem(item).then((res: any) => {
       if (res?.statusCode === 200) {
         Object.keys(res).map((k: string) => {
-          if (&& res[k]) {
-            const state: Condition[] = [...conditions];
-            state.push(k);
-            set(state);
-          }
+          console.log(k);
+          // if (&& res[k]) {
+          // const state: Condition[] = [...conditions];
+          // state.push(k);
+          // set(state);
+          // }
         });
       }
     });
