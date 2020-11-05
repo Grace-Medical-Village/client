@@ -10,10 +10,10 @@
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix --ignore-path .gitignore",
     "check-types": "tsc",
     "validate": "npm-run-all --parallel check-types lint build",
-    "predeploy:development": "REACT_APP_STAGE=development npm run build",
+    "predeploy:development": "REACT_APP_STAGE=development env-cmd -f ./.env.development  npm run build",
     "deploy:development": "aws s3 sync build/ s3://gracemedicalvillagedev.com --delete",
     "postdeploy:development": "aws cloudfront create-invalidation --distribution-id E220JCUPR3SPWA --paths '/*'",
-    "predeploy:production": "REACT_APP_STAGE=production npm run build",
+    "predeploy:production": "REACT_APP_STAGE=production env-cmd -f ./.env.production  npm run build",
     "deploy:production": "aws s3 sync build/ s3://gracemedicalvillage.com --delete",
     "postdeploy:production": "aws cloudfront create-invalidation --distribution-id TODO --paths /"
   },
