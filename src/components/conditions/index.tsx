@@ -43,7 +43,7 @@ export default function Conditions(): JSX.Element {
       .then((success: boolean): void => {
         if (success) {
           message.success('Record Saved');
-        } else message.warn('Unable to Save Record');
+        } else message.warn('Record Not Saved');
       })
       .catch((e: Error): void => {
         console.error(e);

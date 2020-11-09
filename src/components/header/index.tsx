@@ -29,6 +29,7 @@ function Header(): JSX.Element {
     const { key } = event;
     if (key === 'log-out') {
       signOut();
+      localStorage.clear();
       history.push('/');
     } else {
       history.push(key);
@@ -76,7 +77,7 @@ function Header(): JSX.Element {
             icon={<SettingOutlined />}
             title="Settings"
           >
-            <Menu.Item key="log-out">Log Out</Menu.Item>
+            <Menu.Item key="log-out">Logout</Menu.Item>
           </SubMenu>
         </Menu>
       ) : (

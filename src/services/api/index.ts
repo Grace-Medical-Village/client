@@ -1,7 +1,21 @@
+import { Auth } from 'aws-amplify';
 import axios, { AxiosResponse } from 'axios';
 import { GetItem, GetItems, Item, PostItem, PutItem } from '../types';
 
 const { REACT_APP_API } = process.env;
+const authorization = async () => {
+  return {
+    Authorization: `Bearer ${(await Auth.currentSession())
+      .getIdToken()
+      .getJwtToken()}`,
+  };
+};
+
+const headers = {
+  ...authorization()
+    .then((auth) => auth)
+    .catch((e) => console.error(e)),
+};
 
 export const getItem: GetItem = async (params) => {
   if (!REACT_APP_API) throw new Error('API URL is undefined'); // TODO DRY
@@ -9,6 +23,7 @@ export const getItem: GetItem = async (params) => {
     const response: AxiosResponse = await axios({
       method: 'get',
       url: `${REACT_APP_API}/patient`,
+      headers,
       params,
     });
     const res = JSON.parse(response?.data?.body) ?? {};
@@ -34,6 +49,7 @@ export const getItems: GetItems = async (params) => {
     const response: AxiosResponse = await axios({
       method: 'get',
       url: `${REACT_APP_API}/patients`,
+      headers,
       params,
     });
     return JSON.parse(response.data.body);
@@ -49,6 +65,7 @@ export const postItem: PostItem = async (data) => {
     const response: AxiosResponse = await axios({
       method: 'post',
       url: `${REACT_APP_API}/patient`,
+      headers,
       data,
     });
     return +response?.data?.statusCode === 201 ?? false;
@@ -64,6 +81,7 @@ export const putItem: PutItem = async (data) => {
     const response: AxiosResponse = await axios({
       method: 'put',
       url: `${REACT_APP_API}/patient`,
+      headers,
       data,
     });
     return +response?.data?.statusCode === 200 ?? false;
@@ -79,6 +97,7 @@ export const deleteItem = async (url: string, data: Item): Promise<boolean> => {
     const response: AxiosResponse = await axios({
       method: 'delete',
       url: `${REACT_APP_API}/patient`,
+      headers: { ...authorization },
       data,
     });
     const { status } = await response;

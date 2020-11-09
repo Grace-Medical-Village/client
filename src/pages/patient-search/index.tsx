@@ -40,7 +40,7 @@ function PatientSearch(): JSX.Element {
         backgroundCtx.update(res);
         message.success('Patient Found');
         history.push('/dashboard');
-      } else message.warn('Unable to Find Patient');
+      } else message.warn('Patient Not Found');
     });
   };
 
