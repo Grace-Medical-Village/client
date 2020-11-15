@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Form, Input, message, Row } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Store } from 'antd/lib/form/interface';
-import { ItemType, Note, NoteBuilder } from '../../services/types';
+import { ItemType, Note, NoteBuilder } from '../../utils/types';
 import { postItem } from '../../services/api';
 import { useId } from '../../hooks';
+import { NotesContext } from '../../context/notes';
 
 const { TextArea } = Input;
 
 export default function NoteForm(): JSX.Element {
+  const { state, update } = useContext(NotesContext);
   const [form] = useForm();
   const id = useId();
 
@@ -35,14 +37,13 @@ export default function NoteForm(): JSX.Element {
 
   function onFinish(data: Store) {
     const { note } = data;
-    if (!note) {
-      message.warn('Note is empty');
-    }
+    if (!note) message.warn('Note is empty');
     const item: Note = noteBuilder(note);
     postItem(item)
       .then((success: boolean): void => {
         if (success) {
           message.success('Note Saved');
+          update([...state, item]);
           onReset();
         } else message.warn('Unable to Save Note');
       })
@@ -59,8 +60,9 @@ export default function NoteForm(): JSX.Element {
       layout="vertical"
       name="noteForm"
       onFinish={onFinish}
+      style={{ marginTop: '1rem' }}
     >
-      <Form.Item label="Note" name="note" style={{ margin: 0 }}>
+      <Form.Item name="note" style={{ margin: 0 }}>
         <TextArea
           autoSize={{ minRows: 2, maxRows: 5 }}
           placeholder="Take a note about the patient"

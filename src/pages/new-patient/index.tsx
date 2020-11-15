@@ -12,14 +12,11 @@ import {
 
 import { postItem } from '../../services/api';
 import { BackgroundContext } from '../../context/background';
-import {
-  countries,
-  languages,
-  idGenerator,
-} from '../../services/patient/index';
-import { monthDayYear, yearMonthDay } from '../../services/dates/index';
+import { countries, languages, idGenerator } from '../../utils/patient/index';
+import { monthDayYear, yearMonthDay } from '../../utils/dates/index';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
+import { clearStorage } from '../../utils/data';
 
 const { Option } = Select;
 
@@ -33,7 +30,7 @@ const tailLayout = {
 };
 
 function NewPatientForm(): JSX.Element {
-  const backgroundCtx = useContext(BackgroundContext);
+  const { update } = useContext(BackgroundContext);
   const [form] = Form.useForm();
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
 
@@ -45,7 +42,7 @@ function NewPatientForm(): JSX.Element {
     'Excellent',
   ];
 
-  // TODO
+  // todo
   const onFinishFailed = () => null;
   const onReset = () => form.resetFields();
 
@@ -56,17 +53,18 @@ function NewPatientForm(): JSX.Element {
     postNewPatient(data);
   }
 
-  // TODO type
+  // todo type
   function postNewPatient(data: any): void {
     postItem(data).then((success: boolean) => {
       if (success) {
+        clearStorage();
         setPatient(data);
         message.success('Success: Record Saved');
       } else message.error('Error: Failed to Save Record');
     });
   }
 
-  // TODO type
+  // todo type
   function setPatient(data: any) {
     const {
       birthdate,
@@ -82,7 +80,7 @@ function NewPatientForm(): JSX.Element {
       zipCode5,
     } = data;
 
-    backgroundCtx.update({
+    update({
       birthdate,
       country,
       mobileNumber,

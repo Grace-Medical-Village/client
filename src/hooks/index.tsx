@@ -1,4 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { BackgroundContext } from '../context/background';
 
 function useId(): string {
@@ -6,12 +12,15 @@ function useId(): string {
   return state.id;
 }
 
-function useStateWithStorage(name: any, val: any): any {
+function useStateWithStorage<A>(
+  name: string,
+  val: A
+): [A, Dispatch<SetStateAction<A>>] {
   const [state, update] = useState(val);
 
   useEffect(() => {
-    localStorage.setItem('', JSON.stringify(state));
-  }, [state]);
+    localStorage.setItem(name, JSON.stringify(state));
+  }, [name, state]);
 
   return [state, update];
 }

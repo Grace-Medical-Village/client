@@ -4,10 +4,11 @@ import { useHistory } from 'react-router-dom';
 
 import { BackgroundContext } from '../../context/background';
 import { getItem } from '../../services/api';
-import { monthDayYear, yearMonthDay } from '../../services/dates';
-import { idGenerator } from '../../services/patient';
+import { monthDayYear, yearMonthDay } from '../../utils/dates';
+import { idGenerator } from '../../utils/patient';
 import { Store } from 'antd/lib/form/interface';
-import { Item } from '../../services/types';
+import { Item } from '../../utils/types';
+import { clearStorage } from '../../utils/data';
 
 const layout = {
   labelCol: { span: 6 },
@@ -19,7 +20,7 @@ const tailLayout = {
 };
 
 function PatientSearch(): JSX.Element {
-  const backgroundCtx = useContext(BackgroundContext);
+  const { update } = useContext(BackgroundContext);
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -34,10 +35,11 @@ function PatientSearch(): JSX.Element {
       key: 'background',
     };
 
-    // todo type improvement
+    // todo types
     getItem(item).then((res: any) => {
       if (res?.statusCode === 200) {
-        backgroundCtx.update(res);
+        clearStorage();
+        update(res);
         message.success('Patient Found');
         history.push('/dashboard');
       } else message.warn('Patient Not Found');

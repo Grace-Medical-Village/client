@@ -1,6 +1,6 @@
 import { Auth } from 'aws-amplify';
 import axios, { AxiosResponse } from 'axios';
-import { GetItem, GetItems, Item, PostItem, PutItem } from '../types';
+import { GetItem, GetItems, Item, PostItem, PutItem } from '../../utils/types';
 
 const { REACT_APP_API } = process.env;
 const authorization = async () => {
@@ -17,8 +17,12 @@ const headers = {
     .catch((e) => console.error(e)),
 };
 
+const checkApi = () => {
+  if (!REACT_APP_API) throw new Error('API URL is undefined');
+};
+
 export const getItem: GetItem = async (params) => {
-  if (!REACT_APP_API) throw new Error('API URL is undefined'); // TODO DRY
+  checkApi();
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
@@ -44,7 +48,7 @@ export const getItem: GetItem = async (params) => {
 };
 
 export const getItems: GetItems = async (params) => {
-  if (!REACT_APP_API) throw new Error('API URL is undefined');
+  checkApi();
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
@@ -60,7 +64,7 @@ export const getItems: GetItems = async (params) => {
 };
 
 export const postItem: PostItem = async (data) => {
-  if (!REACT_APP_API) throw new Error('API URL is undefined');
+  checkApi();
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
@@ -76,7 +80,7 @@ export const postItem: PostItem = async (data) => {
 };
 
 export const putItem: PutItem = async (data) => {
-  if (!REACT_APP_API) throw new Error('API URL is undefined');
+  checkApi();
   try {
     const response: AxiosResponse = await axios({
       method: 'put',
@@ -92,7 +96,7 @@ export const putItem: PutItem = async (data) => {
 };
 
 export const deleteItem = async (url: string, data: Item): Promise<boolean> => {
-  if (!REACT_APP_API) throw new Error('API URL is undefined');
+  checkApi();
   try {
     const response: AxiosResponse = await axios({
       method: 'delete',

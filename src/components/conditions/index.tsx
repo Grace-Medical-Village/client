@@ -1,48 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { message, Select } from 'antd';
-import { Condition, ConditionItem, Item, ItemType } from '../../services/types';
+import {
+  Condition,
+  CONDITIONS,
+  ConditionItem,
+  Item,
+  ItemType,
+} from '../../utils/types';
 import { useId } from '../../hooks';
 import { getItem, postItem } from '../../services/api';
-// import { CONDITIONS } from '../../services/conditions';
+import { ConditionsContext } from '../../context/conditions';
 
 const { Option } = Select;
 
-// todo - refactor to load data from chronicConditions
-// todo -> GET conditions and set as default value
 export default function Conditions(): JSX.Element {
   const id = useId();
-  const [conditions, set] = useState<Condition[]>([]);
-  useEffect(() => {
-    const item: Item = { id, key: 'conditions' };
-    getItem(item).then((res: any) => {
-      if (res?.statusCode === 200) {
-        Object.keys(res).map((k: string) => {
-          console.log(k);
-          // if (&& res[k]) {
-          // const state: Condition[] = [...conditions];
-          // state.push(k);
-          // set(state);
-          // }
-        });
-      }
-    });
-  }, []);
+  const { state, update } = useContext(ConditionsContext);
 
-  // todo type
+  useEffect(() => {
+    const getConditions = () => {
+      const item: Item = {
+        id,
+        key: ItemType.CONDITION,
+      };
+      // todo type
+      getItem(item).then((res: any) => {
+        saveExistingConditions(res as ConditionItem); // todo
+      });
+    };
+
+    const saveExistingConditions = (r: ConditionItem): void => {
+      update(CONDITIONS.filter((c) => r[c] === true));
+    };
+
+    if (state.length === 0) getConditions();
+  }, [id, state, update]);
+
   function handleChange(e: Condition[]) {
-    console.log(e);
     const item: ConditionItem = {
       id,
-      key: 'conditions',
+      key: ItemType.CONDITION,
       type: ItemType.CONDITION,
     };
-    e.map((c: Condition) => {
+    e.forEach((c: Condition) => {
       item[c] = true;
     });
     postItem(item)
       .then((success: boolean): void => {
         if (success) {
           message.success('Record Saved');
+          update(e);
         } else message.warn('Record Not Saved');
       })
       .catch((e: Error): void => {
@@ -51,9 +58,10 @@ export default function Conditions(): JSX.Element {
       });
   }
 
+  // todo map through options
   return (
     <Select
-      defaultValue={conditions}
+      defaultValue={state}
       mode="tags"
       onChange={handleChange}
       placeholder="Please select"

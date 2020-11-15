@@ -23,7 +23,7 @@ export default function Error(): JSX.Element {
           <Title level={2}>Error</Title>
         </Row>
         <Row justify="center">
-          <Title level={3}>Taking you back {countdown}.</Title>
+          <Title level={3}>Going home in {countdown}</Title>
         </Row>
       </div>
     </>

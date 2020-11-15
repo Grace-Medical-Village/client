@@ -1,8 +1,8 @@
 export const yearMonthDay = 'YYYY-MM-DD';
 export const monthDayYear = 'MM/DD/YYYY';
 
-export const todayAsYearMonthDay = (date: Date): string =>
-  date.toISOString().split('T')[0];
+export const todayAsYearMonthDay = (): string =>
+  new Date().toISOString().split('T')[0];
 
 export const getAge = (birthdate: string): number => {
   const now = new Date();

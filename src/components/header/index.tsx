@@ -12,6 +12,7 @@ import { BackgroundContext } from '../../context/background';
 import logo from '../../assets/gmv-logo-white-heart.png';
 import './styles.css';
 import { Auth } from 'aws-amplify';
+import { clearStorage } from '../../utils/data';
 
 const { SubMenu } = Menu;
 const { Title } = Typography;
@@ -29,7 +30,7 @@ function Header(): JSX.Element {
     const { key } = event;
     if (key === 'log-out') {
       signOut();
-      localStorage.clear();
+      clearStorage();
       history.push('/');
     } else {
       history.push(key);

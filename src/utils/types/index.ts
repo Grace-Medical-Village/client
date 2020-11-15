@@ -1,5 +1,6 @@
-import { CONDITIONS } from '../conditions';
-
+/**
+ * DATABASE
+ */
 export interface Id {
   id: string;
 }
@@ -12,19 +13,14 @@ export interface Item extends Id {
 }
 
 export enum ItemType {
-  PATIENT = 'patient',
+  BACKGROUND = 'background',
   CONDITION = 'conditions',
-  NOTE = 'note',
   METRIC = 'metric',
   MEDICATION = 'medication',
+  NOTE = 'note',
 }
 
-export interface ConditionItem extends Item, ConditionValue {}
-
-export type ConditionValue = {
-  [key in Condition]?: boolean;
-};
-
+// todo -> refactor this and backend to not use JSON.stringify
 export type ResponseBody = string;
 export interface Response {
   body: ResponseBody;
@@ -32,14 +28,26 @@ export interface Response {
   statusCode: number;
 }
 
-export type NoteBuilder = (note: string) => Note;
-
-export type PostData = Note | ConditionItem;
+export type PostData = Note | ConditionItem | MetricItem;
 export type GetItem = (p: Item) => Promise<Partial<Response>>;
 export type GetItems = (p: Id) => Promise<Partial<Response>>;
 export type PostItem = (data: PostData) => Promise<boolean>;
 export type PutItem = (data: unknown) => Promise<boolean>;
 
+/**
+ * LOCAL STATE
+ */
+export enum Storage {
+  BACKGROUND = 'background',
+  CONDITIONS = 'conditions',
+  MEDICATIONS = 'medications',
+  METRICS = 'metrics',
+  NOTES = 'notes',
+}
+
+/**
+ *  MEDICATION
+ **/
 export interface Medication extends Item {
   medicationName: string;
   dosage: string | number;
@@ -48,6 +56,9 @@ export interface Medication extends Item {
   datePrescribed: string;
 }
 
+/**
+ *  METRICS
+ **/
 export enum MetricId {
   bloodPressure = 'bloodPressure',
   cholesterolTotal = 'cholesterolTotal',
@@ -55,12 +66,6 @@ export enum MetricId {
   hemoglobinA1c = 'hemoglobinA1c',
   weight = 'weight',
 }
-
-// export interface MetricItem extends Item {
-//   [attribute: string]: MetricValue;
-// }
-
-// export type MetricObject = Record<string, MetricItem>;
 
 export enum MetricName {
   bloodPressure = 'Blood Pressure',
@@ -72,10 +77,19 @@ export enum MetricName {
 
 export type MetricValue = boolean | number | string;
 
-export interface MetricBuilderOption {
+export type MetricRecord = {
+  [key in MetricId]: MetricValue;
+};
+
+export interface MetricItem extends Item, MetricRecord {
+  type: ItemType.METRIC;
+}
+
+export interface MetricOption {
   disabled: boolean;
   key: string;
-  name?: string | MetricName;
+  id: MetricId | null;
+  name: string | MetricName;
   type?: string;
   max?: number;
   default?: number;
@@ -85,6 +99,8 @@ export interface MetricBuilderOption {
   precision?: number;
 }
 
+export type MetricsBuilder = () => MetricItem[];
+
 export interface TableMetric {
   date: string;
   key: string;
@@ -93,10 +109,20 @@ export interface TableMetric {
   value: MetricValue;
 }
 
+/**
+ * NOTES
+ */
 export interface Note extends Item {
   staff: string;
   note: string;
 }
+
+export type NoteBuilder = (note: string) => Note;
+export type NotesBuilder = () => Note[];
+
+/**
+ * BACKGROUND
+ */
 export interface PatientBackground extends Item {
   birthdate: string;
   country: string;
@@ -109,6 +135,7 @@ export interface PatientBackground extends Item {
   zipCode5: string;
 }
 
+export type BackgroundBuilder = () => PatientBackground;
 export type DashboardBackground = Partial<PatientBackground>;
 
 export interface PatientStatistic {
@@ -116,15 +143,24 @@ export interface PatientStatistic {
   value: string | number;
 }
 
-// todo
-// export type ConditionTuple = typeof CONDITIONS;
-// export type Condition = ConditionTuple[number];
+/**
+ * CONDITIONS
+ */
 export type Condition = 'diabetes' | 'highCholesterol' | 'hypertension';
-export interface ConditionMap {
-  name: string;
-  value: Condition;
-}
+export const CONDITIONS: Condition[] = [
+  'diabetes',
+  'highCholesterol',
+  'hypertension',
+];
 
 export type PatientConditions = string[];
 
 export type Conditions = Condition[];
+
+export interface ConditionItem extends Item, ConditionValue {}
+
+export type ConditionValue = {
+  [key in Condition]?: boolean;
+};
+
+export type ConditionsBuilder = () => Conditions;

@@ -1,16 +1,21 @@
-import React, { useContext } from 'react';
-import { Divider } from 'antd';
+import React, { useContext, useState } from 'react';
+import { Divider, Radio, Typography } from 'antd';
 
 import PatientBackground from '../../components/patient-background';
+import PatientMetrics from '../../components/patient-metrics';
 import NoPatient from '../../components/no-patient';
 import History from '../../components/history';
 import NoteForm from '../../components/note-form';
 import { BackgroundContext } from '../../context/background';
 import './styles.css';
-import { DashboardBackground } from '../../services/types';
+import { DashboardBackground } from '../../utils/types';
+
+const { Title } = Typography;
 
 export default function Dashboard(): JSX.Element {
-  const backgroundCtx = useContext(BackgroundContext);
+  const { state } = useContext(BackgroundContext);
+  const [selection, setOption] = useState('notes');
+  const [component, setComponent] = useState(<NoteForm />);
 
   const {
     birthdate,
@@ -20,7 +25,7 @@ export default function Dashboard(): JSX.Element {
     id,
     nativeLanguage,
     lastName,
-  } = backgroundCtx.state;
+  } = state;
 
   const patientBackground: DashboardBackground = {
     birthdate,
@@ -31,6 +36,26 @@ export default function Dashboard(): JSX.Element {
     lastName,
   };
 
+  const options = [
+    { label: 'Note', value: 'notes' },
+    { label: 'Metrics', value: 'metrics' },
+    { label: 'Medication', value: 'medication', disabled: true },
+  ];
+
+  // todo type
+  function onChange(e: any) {
+    const { value } = e.target;
+    setOption(value);
+    switch (value) {
+      case 'notes':
+        setComponent(<NoteForm />);
+        break;
+      case 'metrics':
+        setComponent(<PatientMetrics />);
+        break;
+    }
+  }
+
   return (
     <>
       <div style={{ padding: '2rem' }}>
@@ -38,8 +63,19 @@ export default function Dashboard(): JSX.Element {
           <>
             <PatientBackground {...patientBackground} />
             <Divider />
+            <Title level={4}>Patient History</Title>
             <History />
-            <NoteForm />
+            <Divider />
+            <Title level={4}>Patient Data</Title>
+            <Radio.Group
+              buttonStyle="solid"
+              options={options}
+              onChange={onChange}
+              optionType="button"
+              style={{ marginBottom: '1rem' }}
+              value={selection}
+            />
+            {component}
           </>
         ) : (
           <NoPatient />

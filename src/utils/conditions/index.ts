@@ -1,8 +1,5 @@
-import { ConditionMap } from '../types';
-
-export const CONDITIONS = ['diabtes', 'highCholesterol', 'hypertension'];
-
-export const cm: ConditionMap[] = [
+// todo
+export const cm: any = [
   {
     name: 'Diabetes',
     value: 'diabetes',

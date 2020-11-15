@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Statistic, Row, Typography, Col } from 'antd';
+import { Statistic, Row, Col } from 'antd';
+import { upperFirst } from 'lodash';
 
-import { getAge } from '../../services/dates';
-import { capitalize } from '../../services/patient';
+import { getAge } from '../../utils/dates';
+import { capitalize } from '../../utils/patient';
 
 import './styles.css';
-import { DashboardBackground, PatientStatistic } from '../../services/types';
-const { Title } = Typography;
+import { DashboardBackground, PatientStatistic } from '../../utils/types';
 
 export default function PatientBackground({
   birthdate,
@@ -36,7 +36,7 @@ export default function PatientBackground({
     },
     {
       title: 'Language',
-      value: nativeLanguage ?? 'N/A',
+      value: upperFirst(nativeLanguage) ?? 'N/A',
     },
     {
       title: 'Last Visit',
@@ -46,9 +46,6 @@ export default function PatientBackground({
 
   return (
     <>
-      <Row>
-        <Title level={3}>Background</Title>
-      </Row>
       <Row>
         {background.map((stat: PatientStatistic, index: number) => {
           const { title, value }: PatientStatistic = stat;

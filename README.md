@@ -20,3 +20,13 @@ If you mean share the same computer/tablets while they're working on that same d
 - Add Medications Table
 - Backend Tests
 - Frontend Tests
+
+## Data Flow
+
+- GET
+  - onSuccess -> updateContext
+  - onContextUpdate -> updateLocalStorage
+- POST/PUT/DELETE
+  - Put in Database
+  - onSuccess -> updateContext
+  - onContextUpdate -> updateLocalStorage
