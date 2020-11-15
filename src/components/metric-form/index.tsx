@@ -7,12 +7,13 @@ import { Store } from 'antd/lib/form/interface';
 import {
   ItemType,
   MetricItem,
-  MetricName,
   MetricOption,
+  MetricState,
 } from '../../utils/types';
 import { useId } from '../../hooks';
-import { postItem } from '../../services/api';
+import { postItem, putItem } from '../../services/api';
 import { allMetrics } from '../../utils/metrics';
+import { isEmpty } from 'lodash';
 
 const { Option } = Select;
 
@@ -61,26 +62,46 @@ export default function MetricForm(): JSX.Element {
       message.warn(`Provide a Value for ${metric.name}`);
       throw new Error('Metric Value Required');
     }
-    console.log(data);
 
+    const yyyyMMdd = todayAsYearMonthDay();
+    const newMetric = { [metricId]: metricValue };
+    const existingMetrics = state[yyyyMMdd] ?? {};
+    const key = `${ItemType.METRIC}_${yyyyMMdd}`;
+    const timestamp = Date.now();
     const metricItem = {
-      id,
-      key: `${ItemType.METRIC}_${todayAsYearMonthDay()}`,
-      type: ItemType.METRIC,
-      [metricId]: metricValue,
-      createdAt: Date.now(),
-      modifiedAt: Date.now(),
+      ...newMetric,
+      modifiedAt: timestamp,
     } as MetricItem; // todo use : MetricItem fix
 
-    // postItem(metricItem).then((success) => {
-    //   if (success) {
-    //     const newState: any = { ...state };
-    //     newState[metricId] = { ...newState[metricName], ...metricItem };
-    //     update(newState);
-    //     console.log(state);
-    //     onReset();
-    //   }
-    // });
+    // TODO
+    const newMetricForState: MetricState = {
+      [yyyyMMdd]: {
+        ...existingMetrics,
+        ...newMetric,
+      },
+    };
+
+    if (isEmpty(existingMetrics)) {
+      metricItem.id = id;
+      metricItem.key = key;
+      metricItem.type = ItemType.METRIC;
+      metricItem.createdAt = timestamp;
+      postItem(metricItem).then((success) => {
+        if (success) {
+          message.success('Metric Saved');
+          update({ ...state, ...newMetricForState });
+          onReset();
+        } else message.warn('Failure to Save Metric');
+      });
+    } else {
+      putItem(id, key, metricItem).then((success) => {
+        if (success) {
+          message.success('Metric Saved');
+          update({ ...state, ...newMetricForState });
+          onReset();
+        } else message.warn('Failure to Save Metric');
+      });
+    }
   };
 
   return (

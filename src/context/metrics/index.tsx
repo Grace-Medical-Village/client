@@ -5,7 +5,7 @@ import React, {
   SetStateAction,
 } from 'react';
 import { useStateWithStorage } from '../../hooks';
-import { MetricItem, MetricsBuilder, Storage } from '../../utils/types';
+import { MetricsBuilder, MetricState, Storage } from '../../utils/types';
 
 const LOCAL_STORAGE_KEY = Storage.METRICS;
 function createCtx<A>(defaultValue: A) {
@@ -27,9 +27,9 @@ function createCtx<A>(defaultValue: A) {
 
 const metricsBuilder: MetricsBuilder = () => {
   const localItem = localStorage.getItem(LOCAL_STORAGE_KEY);
-  const defaultBackground: MetricItem[] = [];
+  const defaultBackground: MetricState = {};
   if (localItem) {
-    const parsedItem: MetricItem[] = JSON.parse(localItem);
+    const parsedItem: MetricState = JSON.parse(localItem);
     return parsedItem;
   } else return defaultBackground;
 };

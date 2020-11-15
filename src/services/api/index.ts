@@ -79,13 +79,17 @@ export const postItem: PostItem = async (data) => {
   }
 };
 
-export const putItem: PutItem = async (data) => {
+export const putItem: PutItem = async (id, key, data) => {
   checkApi();
   try {
     const response: AxiosResponse = await axios({
       method: 'put',
       url: `${REACT_APP_API}/patient`,
       headers,
+      params: {
+        id,
+        key,
+      },
       data,
     });
     return +response?.data?.statusCode === 200 ?? false;

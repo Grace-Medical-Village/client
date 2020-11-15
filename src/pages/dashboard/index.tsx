@@ -8,13 +8,13 @@ import History from '../../components/history';
 import NoteForm from '../../components/note-form';
 import { BackgroundContext } from '../../context/background';
 import './styles.css';
-import { DashboardBackground } from '../../utils/types';
+import { DashboardBackground, ItemType } from '../../utils/types';
 
 const { Title } = Typography;
 
 export default function Dashboard(): JSX.Element {
   const { state } = useContext(BackgroundContext);
-  const [selection, setOption] = useState('notes');
+  const [selection, setOption] = useState(ItemType.NOTE);
   const [component, setComponent] = useState(<NoteForm />);
 
   const {
@@ -37,20 +37,20 @@ export default function Dashboard(): JSX.Element {
   };
 
   const options = [
-    { label: 'Note', value: 'notes' },
-    { label: 'Metrics', value: 'metrics' },
-    { label: 'Medication', value: 'medication', disabled: true },
+    { label: 'Note', value: ItemType.NOTE },
+    { label: 'Metrics', value: ItemType.METRIC },
+    { label: 'Medication', value: ItemType.MEDICATION, disabled: true },
   ];
 
   // todo type
   function onChange(e: any) {
-    const { value } = e.target;
+    const { value } = e.target ?? ItemType.NOTE;
     setOption(value);
     switch (value) {
-      case 'notes':
+      case ItemType.NOTE:
         setComponent(<NoteForm />);
         break;
-      case 'metrics':
+      case ItemType.METRIC:
         setComponent(<PatientMetrics />);
         break;
     }

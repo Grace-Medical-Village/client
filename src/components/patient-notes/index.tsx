@@ -21,7 +21,6 @@ export default function PatientNotes(): JSX.Element {
       });
     };
     if (state.length === 0) getNotes();
-    console.log(state);
   }, [id, state, update]);
 
   return (

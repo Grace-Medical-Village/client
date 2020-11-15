@@ -32,7 +32,11 @@ export type PostData = Note | ConditionItem | MetricItem;
 export type GetItem = (p: Item) => Promise<Partial<Response>>;
 export type GetItems = (p: Id) => Promise<Partial<Response>>;
 export type PostItem = (data: PostData) => Promise<boolean>;
-export type PutItem = (data: unknown) => Promise<boolean>;
+export type PutItem = (
+  id: string,
+  key: string,
+  data: unknown
+) => Promise<boolean>;
 
 /**
  * LOCAL STATE
@@ -59,6 +63,7 @@ export interface Medication extends Item {
 /**
  *  METRICS
  **/
+// todo -> capitalization
 export enum MetricId {
   bloodPressure = 'bloodPressure',
   cholesterolTotal = 'cholesterolTotal',
@@ -67,11 +72,13 @@ export enum MetricId {
   weight = 'weight',
 }
 
+// todo -> capitalization
 export enum MetricName {
   bloodPressure = 'Blood Pressure',
   cholesterolTotal = 'Cholesterol (Total)',
   heartRate = 'Heart Rate',
   hemoglobinA1c = 'Hemoglobin A1c',
+  na = 'Not Availalbe',
   weight = 'Weight',
 }
 
@@ -84,6 +91,23 @@ export type MetricRecord = {
 export interface MetricItem extends Item, MetricRecord {
   type: ItemType.METRIC;
 }
+
+export type MetricState = {
+  [key: string]: {
+    [key in MetricId]?: MetricValue;
+  };
+};
+
+// const metricContext: MetricState = {
+// '2020-11-05': {
+// weight: 200,
+// cholesterolTotal: 20,
+// },
+// '2020-01-15': {
+// weight: 205,
+// cholesterolTotal: 200,
+// },
+// };
 
 export interface MetricOption {
   disabled: boolean;
@@ -99,15 +123,16 @@ export interface MetricOption {
   precision?: number;
 }
 
-export type MetricsBuilder = () => MetricItem[];
+export type MetricsBuilder = () => MetricState;
 
-export interface TableMetric {
-  date: string;
+export type MetricEntry = [MetricName, MetricValue];
+
+export type TableMetric = {
   key: string;
+  date: string;
   metric: MetricName;
-  metricId: MetricId;
   value: MetricValue;
-}
+};
 
 /**
  * NOTES

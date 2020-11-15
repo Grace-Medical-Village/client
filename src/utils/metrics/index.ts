@@ -1,5 +1,13 @@
 import { MetricId, MetricName, MetricOption } from '../types';
 
+export const metricNames: { [key in MetricId]: MetricName } = {
+  [MetricId.bloodPressure]: MetricName.bloodPressure,
+  [MetricId.cholesterolTotal]: MetricName.cholesterolTotal,
+  [MetricId.heartRate]: MetricName.heartRate,
+  [MetricId.hemoglobinA1c]: MetricName.hemoglobinA1c,
+  [MetricId.weight]: MetricName.weight,
+};
+
 // todo type -> key
 export const allMetrics: MetricOption[] = [
   {
