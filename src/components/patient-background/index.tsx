@@ -32,7 +32,7 @@ export default function PatientBackground({
     },
     {
       title: 'Gender',
-      value: gender ? capitalize(gender) : 'N/A',
+      value: gender ? upperFirst(gender) : 'N/A',
     },
     {
       title: 'Language',

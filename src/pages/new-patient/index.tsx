@@ -17,6 +17,7 @@ import { monthDayYear, yearMonthDay } from '../../utils/dates/index';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
 import { clearStorage } from '../../utils/data';
+import { ItemType } from '../../utils/types';
 
 const { Option } = Select;
 
@@ -49,7 +50,11 @@ function NewPatientForm(): JSX.Element {
   function onFinish(data: Store) {
     data.birthdate = data.birthdate.format(yearMonthDay);
     data.id = idGenerator(data.birthdate, data.firstName, data.lastName);
-    data.key = 'background';
+    data.key = ItemType.BACKGROUND;
+    data.type = ItemType.BACKGROUND;
+    const currentTime = Date.now();
+    data.createdAt = currentTime;
+    data.modifiedAt = currentTime;
     postNewPatient(data);
   }
 
@@ -66,32 +71,8 @@ function NewPatientForm(): JSX.Element {
 
   // todo type
   function setPatient(data: any) {
-    const {
-      birthdate,
-      country,
-      mobileNumber,
-      firstName,
-      gender,
-      id,
-      key,
-      nativeLanguage,
-      literacy,
-      lastName,
-      zipCode5,
-    } = data;
-
     update({
-      birthdate,
-      country,
-      mobileNumber,
-      firstName,
-      gender,
-      id,
-      key,
-      nativeLanguage,
-      literacy,
-      lastName,
-      zipCode5,
+      ...data,
     });
   }
 
@@ -117,7 +98,7 @@ function NewPatientForm(): JSX.Element {
         >
           <Input />
         </Form.Item>
-        <Form.Item label="Mobile Number" name="mobileNumber">
+        <Form.Item label="Mobile" name="mobile">
           <Input />
         </Form.Item>
         <Form.Item

@@ -1,8 +1,13 @@
-// todo
-export const cm: any = [
+import { ConditionOption } from '../types';
+
+export const allConditions: ConditionOption[] = [
   {
     name: 'Diabetes',
     value: 'diabetes',
+  },
+  {
+    name: 'GERD',
+    value: 'gerd',
   },
   {
     name: 'High Cholesterol',
@@ -11,5 +16,21 @@ export const cm: any = [
   {
     name: 'Hypertension',
     value: 'hypertension',
+  },
+  {
+    name: 'Hypothyroidism',
+    value: 'hypothyroidism',
+  },
+  {
+    name: 'Joint Pain',
+    value: 'jointPain',
+  },
+  {
+    name: 'Back Pain',
+    value: 'backPain',
+  },
+  {
+    name: 'Asthma',
+    value: 'asthma',
   },
 ];

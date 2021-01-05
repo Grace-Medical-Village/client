@@ -7,6 +7,7 @@ import React, {
 import { useStateWithStorage } from '../../hooks';
 import {
   BackgroundBuilder,
+  ItemType,
   PatientBackground,
   Storage,
 } from '../../utils/types';
@@ -31,30 +32,33 @@ function createCtx<A>(defaultValue: A) {
   return [ctx, Provider] as const;
 }
 
+const defaultBackgroundState: PatientBackground = {
+  id: '',
+  key: '',
+  firstName: '',
+  lastName: '',
+  birthdate: '',
+  country: '',
+  gender: '',
+  literacy: '',
+  mobile: '',
+  nativeLanguage: '',
+  type: ItemType.BACKGROUND,
+  zipCode5: '',
+  createdAt: 0,
+  modifiedAt: 0,
+};
+
 const backgroundBuilder: BackgroundBuilder = () => {
   const localItem = localStorage.getItem(LOCAL_STORAGE_KEY);
-
-  const defaultBackground: PatientBackground = {
-    id: '',
-    key: '',
-    firstName: '',
-    lastName: '',
-    birthdate: '',
-    country: '',
-    gender: '',
-    literacy: '',
-    mobileNumber: '',
-    nativeLanguage: '',
-    zipCode5: '',
-  };
 
   if (localItem) {
     const parsedItem: PatientBackground = JSON.parse(localItem);
     return parsedItem;
-  } else return defaultBackground;
+  } else return defaultBackgroundState;
 };
 
 const [ctx, BackgroundProvider] = createCtx(backgroundBuilder());
 const BackgroundContext = ctx;
 
-export { BackgroundProvider, BackgroundContext };
+export { BackgroundProvider, BackgroundContext, defaultBackgroundState };

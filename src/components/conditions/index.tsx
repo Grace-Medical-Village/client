@@ -6,10 +6,13 @@ import {
   ConditionItem,
   Item,
   ItemType,
+  ConditionOption,
 } from '../../utils/types';
 import { useId } from '../../hooks';
 import { getItem, postItem } from '../../services/api';
+import { allConditions } from '../../utils/conditions';
 import { ConditionsContext } from '../../context/conditions';
+import { orderBy } from 'lodash';
 
 const { Option } = Select;
 
@@ -58,7 +61,14 @@ export default function Conditions(): JSX.Element {
       });
   }
 
-  // todo map through options
+  const options = orderBy(allConditions, ['name'], ['asc']).map(
+    (c: ConditionOption) => (
+      <Option key={c.value} value={c.value}>
+        {c.name}
+      </Option>
+    )
+  );
+
   return (
     <Select
       defaultValue={state}
@@ -68,15 +78,7 @@ export default function Conditions(): JSX.Element {
       size="large"
       style={{ width: '100%' }}
     >
-      <Option key="diabetes" value="diabetes">
-        Diabetes
-      </Option>
-      <Option key="highCholesterol" value="highCholesterol">
-        High Cholesterol
-      </Option>
-      <Option key="hypertension" value="hypertension">
-        Hypertension
-      </Option>
+      {options}
     </Select>
   );
 }

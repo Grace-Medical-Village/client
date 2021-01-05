@@ -57,7 +57,12 @@ export const getItems: GetItems = async (params) => {
       },
       params,
     });
-    return JSON.parse(response.data.body);
+    const res = JSON.parse(response?.data?.body) ?? {};
+
+    if (Object.entries(res).length > 0) res.statusCode = 200;
+    else res.statusCode = 404;
+
+    return res;
   } catch (error) {
     console.error(error);
     return error;

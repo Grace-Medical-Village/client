@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Button, Form, Input, message, Row } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Store } from 'antd/lib/form/interface';
-import { ItemType, Note, NoteBuilder } from '../../utils/types';
+import { ItemType, NoteItem, NoteBuilder } from '../../utils/types';
 import { postItem } from '../../services/api';
 import { useId } from '../../hooks';
 import { NotesContext } from '../../context/notes';
@@ -38,7 +38,7 @@ export default function NoteForm(): JSX.Element {
   function onFinish(data: Store) {
     const { note } = data;
     if (!note) message.warn('Note is empty');
-    const item: Note = noteBuilder(note);
+    const item: NoteItem = noteBuilder(note);
     postItem(item)
       .then((success: boolean): void => {
         if (success) {

@@ -14,11 +14,11 @@ function Footer(): JSX.Element {
         </Row>
         <Row justify="center">
           <Text>
-            Email{' '}
-            <a href="mailto:dev@gracemedicalvillage.com">
-              dev@gracemedicalvillage.com
+            Email the{' '}
+            <a href="mailto:timothy_lee@alumni.emory.edu,brettbotto@gmail.com">
+              dev team
             </a>{' '}
-            with suggestions.
+            with feedback so we can improve.
           </Text>
         </Row>
       </Layout.Footer>

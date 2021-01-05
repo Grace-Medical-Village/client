@@ -25,15 +25,15 @@ function createCtx<A>(defaultValue: A) {
   return [ctx, Provider] as const;
 }
 
+const defaultConditionsState: Conditions = [];
 const conditionsBuilder: ConditionsBuilder = () => {
   const localItem = localStorage.getItem(LOCAL_STORAGE_KEY);
-  const defaultBackground: Conditions = [];
   if (localItem) {
     const parsedItem: Conditions = JSON.parse(localItem);
     return parsedItem;
-  } else return defaultBackground;
+  } else return defaultConditionsState;
 };
 const [ctx, ConditionsProvider] = createCtx(conditionsBuilder());
 const ConditionsContext = ctx;
 
-export { ConditionsProvider, ConditionsContext };
+export { ConditionsProvider, ConditionsContext, defaultConditionsState };

@@ -59,7 +59,6 @@ export const countries: string[] = [
   'Colombia',
   'Comoros',
   'Congo',
-  'Congo { Democratic Rep }',
   'Costa Rica',
   'Croatia',
   'Cuba',

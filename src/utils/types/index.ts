@@ -7,10 +7,19 @@ export interface Id {
 
 export interface Item extends Id {
   key: string;
-  type?: ItemType;
-  createdAt?: number;
-  modifiedAt?: number;
 }
+
+export interface Type {
+  type: ItemType;
+}
+export interface ItemTimestamps {
+  createdAt: number;
+  modifiedAt: number;
+}
+
+export interface ItemWithType extends Item, Type {}
+
+export interface DetailedItem extends ItemWithType, ItemTimestamps {}
 
 export enum ItemType {
   BACKGROUND = 'background',
@@ -28,7 +37,7 @@ export interface Response {
   statusCode: number;
 }
 
-export type PostData = Note | ConditionItem | MetricItem;
+export type PostData = NoteItem | ConditionItem | MetricItem;
 export type GetItem = (p: Item) => Promise<Partial<Response>>;
 export type GetItems = (p: Id) => Promise<Partial<Response>>;
 export type PostItem = (data: PostData) => Promise<boolean>;
@@ -77,7 +86,7 @@ export enum MetricName {
   bloodPressure = 'Blood Pressure',
   cholesterolTotal = 'Cholesterol (Total)',
   heartRate = 'Heart Rate',
-  hemoglobinA1c = 'Hemoglobin A1c',
+  hemoglobinA1c = 'Hemoglobin (A1c)',
   na = 'Not Availalbe',
   weight = 'Weight',
 }
@@ -88,7 +97,7 @@ export type MetricRecord = {
   [key in MetricId]: MetricValue;
 };
 
-export interface MetricItem extends Item, MetricRecord {
+export interface MetricItem extends Item, ItemTimestamps, MetricRecord {
   type: ItemType.METRIC;
 }
 
@@ -97,17 +106,6 @@ export type MetricState = {
     [key in MetricId]?: MetricValue;
   };
 };
-
-// const metricContext: MetricState = {
-// '2020-11-05': {
-// weight: 200,
-// cholesterolTotal: 20,
-// },
-// '2020-01-15': {
-// weight: 205,
-// cholesterolTotal: 200,
-// },
-// };
 
 export interface MetricOption {
   disabled: boolean;
@@ -137,21 +135,21 @@ export type TableMetric = {
 /**
  * NOTES
  */
-export interface Note extends Item {
+export interface NoteItem extends Item, ItemTimestamps {
   staff: string;
   note: string;
 }
 
-export type NoteBuilder = (note: string) => Note;
-export type NotesBuilder = () => Note[];
+export type NoteBuilder = (note: string) => NoteItem;
+export type NotesBuilder = () => NoteItem[];
 
 /**
  * BACKGROUND
  */
-export interface PatientBackground extends Item {
+export interface PatientBackground extends ItemWithType, ItemTimestamps {
   birthdate: string;
   country: string;
-  mobileNumber: string;
+  mobile: string;
   firstName: string;
   gender: string;
   nativeLanguage: string;
@@ -171,18 +169,37 @@ export interface PatientStatistic {
 /**
  * CONDITIONS
  */
-export type Condition = 'diabetes' | 'highCholesterol' | 'hypertension';
+export type Condition =
+  | 'asthma'
+  | 'backPain'
+  | 'diabetes'
+  | 'gerd'
+  | 'highCholesterol'
+  | 'hypertension'
+  | 'hypothyroidism'
+  | 'jointPain';
+
 export const CONDITIONS: Condition[] = [
+  'asthma',
+  'backPain',
   'diabetes',
+  'gerd',
   'highCholesterol',
   'hypertension',
+  'hypothyroidism',
+  'jointPain',
 ];
+
+export type ConditionOption = {
+  name: string;
+  value: string;
+};
 
 export type PatientConditions = string[];
 
 export type Conditions = Condition[];
 
-export interface ConditionItem extends Item, ConditionValue {}
+export interface ConditionItem extends ItemWithType, ConditionValue {}
 
 export type ConditionValue = {
   [key in Condition]?: boolean;

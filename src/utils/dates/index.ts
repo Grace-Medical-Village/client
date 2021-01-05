@@ -4,6 +4,9 @@ export const monthDayYear = 'MM/DD/YYYY';
 export const todayAsYearMonthDay = (): string =>
   new Date().toISOString().split('T')[0];
 
+export const getYearMonthDay = (date: number): string =>
+  new Date(date).toISOString().split('T')[0];
+
 export const getAge = (birthdate: string): number => {
   const now = new Date();
   const past = new Date(birthdate);

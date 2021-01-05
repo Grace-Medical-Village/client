@@ -15,7 +15,7 @@ const { Title } = Typography;
 export default function Dashboard(): JSX.Element {
   const { state } = useContext(BackgroundContext);
   const [selection, setOption] = useState(ItemType.NOTE);
-  const [component, setComponent] = useState(<NoteForm />);
+  const [dataEntryComponent, setDataEntryComponent] = useState(<NoteForm />);
 
   const {
     birthdate,
@@ -48,10 +48,10 @@ export default function Dashboard(): JSX.Element {
     setOption(value);
     switch (value) {
       case ItemType.NOTE:
-        setComponent(<NoteForm />);
+        setDataEntryComponent(<NoteForm />);
         break;
       case ItemType.METRIC:
-        setComponent(<PatientMetrics />);
+        setDataEntryComponent(<PatientMetrics />);
         break;
     }
   }
@@ -61,12 +61,13 @@ export default function Dashboard(): JSX.Element {
       <div style={{ padding: '2rem' }}>
         {id ? (
           <>
+            <Title level={4}>
+              {firstName} {lastName}
+            </Title>
             <PatientBackground {...patientBackground} />
-            <Divider />
-            <Title level={4}>Patient History</Title>
             <History />
             <Divider />
-            <Title level={4}>Patient Data</Title>
+            <Title level={4}>Data Entry</Title>
             <Radio.Group
               buttonStyle="solid"
               options={options}
@@ -75,7 +76,9 @@ export default function Dashboard(): JSX.Element {
               style={{ marginBottom: '1rem' }}
               value={selection}
             />
-            {component}
+            {dataEntryComponent}
+            <Divider />
+            <Title level={4}>Data Analysis</Title>
           </>
         ) : (
           <NoPatient />

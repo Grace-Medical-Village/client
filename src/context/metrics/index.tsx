@@ -25,15 +25,15 @@ function createCtx<A>(defaultValue: A) {
   return [ctx, Provider] as const;
 }
 
+const defaultMetricState: MetricState = {};
 const metricsBuilder: MetricsBuilder = () => {
   const localItem = localStorage.getItem(LOCAL_STORAGE_KEY);
-  const defaultBackground: MetricState = {};
   if (localItem) {
     const parsedItem: MetricState = JSON.parse(localItem);
     return parsedItem;
-  } else return defaultBackground;
+  } else return defaultMetricState;
 };
 const [ctx, MetricsProvider] = createCtx(metricsBuilder());
 const MetricsContext = ctx;
 
-export { MetricsProvider, MetricsContext };
+export { MetricsProvider, MetricsContext, defaultMetricState };
