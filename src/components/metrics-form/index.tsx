@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Form, Select, InputNumber, Button, Row, message } from 'antd';
+import { Form, Select, InputNumber, Button, Row, message, Col } from 'antd';
 
 import { MetricsContext } from '../../context/metrics';
 import { todayAsYearMonthDay } from '../../utils/dates';
@@ -32,7 +32,7 @@ const noMetric = {
   type: '',
 };
 
-export default function MetricForm(): JSX.Element {
+export default function MetricsForm(): JSX.Element {
   const { state, update } = useContext(MetricsContext);
   const id = useId();
 
@@ -106,49 +106,53 @@ export default function MetricForm(): JSX.Element {
 
   return (
     <>
-      <Form {...layout} form={form} name="metricForm" onFinish={onFinish}>
-        <Form.Item name="metricId">
-          <Select
-            onChange={onChange}
-            optionFilterProp="children"
-            placeholder="Select a Metric"
-            showSearch
-          >
-            {allMetrics
-              .filter((m) => m.disabled === false)
-              .map(({ key, name }) => (
-                <Option key={key} value={key}>
-                  {name}
-                </Option>
-              ))}
-          </Select>
-        </Form.Item>
-        <Form.Item>
-          <Form.Item name="metricValue" noStyle>
-            <InputNumber
-              disabled={metric.disabled}
-              max={metric.max}
-              min={metric.min}
-              step={metric.step}
-            />
-          </Form.Item>
-          <span className="ant-form-text">{` ${metric.type}`}</span>
-        </Form.Item>
-        <Form.Item>
-          <Row>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ marginRight: '0.5rem' }}
-            >
-              {buttonText}
-            </Button>
-            <Button htmlType="button" onClick={onReset}>
-              Reset
-            </Button>
-          </Row>
-        </Form.Item>
-      </Form>
+      <Row>
+        <Col span={24}>
+          <Form {...layout} form={form} name="metricForm" onFinish={onFinish}>
+            <Form.Item name="metricId">
+              <Select
+                onChange={onChange}
+                optionFilterProp="children"
+                placeholder="Select a Metric"
+                showSearch
+              >
+                {allMetrics
+                  .filter((m) => m.disabled === false)
+                  .map(({ key, name }) => (
+                    <Option key={key} value={key}>
+                      {name}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              <Form.Item name="metricValue" noStyle>
+                <InputNumber
+                  disabled={metric.disabled}
+                  max={metric.max}
+                  min={metric.min}
+                  step={metric.step}
+                />
+              </Form.Item>
+              <span className="ant-form-text">{` ${metric.type}`}</span>
+            </Form.Item>
+            <Form.Item>
+              <Row>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ marginRight: '0.5rem' }}
+                >
+                  {buttonText}
+                </Button>
+                <Button htmlType="button" onClick={onReset}>
+                  Reset
+                </Button>
+              </Row>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
     </>
   );
 }

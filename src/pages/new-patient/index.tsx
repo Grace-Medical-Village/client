@@ -17,7 +17,11 @@ import { monthDayYear, yearMonthDay } from '../../utils/dates/index';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
 import { clearStorage } from '../../utils/data';
-import { ItemType } from '../../utils/types';
+import {
+  ItemType,
+  PatientBackground,
+  PatientSearchItem,
+} from '../../utils/types';
 
 const { Option } = Select;
 
@@ -48,25 +52,87 @@ function NewPatientForm(): JSX.Element {
   const onReset = () => form.resetFields();
 
   function onFinish(data: Store) {
-    data.birthdate = data.birthdate.format(yearMonthDay);
-    data.id = idGenerator(data.birthdate, data.firstName, data.lastName);
-    data.key = ItemType.BACKGROUND;
-    data.type = ItemType.BACKGROUND;
-    const currentTime = Date.now();
-    data.createdAt = currentTime;
-    data.modifiedAt = currentTime;
-    postNewPatient(data);
+    const id = idGenerator(data.birthdate, data.firstName, data.lastName);
+    const birthdate = data.birthdate.format(yearMonthDay);
+    const time = Date.now();
+    if (!data.mobile) delete data.mobile;
+    console.log(data);
+    const backgroundData = buildBackgroundData(id, birthdate, time, data);
+    const searchData = buildSearchData(id, birthdate, time, data);
+    postNewPatient(backgroundData, searchData);
   }
 
+  const buildBackgroundData = (
+    id: string,
+    birthdate: string,
+    time: number,
+    data: Store
+  ): PatientBackground => {
+    const backgroundData: PatientBackground = {
+      id,
+      key: ItemType.BACKGROUND,
+      type: ItemType.BACKGROUND,
+      birthdate,
+      country: data.country,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      gender: data.gender,
+      nativeLanguage: data.nativeLanguage,
+      nativeLiteracy: data.nativeLiteracy,
+      zipCode5: data.zipCode5,
+      createdAt: time,
+      modifiedAt: time,
+    };
+    if (data.mobile) backgroundData.mobile = data.mobile;
+
+    return backgroundData;
+  };
+
+  const buildSearchData = (
+    id: string,
+    birthdate: string,
+    time: number,
+    data: Store
+  ): PatientSearchItem => {
+    const searchData: PatientSearchItem = {
+      id: birthdate,
+      key: id,
+      type: ItemType.PATIENT_SEARCH,
+      birthdate,
+      firstName: data.firstName,
+      gender: data.gender,
+      lastName: data.lastName,
+      nativeLanguage: data.nativeLanguage,
+      createdAt: time,
+      modifiedAt: time,
+    };
+
+    if (data.mobile) searchData.mobile = data.mobile;
+
+    return searchData;
+  };
+
+  // TODO refactor as promise.all
   // todo type
-  function postNewPatient(data: any): void {
-    postItem(data).then((success: boolean) => {
-      if (success) {
-        clearStorage();
-        setPatient(data);
-        message.success('Success: Record Saved');
-      } else message.error('Error: Failed to Save Record');
+  function postNewPatient(
+    backgroundData: PatientBackground,
+    searchData: PatientSearchItem
+  ): void {
+    // todo -> could be a batch write... but choosing speed instead of elegance
+    let savedPatientBackground = false;
+    let savedPatientSearch = false;
+    // todo -> catches
+    postItem(backgroundData).then((success: boolean) => {
+      savedPatientBackground = success;
     });
+    postItem(searchData).then((success: boolean) => {
+      savedPatientSearch = success;
+    });
+    if (savedPatientBackground && savedPatientSearch) {
+      clearStorage();
+      setPatient(backgroundData);
+      message.success('Success: Record Saved');
+    } else message.error('Error: Failed to Save Record');
   }
 
   // todo type

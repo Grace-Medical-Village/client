@@ -38,68 +38,77 @@ function PatientSearch(): JSX.Element {
   // todo -> all data should be pulled at once. this should be a util
 
   const [form] = Form.useForm();
-  const history = useHistory();
-  const backgroundCtx = useContext(BackgroundContext);
-  const conditionsCtx = useContext(ConditionsContext);
-  const metricsCtx = useContext(MetricsContext);
-  const notesCtx = useContext(NotesContext);
+  // const history = useHistory();
+  // const backgroundCtx = useContext(BackgroundContext);
+  // const conditionsCtx = useContext(ConditionsContext);
+  // const metricsCtx = useContext(MetricsContext);
+  // const notesCtx = useContext(NotesContext);
 
   const onReset = () => form.resetFields();
   const onFinishFailed = () => null;
-  const onFinish = (data: Store) => {
-    const { firstName, lastName } = data;
-    const birthdate = data.birthdate.format(yearMonthDay);
-    const id = idGenerator(birthdate, firstName, lastName);
-    const item: Item = {
-      id,
-      key: 'background',
-    };
+  const onFinish = () => {
+    console.log(42);
+    // const birthdate = data.birthdate.format(yearMonthDay);
 
-    // todo types
-    // getItem(item).then((res: any) => {
-    //   if (res?.statusCode === 200) {
-    //     // todo -> this should be a hook or util
-    //     clearStorage();
-    //     backgroundCtx.update(defaultBackgroundState);
-    //     conditionsCtx.update(defaultConditionsState);
-    //     metricsCtx.update(defaultMetricState);
-    //     notesCtx.update(defaultNotesState);
-
-    //     backgroundCtx.update(res);
-    //     message.success('Patient Found');
-    //     history.push('/dashboard');
-    //   } else message.warn('Patient Not Found');
-    // });
-    // TODO Refactor
-    getItems({ id }).then((res: any) => {
-      if (res?.statusCode === 200) {
-        console.log(res);
-        clearStorage();
-        backgroundCtx.update(defaultBackgroundState);
-        conditionsCtx.update(defaultConditionsState);
-        metricsCtx.update(defaultMetricState);
-        notesCtx.update(defaultNotesState);
-
-        let background: PatientBackground = defaultBackgroundState;
-        const metrics: MetricState = defaultMetricState;
-        res.map((item: any) => {
-          switch (item.type) {
-            case ItemType.BACKGROUND:
-              background = item;
-              break;
-            case ItemType.METRIC:
-              // metrics.push(item);
-              break;
-          }
-        });
-        backgroundCtx.update(background);
-        metricsCtx.update(metrics);
-
-        message.success('Patient Found');
-        history.push('/dashboard');
-      } else message.warn('Patient Not Found');
-    });
+    //   const item: Item = {
+    //     id,
+    //     key: 'background',
+    //   };
   };
+  // const onFinish = (data: Store) => {
+  //   const { firstName, lastName } = data;
+  //   const birthdate = data.birthdate.format(yearMonthDay);
+  //   const id = idGenerator(birthdate, firstName, lastName);
+  //   const item: Item = {
+  //     id,
+  //     key: 'background',
+  //   };
+
+  //   // todo types
+  //   // getItem(item).then((res: any) => {
+  //   //   if (res?.statusCode === 200) {
+  //   //     // todo -> this should be a hook or util
+  //   //     clearStorage();
+  //   //     backgroundCtx.update(defaultBackgroundState);
+  //   //     conditionsCtx.update(defaultConditionsState);
+  //   //     metricsCtx.update(defaultMetricState);
+  //   //     notesCtx.update(defaultNotesState);
+
+  //   //     backgroundCtx.update(res);
+  //   //     message.success('Patient Found');
+  //   //     history.push('/dashboard');
+  //   //   } else message.warn('Patient Not Found');
+  //   // });
+  //   // TODO Refactor
+  //   getItems({ id }).then((res: any) => {
+  //     if (res?.statusCode === 200) {
+  //       console.log(res);
+  //       clearStorage();
+  //       backgroundCtx.update(defaultBackgroundState);
+  //       conditionsCtx.update(defaultConditionsState);
+  //       metricsCtx.update(defaultMetricState);
+  //       notesCtx.update(defaultNotesState);
+
+  //       let background: PatientBackground = defaultBackgroundState;
+  //       const metrics: MetricState = defaultMetricState;
+  //       res.map((item: any) => {
+  //         switch (item.type) {
+  //           case ItemType.BACKGROUND:
+  //             background = item;
+  //             break;
+  //           case ItemType.METRIC:
+  //             // metrics.push(item);
+  //             break;
+  //         }
+  //       });
+  //       backgroundCtx.update(background);
+  //       metricsCtx.update(metrics);
+
+  //       message.success('Patient Found');
+  //       history.push('/dashboard');
+  //     } else message.warn('Patient Not Found');
+  //   });
+  // };
 
   return (
     <>
@@ -109,20 +118,6 @@ function PatientSearch(): JSX.Element {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
-        <Form.Item
-          label="First Name"
-          name="firstName"
-          rules={[{ required: true, message: 'First name is required.' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Last Name"
-          name="lastName"
-          rules={[{ required: true, message: 'Last name is required.' }]}
-        >
-          <Input />
-        </Form.Item>
         <Form.Item
           label="Birthdate"
           name="birthdate"

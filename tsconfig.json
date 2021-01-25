@@ -16,6 +16,6 @@
     "strict": true,
     "target": "es5"
   },
-  "include": ["src", "types.ts"],
+  "include": ["src", "types.ts", ".archive/patient-notes"],
   "exclude": ["node_modules", "build", ".archive/**/*"]
 }

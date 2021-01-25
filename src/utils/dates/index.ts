@@ -16,3 +16,10 @@ export const getAge = (birthdate: string): number => {
 
   return age;
 };
+
+export const monthDayYearFullDate = (date: string): string =>
+  new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });

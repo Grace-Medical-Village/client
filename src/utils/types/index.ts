@@ -27,6 +27,7 @@ export enum ItemType {
   METRIC = 'metric',
   MEDICATION = 'medication',
   NOTE = 'note',
+  PATIENT_SEARCH = 'patientSearch',
 }
 
 // todo -> refactor this and backend to not use JSON.stringify
@@ -47,9 +48,7 @@ export type PutItem = (
   data: unknown
 ) => Promise<boolean>;
 
-/**
- * LOCAL STATE
- */
+// LOCAL STORAGE
 export enum Storage {
   BACKGROUND = 'background',
   CONDITIONS = 'conditions',
@@ -58,9 +57,7 @@ export enum Storage {
   NOTES = 'notes',
 }
 
-/**
- *  MEDICATION
- **/
+// MEDICATION
 export interface Medication extends Item {
   medicationName: string;
   dosage: string | number;
@@ -69,9 +66,7 @@ export interface Medication extends Item {
   datePrescribed: string;
 }
 
-/**
- *  METRICS
- **/
+// METRICS
 // todo -> capitalization
 export enum MetricId {
   bloodPressure = 'bloodPressure',
@@ -87,7 +82,7 @@ export enum MetricName {
   cholesterolTotal = 'Cholesterol (Total)',
   heartRate = 'Heart Rate',
   hemoglobinA1c = 'Hemoglobin (A1c)',
-  na = 'Not Availalbe',
+  na = 'Not Available',
   weight = 'Weight',
 }
 
@@ -125,7 +120,7 @@ export type MetricsBuilder = () => MetricState;
 
 export type MetricEntry = [MetricName, MetricValue];
 
-export type TableMetric = {
+export type MetricsTableRecord = {
   key: string;
   date: string;
   metric: MetricName;
@@ -138,23 +133,32 @@ export type TableMetric = {
 export interface NoteItem extends Item, ItemTimestamps {
   staff: string;
   note: string;
+  noteType: string; // todo
 }
 
-export type NoteBuilder = (note: string) => NoteItem;
+export type NoteBuilder = (note: string, noteType: string) => NoteItem;
 export type NotesBuilder = () => NoteItem[];
 
-/**
- * BACKGROUND
- */
+export type NotesTableRecord = {
+  key: string;
+  date: string;
+  note: string;
+  noteType: any;
+  staff: string;
+};
+
+// BACKGROUND
+// background is used for saving static information about the patient
+// it also contains some data that can be useful for fundraising
 export interface PatientBackground extends ItemWithType, ItemTimestamps {
   birthdate: string;
   country: string;
-  mobile: string;
   firstName: string;
   gender: string;
-  nativeLanguage: string;
-  literacy: string;
+  nativeLiteracy: string;
   lastName: string;
+  mobile?: string;
+  nativeLanguage: string;
   zipCode5: string;
 }
 
@@ -164,6 +168,17 @@ export type DashboardBackground = Partial<PatientBackground>;
 export interface PatientStatistic {
   title: string;
   value: string | number;
+}
+
+// PATIENT SEARCH
+// this is used for querying DynamoDB by birthdate to fetch all patients of a given birthdate
+export interface PatientSearchItem extends ItemWithType, ItemTimestamps {
+  birthdate: string;
+  firstName: string;
+  gender: string;
+  lastName: string;
+  mobile?: string;
+  nativeLanguage: string;
 }
 
 /**
