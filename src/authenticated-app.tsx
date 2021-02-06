@@ -3,9 +3,10 @@ import React from 'react';
 import { Col, Layout, Row } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 
-import Patient from './pages/patient';
 import Dashboard from './pages/dashboard';
 import Error from './pages/error';
+import Medications from './pages/medications';
+import Patient from './pages/patient';
 
 import Header from './components/header';
 import Footer from './components/footer';
@@ -21,6 +22,7 @@ function AuthenticatedApp(): JSX.Element {
           <Row align="middle" justify="center">
             <Col span={24}>
               <Switch>
+                <Route exact path="/medications" component={Medications} />
                 <Route exact path="/patient" component={Patient} />
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route component={Error} />

@@ -4,6 +4,7 @@ import { Layout, Menu, Typography } from 'antd';
 import {
   IdcardOutlined,
   LineChartOutlined,
+  MedicineBoxOutlined,
   SettingOutlined,
   UserAddOutlined,
 } from '@ant-design/icons';
@@ -69,6 +70,9 @@ function Header(): JSX.Element {
           </Menu.Item>
           <Menu.Item key="patient" icon={<UserAddOutlined />}>
             Patient
+          </Menu.Item>
+          <Menu.Item key="medications" icon={<MedicineBoxOutlined />}>
+            Medications
           </Menu.Item>
           <Menu.Item key="analytics" icon={<LineChartOutlined />} disabled>
             Analytics

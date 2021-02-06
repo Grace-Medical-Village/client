@@ -48,17 +48,8 @@ export type PutItem = (
   data: unknown
 ) => Promise<boolean>;
 
-// LOCAL STORAGE
-export enum Storage {
-  BACKGROUND = 'background',
-  CONDITIONS = 'conditions',
-  MEDICATIONS = 'medications',
-  METRICS = 'metrics',
-  NOTES = 'notes',
-}
-
 // MEDICATION
-export interface Medication extends Item {
+export interface _Medication extends Item {
   medicationName: string;
   dosage: string | number;
   dosageType: string;
@@ -220,4 +211,50 @@ export type ConditionValue = {
   [key in Condition]?: boolean;
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * API
+ */
+
+// REQUEST
+
+// RESPONSE
+export type Medication = {
+  id: number;
+  name: string;
+  strength: string;
+  category_id: number;
+  category_name: string;
+  created_at: string;
+  modified_at: string;
+};
+
+// METHODS
+export type GetMedications = () => Medication[] | any; // todo
+
+/**
+ * STATE MANAGEMENT
+ */
+
+// CONTEXT
 export type ConditionsBuilder = () => Conditions;
+
+// LOCAL STORAGE
+export enum Storage {
+  BACKGROUND = 'background',
+  CONDITIONS = 'conditions',
+  METRICS = 'metrics',
+  NOTES = 'notes',
+}
+
+/**
+ * TABLES
+ */
+
+// MEDICATIONS
+export type MedicationTableData = {
+  key: number;
+  name: string;
+  strength: string;
+  category_name: string;
+};

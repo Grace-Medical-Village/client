@@ -1,10 +1,23 @@
 import { Auth } from 'aws-amplify';
 import axios, { AxiosResponse } from 'axios';
-import { GetItem, GetItems, Item, PostItem, PutItem } from '../../utils/types';
+import {
+  GetItem,
+  GetItems,
+  GetMedications,
+  Item,
+  Medication,
+  PostItem,
+  PutItem,
+} from '../../utils/types';
 
 const { REACT_APP_API } = process.env;
 
+const canSend = () => {
+  if (!REACT_APP_API) throw new Error('API URL is undefined');
+};
+
 const getAuthorization = async () => {
+  canSend();
   return {
     Authorization: `Bearer ${(await Auth.currentSession())
       .getIdToken()
@@ -12,12 +25,24 @@ const getAuthorization = async () => {
   };
 };
 
-const checkApi = () => {
-  if (!REACT_APP_API) throw new Error('API URL is undefined');
+export const getMedications: GetMedications = async () => {
+  const authorization = await getAuthorization();
+  let data: Medication[] = [];
+  try {
+    console.log(authorization);
+    const response = await axios({
+      method: 'get',
+      url: 'http://localhost:4000/local/medications',
+      headers: authorization,
+    });
+    data = response?.data;
+  } catch (error) {
+    console.log(error);
+  }
+  return data;
 };
 
 export const getItem: GetItem = async (params) => {
-  checkApi();
   const authorization = await getAuthorization();
   try {
     const response: AxiosResponse = await axios({
@@ -46,7 +71,6 @@ export const getItem: GetItem = async (params) => {
 };
 
 export const getItems: GetItems = async (params) => {
-  checkApi();
   const authorization = await getAuthorization();
   try {
     const response: AxiosResponse = await axios({
@@ -70,7 +94,6 @@ export const getItems: GetItems = async (params) => {
 };
 
 export const postItem: PostItem = async (data) => {
-  checkApi();
   const authorization = await getAuthorization();
   try {
     const response: AxiosResponse = await axios({
@@ -89,7 +112,6 @@ export const postItem: PostItem = async (data) => {
 };
 
 export const putItem: PutItem = async (id, key, data) => {
-  checkApi();
   const authorization = await getAuthorization();
   try {
     const response: AxiosResponse = await axios({
@@ -112,7 +134,6 @@ export const putItem: PutItem = async (id, key, data) => {
 };
 
 export const deleteItem = async (url: string, data: Item): Promise<boolean> => {
-  checkApi();
   const authorization = await getAuthorization();
   try {
     const response: AxiosResponse = await axios({

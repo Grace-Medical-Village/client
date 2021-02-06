@@ -40,7 +40,7 @@ const defaultBackgroundState: PatientBackground = {
   birthdate: '',
   country: '',
   gender: '',
-  literacy: '',
+  nativeLiteracy: '',
   mobile: '',
   nativeLanguage: '',
   type: ItemType.BACKGROUND,

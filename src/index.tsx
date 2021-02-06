@@ -11,23 +11,26 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { config } from './config';
 import './index.css';
+import { MedicationsProvider } from './context/medications';
 
 Amplify.configure(config);
 
 ReactDOM.render(
   // TODO <React.StrictMode>
   <AuthProvider>
-    <BackgroundProvider>
-      <ConditionsProvider>
-        <NotesProvider>
-          <MetricsProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </MetricsProvider>
-        </NotesProvider>
-      </ConditionsProvider>
-    </BackgroundProvider>
+    <MedicationsProvider>
+      <BackgroundProvider>
+        <ConditionsProvider>
+          <NotesProvider>
+            <MetricsProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </MetricsProvider>
+          </NotesProvider>
+        </ConditionsProvider>
+      </BackgroundProvider>
+    </MedicationsProvider>
   </AuthProvider>,
   document.getElementById('root')
 );

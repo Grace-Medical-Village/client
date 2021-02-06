@@ -5,24 +5,39 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
 import { AuthContext } from '../../context/auth';
+import { MedicationsContext } from '../../context/medications';
 import './styles.css';
+import { getMedications } from '../../services/api';
 
 const { Title } = Typography;
 
 function SignIn(): JSX.Element {
-  const { update } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  const medicationsContext = useContext(MedicationsContext);
   const history = useHistory();
 
   async function signIn(usernameEntered: string, passwordEntered: string) {
     try {
       const user = await Auth.signIn(usernameEntered, passwordEntered);
-      update({ authenticated: true, username: user.username });
+      authContext.update({ authenticated: true, username: user.username });
+      setData();
       history.push('/patient');
     } catch (e) {
       console.error(e);
       message.error('Login Credentials are Incorrect');
     }
   }
+
+  function setData() {
+    setMedicationsContext();
+    // setConditions(); // todo
+    // setMetrics(); // todo
+  }
+
+  const setMedicationsContext = async (): Promise<void> => {
+    const data = await getMedications();
+    medicationsContext.update(data);
+  };
 
   function onFinish({ username, password }: any) {
     signIn(username, password);
