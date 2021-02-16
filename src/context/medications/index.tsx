@@ -5,7 +5,7 @@ import React, {
   SetStateAction,
   useState,
 } from 'react';
-import { Medication } from '../../utils/types';
+import { MedicationState } from '../../utils/types';
 
 function createCtx<A>(defaultValue: A) {
   type UpdateType = Dispatch<SetStateAction<typeof defaultValue>>;
@@ -25,7 +25,10 @@ function createCtx<A>(defaultValue: A) {
   return [MedicationsContext, Provider] as const;
 }
 
-const defaultMedicationsState: Medication[] = [];
+const defaultMedicationsState: MedicationState = {
+  categories: [],
+  medications: [],
+};
 
 const [MedicationsContext, MedicationsProvider] = createCtx(
   defaultMedicationsState

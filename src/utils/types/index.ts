@@ -38,7 +38,7 @@ export interface Response {
   statusCode: number;
 }
 
-export type PostData = NoteItem | ConditionItem | MetricItem;
+export type PostData = NoteItem | MetricItem;
 export type GetItem = (p: Item) => Promise<Partial<Response>>;
 export type GetItems = (p: Id) => Promise<Partial<Response>>;
 export type PostItem = (data: PostData) => Promise<boolean>;
@@ -172,45 +172,6 @@ export interface PatientSearchItem extends ItemWithType, ItemTimestamps {
   nativeLanguage: string;
 }
 
-/**
- * CONDITIONS
- */
-export type Condition =
-  | 'asthma'
-  | 'backPain'
-  | 'diabetes'
-  | 'gerd'
-  | 'highCholesterol'
-  | 'hypertension'
-  | 'hypothyroidism'
-  | 'jointPain';
-
-export const CONDITIONS: Condition[] = [
-  'asthma',
-  'backPain',
-  'diabetes',
-  'gerd',
-  'highCholesterol',
-  'hypertension',
-  'hypothyroidism',
-  'jointPain',
-];
-
-export type ConditionOption = {
-  name: string;
-  value: string;
-};
-
-export type PatientConditions = string[];
-
-export type Conditions = Condition[];
-
-export interface ConditionItem extends ItemWithType, ConditionValue {}
-
-export type ConditionValue = {
-  [key in Condition]?: boolean;
-};
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * API
@@ -229,19 +190,44 @@ export type Medication = {
   modified_at: string;
 };
 
+export type ResponseStatus = {
+  status: number;
+  statusText: string;
+};
+
+export type MedicationCategory = {
+  id: number;
+  name: string;
+  created_at: string;
+  modified_at: string;
+};
+
 // METHODS
-export type GetMedications = () => Medication[] | any; // todo
+export type DeleteMedication = (id: string | number) => Promise<ResponseStatus>;
+export type GetConditions = () => Promise<string[]>;
+export type GetMedications = () => Promise<Medication[]> | any; // todo
+export type GetMedicationCategories = () => Promise<MedicationCategory[]>;
+export type PostMedication = (
+  name: string,
+  strength: string,
+  categoryId: string
+) => Promise<ResponseStatus>;
 
 /**
  * STATE MANAGEMENT
  */
 
 // CONTEXT
-export type ConditionsBuilder = () => Conditions;
+export type GetConditionsFromStorage = () => string[];
+
+export interface MedicationState {
+  categories: MedicationCategory[];
+  medications: Medication[];
+}
 
 // LOCAL STORAGE
 export enum Storage {
-  BACKGROUND = 'background',
+  BACKGROUND = 'background', // todo rename to patient
   CONDITIONS = 'conditions',
   METRICS = 'metrics',
   NOTES = 'notes',
@@ -250,10 +236,15 @@ export enum Storage {
 /**
  * TABLES
  */
-
 // MEDICATIONS
+export type CategoryFilter = {
+  text: string;
+  value: string;
+};
+
 export type MedicationTableData = {
   key: number;
+  id: number;
   name: string;
   strength: string;
   category_name: string;

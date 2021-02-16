@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Divider, Radio, Typography } from 'antd';
 
-import History from '../../components/patient-overview';
 import MedicationsForm from '../../components/medications-form';
 import MedicationsTable from '../../components/medications-table';
 import MetricsForm from '../../components/metrics-form';
@@ -9,6 +8,7 @@ import MetricsTable from '../../components/metrics-table';
 import NoPatient from '../../components/no-patient';
 import NotesForm from '../../components/notes-form';
 import NotesTable from '../../components/notes-table';
+import PatientOverview from '../../components/patient-overview';
 import { BackgroundContext } from '../../context/background';
 import './styles.css';
 import { ItemType } from '../../utils/types';
@@ -71,7 +71,7 @@ export default function Dashboard(): JSX.Element {
             <Title level={3}>
               {firstName} {lastName}
             </Title>
-            <History />
+            <PatientOverview />
             <Divider />
             <Title level={4}>Data Entry</Title>
             <Radio.Group

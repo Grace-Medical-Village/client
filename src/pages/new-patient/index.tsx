@@ -10,7 +10,6 @@ import {
   message,
 } from 'antd';
 
-import { postItem } from '../../services/api';
 import { BackgroundContext } from '../../context/background';
 import { countries, languages, idGenerator } from '../../utils/patient/index';
 import { monthDayYear, yearMonthDay } from '../../utils/dates/index';
@@ -118,16 +117,17 @@ function NewPatientForm(): JSX.Element {
     backgroundData: PatientBackground,
     searchData: PatientSearchItem
   ): void {
+    console.log(searchData);
     // todo -> could be a batch write... but choosing speed instead of elegance
-    let savedPatientBackground = false;
-    let savedPatientSearch = false;
+    const savedPatientBackground = false;
+    const savedPatientSearch = false;
     // todo -> catches
-    postItem(backgroundData).then((success: boolean) => {
-      savedPatientBackground = success;
-    });
-    postItem(searchData).then((success: boolean) => {
-      savedPatientSearch = success;
-    });
+    // postItem(backgroundData).then((success: boolean) => {
+    // savedPatientBackground = success;
+    // });
+    // postItem(searchData).then((success: boolean) => {
+    // savedPatientSearch = success;
+    // });
     if (savedPatientBackground && savedPatientSearch) {
       clearStorage();
       setPatient(backgroundData);

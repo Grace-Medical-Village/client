@@ -8,7 +8,7 @@ import {
   SettingOutlined,
   UserAddOutlined,
 } from '@ant-design/icons';
-import { AuthContext } from '../../context/auth';
+import { AuthContext, defaultAuthState } from '../../context/auth';
 import { BackgroundContext } from '../../context/background';
 import logo from '../../assets/gmv-logo-white-heart.png';
 import './styles.css';
@@ -20,10 +20,10 @@ const { Title } = Typography;
 
 function Header(): JSX.Element {
   const [menuSelection, setMenuSelection] = useState('dashboard');
-  const auth = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  const { authenticated } = authContext.state;
   const { state } = useContext(BackgroundContext);
   const { firstName, lastName } = state;
-  const { authenticated } = auth.state;
   const history = useHistory();
   const location = useLocation();
 
@@ -31,7 +31,6 @@ function Header(): JSX.Element {
     const { key } = event;
     if (key === 'log-out') {
       signOut();
-      clearStorage();
       history.push('/');
     } else {
       history.push(key);
@@ -44,14 +43,20 @@ function Header(): JSX.Element {
 
   async function signOut() {
     try {
+      clearState();
       await Auth.signOut();
-      auth.update({
-        authenticated: false,
-        username: '',
-      });
     } catch (error) {
       console.error('error signing out: ', error);
     }
+  }
+
+  function clearState() {
+    resetAuth();
+    clearStorage();
+  }
+
+  function resetAuth() {
+    authContext.update(defaultAuthState);
   }
 
   return (
@@ -72,7 +77,7 @@ function Header(): JSX.Element {
             Patient
           </Menu.Item>
           <Menu.Item key="medications" icon={<MedicineBoxOutlined />}>
-            Medications
+            Formulary
           </Menu.Item>
           <Menu.Item key="analytics" icon={<LineChartOutlined />} disabled>
             Analytics

@@ -1,19 +1,25 @@
 import { Auth } from 'aws-amplify';
 import axios, { AxiosResponse } from 'axios';
 import {
+  DeleteMedication,
+  GetConditions,
   GetItem,
   GetItems,
+  GetMedicationCategories,
   GetMedications,
   Item,
   Medication,
+  MedicationCategory,
   PostItem,
+  PostMedication,
   PutItem,
+  ResponseStatus,
 } from '../../utils/types';
 
-const { REACT_APP_API } = process.env;
+const { REACT_APP_URL } = process.env;
 
 const canSend = () => {
-  if (!REACT_APP_API) throw new Error('API URL is undefined');
+  if (!REACT_APP_URL) throw new Error('API URL is undefined');
 };
 
 const getAuthorization = async () => {
@@ -25,29 +31,119 @@ const getAuthorization = async () => {
   };
 };
 
-export const getMedications: GetMedications = async () => {
+export const deleteMedication: DeleteMedication = async (id) => {
   const authorization = await getAuthorization();
-  let data: Medication[] = [];
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
   try {
-    console.log(authorization);
-    const response = await axios({
+    const response: AxiosResponse = await axios({
+      method: 'delete',
+      url: `${REACT_APP_URL}/medication`,
+      headers: authorization,
+      params: {
+        id,
+      },
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const getConditions: GetConditions = async () => {
+  const authorization = await getAuthorization();
+  let data: string[] = [];
+  try {
+    const response: AxiosResponse = await axios({
       method: 'get',
-      url: 'http://localhost:4000/local/medications',
+      url: `${REACT_APP_URL}/conditions`,
       headers: authorization,
     });
     data = response?.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
   return data;
 };
+
+export const getMedications: GetMedications = async () => {
+  const authorization = await getAuthorization();
+  let data: Medication[] = [];
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/medications`,
+      headers: authorization,
+    });
+    console.log(response);
+    data = response?.data?.data;
+  } catch (error) {
+    console.error(error);
+  }
+  return data;
+};
+
+export const getMedicationCategories: GetMedicationCategories = async () => {
+  const authorization = await getAuthorization();
+  let data: MedicationCategory[] = [];
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/medication-categories`,
+      headers: authorization,
+    });
+    data = response?.data;
+  } catch (error) {
+    console.error(error);
+  }
+  return data;
+};
+
+export const postMedication: PostMedication = async (
+  name,
+  strength,
+  category_id
+) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'post',
+      url: `${REACT_APP_URL}/medication`,
+      headers: authorization,
+      data: {
+        name,
+        strength,
+        category_id,
+      },
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+//----------------------------------------------------------------
 
 export const getItem: GetItem = async (params) => {
   const authorization = await getAuthorization();
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
-      url: `${REACT_APP_API}/patient`,
+      url: `${REACT_APP_URL}/patient`,
       headers: {
         ...authorization,
       },
@@ -75,7 +171,7 @@ export const getItems: GetItems = async (params) => {
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
-      url: `${REACT_APP_API}/patients`,
+      url: `${REACT_APP_URL}/patients`,
       headers: {
         ...authorization,
       },
@@ -98,7 +194,7 @@ export const postItem: PostItem = async (data) => {
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
-      url: `${REACT_APP_API}/patient`,
+      url: `${REACT_APP_URL}/patient`,
       headers: {
         ...authorization,
       },
@@ -116,7 +212,7 @@ export const putItem: PutItem = async (id, key, data) => {
   try {
     const response: AxiosResponse = await axios({
       method: 'put',
-      url: `${REACT_APP_API}/patient`,
+      url: `${REACT_APP_URL}/patient`,
       headers: {
         ...authorization,
       },
@@ -138,7 +234,7 @@ export const deleteItem = async (url: string, data: Item): Promise<boolean> => {
   try {
     const response: AxiosResponse = await axios({
       method: 'delete',
-      url: `${REACT_APP_API}/patient`,
+      url: `${REACT_APP_URL}/patient`,
       headers: { ...authorization },
       data,
     });

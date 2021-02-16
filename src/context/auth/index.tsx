@@ -14,10 +14,12 @@ function createCtx<A>(defaultValue: A) {
   return [ctx, Provider] as const;
 }
 
-const [ctx, AuthProvider] = createCtx({
+const defaultAuthState = {
   authenticated: false,
   username: '',
-});
+};
+
+const [ctx, AuthProvider] = createCtx(defaultAuthState);
 const AuthContext = ctx;
 
-export { AuthProvider, AuthContext };
+export { AuthProvider, AuthContext, defaultAuthState };

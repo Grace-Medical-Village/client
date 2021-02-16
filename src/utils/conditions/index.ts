@@ -1,6 +1,4 @@
-import { ConditionOption } from '../types';
-
-export const allConditions: ConditionOption[] = [
+export const allConditions: any[] = [
   {
     name: 'Diabetes',
     value: 'diabetes',

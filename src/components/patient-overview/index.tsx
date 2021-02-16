@@ -1,6 +1,6 @@
 import React from 'react';
 import { Collapse } from 'antd';
-import Conditions from '../conditions';
+// import Conditions from '../conditions';
 import PatientBackground from '../patient-background';
 
 const { Panel } = Collapse;
@@ -13,7 +13,7 @@ export default function PatientOverview(): JSX.Element {
           <PatientBackground />
         </Panel>
         <Panel header="Conditions" key="2">
-          <Conditions />
+          {/* <Conditions /> */}
         </Panel>
       </Collapse>
     </>

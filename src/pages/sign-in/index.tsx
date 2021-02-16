@@ -5,14 +5,21 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
 import { AuthContext } from '../../context/auth';
+import { ConditionsContext } from '../../context/conditions';
 import { MedicationsContext } from '../../context/medications';
+import {
+  getConditions,
+  getMedicationCategories,
+  getMedications,
+} from '../../services/api';
 import './styles.css';
-import { getMedications } from '../../services/api';
+import { MedicationState } from '../../utils/types';
 
 const { Title } = Typography;
 
 function SignIn(): JSX.Element {
   const authContext = useContext(AuthContext);
+  const conditionsContext = useContext(ConditionsContext);
   const medicationsContext = useContext(MedicationsContext);
   const history = useHistory();
 
@@ -30,13 +37,23 @@ function SignIn(): JSX.Element {
 
   function setData() {
     setMedicationsContext();
-    // setConditions(); // todo
+    setConditions(); // todo
     // setMetrics(); // todo
   }
 
   const setMedicationsContext = async (): Promise<void> => {
-    const data = await getMedications();
+    const categories = await getMedicationCategories();
+    const medications = await getMedications();
+    const data: MedicationState = {
+      categories,
+      medications,
+    };
     medicationsContext.update(data);
+  };
+
+  const setConditions = async (): Promise<void> => {
+    const data = await getConditions();
+    conditionsContext.update(data);
   };
 
   function onFinish({ username, password }: any) {
