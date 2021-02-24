@@ -7,10 +7,12 @@ import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../../context/auth';
 import { ConditionsContext } from '../../context/conditions';
 import { MedicationsContext } from '../../context/medications';
+import { MetricsContext } from '../../context/metrics';
 import {
   getConditions,
   getMedicationCategories,
   getMedications,
+  getMetrics,
 } from '../../services/api';
 import './styles.css';
 import { MedicationState } from '../../utils/types';
@@ -21,6 +23,7 @@ function SignIn(): JSX.Element {
   const authContext = useContext(AuthContext);
   const conditionsContext = useContext(ConditionsContext);
   const medicationsContext = useContext(MedicationsContext);
+  const metricsCtx = useContext(MetricsContext);
   const history = useHistory();
 
   async function signIn(usernameEntered: string, passwordEntered: string) {
@@ -36,12 +39,17 @@ function SignIn(): JSX.Element {
   }
 
   function setData() {
-    setMedicationsContext();
-    setConditions(); // todo
-    // setMetrics(); // todo
+    setConditions();
+    setMedications();
+    setMetrics();
   }
 
-  const setMedicationsContext = async (): Promise<void> => {
+  const setConditions = async (): Promise<void> => {
+    const data = await getConditions();
+    conditionsContext.update(data);
+  };
+
+  const setMedications = async (): Promise<void> => {
     const categories = await getMedicationCategories();
     const medications = await getMedications();
     const data: MedicationState = {
@@ -51,9 +59,9 @@ function SignIn(): JSX.Element {
     medicationsContext.update(data);
   };
 
-  const setConditions = async (): Promise<void> => {
-    const data = await getConditions();
-    conditionsContext.update(data);
+  const setMetrics = async (): Promise<void> => {
+    const data = await getMetrics();
+    metricsCtx.update(data);
   };
 
   function onFinish({ username, password }: any) {

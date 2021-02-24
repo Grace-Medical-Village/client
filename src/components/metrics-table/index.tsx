@@ -1,48 +1,66 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Table } from 'antd';
-
-import { MetricsContext } from '../../context/metrics';
-import { MetricId, MetricsTableRecord } from '../../utils/types';
-import { metricNames } from '../../utils/metrics';
+import {
+  Metric,
+  PatientMetric,
+  PatientMetricTableRecord,
+} from '../../utils/types';
 import { monthDayYearFullDate } from '../../utils/dates';
+import { PatientContext } from '../../context/patient';
+import { MetricsContext } from '../../context/metrics';
+import { getMetrics } from '../../services/api';
 
-export default function MetricsTable(): JSX.Element {
-  const [data, set] = useState<MetricsTableRecord[]>([]);
-  const { state } = useContext(MetricsContext);
+export default function NotesTable(): JSX.Element {
+  const [data, set] = useState<PatientMetricTableRecord[]>([]);
+  const metricCtx = useContext(MetricsContext);
+  const patientCtx = useContext(PatientContext);
 
   useEffect(() => {
-    const d: MetricsTableRecord[] = [];
-    Object.keys(state).forEach((date: string) =>
-      // todo -> MetricEntry
-      Object.entries(state[date]).forEach((v: any) => {
-        const n = v[0] as MetricId;
-        const m: MetricsTableRecord = {
-          key: `${date}_${v[0]}_${v[1]}`,
-          date: monthDayYearFullDate(date),
-          metric: metricNames[n],
-          value: v[1],
-        };
-        d.push(m);
-      })
-    );
+    const buildMetricState = async () => {
+      if (metricCtx.state.length === 0) {
+        const metrics = await getMetrics();
+        if (metrics.length > 0) metricCtx.update(metrics);
+      }
+    };
+    buildMetricState();
+  }, [metricCtx]);
+
+  useEffect(() => {
+    const d: PatientMetricTableRecord[] = [];
+
+    const getMetric = (id: number): Metric =>
+      metricCtx?.state?.filter((metric) => metric.id === id)[0];
+
+    if (patientCtx?.state?.metrics) {
+      patientCtx?.state?.metrics.forEach((patientMetric: PatientMetric) => {
+        const metric = getMetric(patientMetric.metric_id);
+        if (metric) {
+          const m: PatientMetricTableRecord = {
+            id: patientMetric.metric_id,
+            key: patientMetric.metric_id,
+            date: monthDayYearFullDate(patientMetric.created_at.toString()),
+            metric: metric.metric_name,
+            value: `${patientMetric.value} ${metric.uom}`,
+          };
+          d.push(m);
+        }
+      });
+    }
     set(d);
-  }, [state]);
+  }, [metricCtx, patientCtx]);
 
   const columns = [
     {
       title: 'Metric',
       dataIndex: 'metric',
-      key: 'metric',
-    },
-    {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
     },
     {
       title: 'Value',
       dataIndex: 'value',
-      key: 'value',
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
     },
   ];
 

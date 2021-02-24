@@ -3,37 +3,29 @@ import React, {
   Dispatch,
   PropsWithChildren,
   SetStateAction,
+  useState,
 } from 'react';
-import { useStateWithStorage } from '../../hooks';
-import { MetricsBuilder, MetricState, Storage } from '../../utils/types';
+import { Metric } from '../../utils/types';
 
-const LOCAL_STORAGE_KEY = Storage.METRICS;
 function createCtx<A>(defaultValue: A) {
   type UpdateType = Dispatch<SetStateAction<typeof defaultValue>>;
+
   const defaultUpdate: UpdateType = () => defaultValue;
-  const ctx = createContext({
+
+  const MetricsContext = createContext({
     state: defaultValue,
     update: defaultUpdate,
   });
+
   function Provider(props: PropsWithChildren<unknown>) {
-    const [state, update] = useStateWithStorage(
-      LOCAL_STORAGE_KEY,
-      defaultValue
-    );
-    return <ctx.Provider value={{ state, update }} {...props} />;
+    const [state, update] = useState(defaultValue);
+    return <MetricsContext.Provider value={{ state, update }} {...props} />;
   }
-  return [ctx, Provider] as const;
+
+  return [MetricsContext, Provider] as const;
 }
 
-const defaultMetricState: MetricState = {};
-const metricsBuilder: MetricsBuilder = () => {
-  const localItem = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (localItem) {
-    const parsedItem: MetricState = JSON.parse(localItem);
-    return parsedItem;
-  } else return defaultMetricState;
-};
-const [ctx, MetricsProvider] = createCtx(metricsBuilder());
-const MetricsContext = ctx;
+const defaultState: Metric[] = [];
 
-export { MetricsProvider, MetricsContext, defaultMetricState };
+const [MetricsContext, MetricsProvider] = createCtx(defaultState);
+export { MetricsProvider, MetricsContext };

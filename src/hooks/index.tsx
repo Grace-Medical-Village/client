@@ -1,16 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import { BackgroundContext } from '../context/background';
-
-function useId(): string {
-  const { state } = useContext(BackgroundContext);
-  return state.id;
-}
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 function useStateWithStorage<A>(
   name: string,
@@ -25,4 +13,4 @@ function useStateWithStorage<A>(
   return [state, update];
 }
 
-export { useId, useStateWithStorage };
+export { useStateWithStorage };

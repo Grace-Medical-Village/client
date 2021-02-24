@@ -9,11 +9,11 @@ import {
   UserAddOutlined,
 } from '@ant-design/icons';
 import { AuthContext, defaultAuthState } from '../../context/auth';
-import { BackgroundContext } from '../../context/background';
 import logo from '../../assets/gmv-logo-white-heart.png';
 import './styles.css';
 import { Auth } from 'aws-amplify';
 import { clearStorage } from '../../utils/data';
+import { PatientContext } from '../../context/patient';
 
 const { SubMenu } = Menu;
 const { Title } = Typography;
@@ -22,8 +22,7 @@ function Header(): JSX.Element {
   const [menuSelection, setMenuSelection] = useState('dashboard');
   const authContext = useContext(AuthContext);
   const { authenticated } = authContext.state;
-  const { state } = useContext(BackgroundContext);
-  const { firstName, lastName } = state;
+  const { state } = useContext(PatientContext);
   const history = useHistory();
   const location = useLocation();
 
@@ -61,7 +60,7 @@ function Header(): JSX.Element {
 
   return (
     <Layout.Header className="header">
-      <img alt="GMV Logo" className="header-logo" src={logo} />
+      <img alt="GMVC Logo" className="header-logo" src={logo} />
       {authenticated ? (
         <Menu
           className="header-menu"
@@ -71,7 +70,9 @@ function Header(): JSX.Element {
           theme="dark"
         >
           <Menu.Item key="dashboard" icon={<IdcardOutlined />}>
-            {firstName && lastName ? `${firstName} ${lastName}` : 'Dashboard'}
+            {state.patient
+              ? `${state.patient.first_name} ${state.patient.last_name}`
+              : 'Dashboard'}
           </Menu.Item>
           <Menu.Item key="patient" icon={<UserAddOutlined />}>
             Patient

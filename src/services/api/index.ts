@@ -3,16 +3,28 @@ import axios, { AxiosResponse } from 'axios';
 import {
   DeleteMedication,
   GetConditions,
-  GetItem,
-  GetItems,
   GetMedicationCategories,
   GetMedications,
-  Item,
+  GetMetrics,
+  GetPatient,
+  GetPatientMedications,
+  GetPatientMetrics,
+  GetPatientNotes,
+  GetPatientsByBirthdate,
+  GetPatientsByName,
   Medication,
   MedicationCategory,
-  PostItem,
+  Metric,
+  PatientData,
+  PatientMedication,
+  PatientMetric,
+  PatientNote,
+  PatientSearchResult,
   PostMedication,
-  PutItem,
+  PostPatientMedication,
+  PostPatientMetric,
+  PostPatientNote,
+  RequestSuccess,
   ResponseStatus,
 } from '../../utils/types';
 
@@ -21,6 +33,8 @@ const { REACT_APP_URL } = process.env;
 const canSend = () => {
   if (!REACT_APP_URL) throw new Error('API URL is undefined');
 };
+
+export const requestSuccess: RequestSuccess = (n) => n >= 200 && n <= 299;
 
 const getAuthorization = async () => {
   canSend();
@@ -81,7 +95,6 @@ export const getMedications: GetMedications = async () => {
       url: `${REACT_APP_URL}/medications`,
       headers: authorization,
     });
-    console.log(response);
     data = response?.data?.data;
   } catch (error) {
     console.error(error);
@@ -98,7 +111,137 @@ export const getMedicationCategories: GetMedicationCategories = async () => {
       url: `${REACT_APP_URL}/medication-categories`,
       headers: authorization,
     });
-    data = response?.data;
+    data = response?.data?.data;
+  } catch (error) {
+    console.error(error);
+  }
+  return data;
+};
+
+export const getMetrics: GetMetrics = async () => {
+  const authorization = await getAuthorization();
+  let data: Metric[] = [];
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/metrics`,
+      headers: authorization,
+    });
+    data = response?.data?.data;
+  } catch (error) {
+    console.error(error);
+  }
+  return data;
+};
+
+export const getPatient: GetPatient = async (
+  id,
+  patient,
+  conditions,
+  medications,
+  metrics,
+  notes
+) => {
+  const authorization = await getAuthorization();
+  let data: PatientData = {};
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/patient`,
+      headers: authorization,
+      params: {
+        id,
+        patient,
+        conditions,
+        medications,
+        metrics,
+        notes,
+      },
+    });
+    data = response?.data?.data;
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+  return data;
+};
+
+export const getPatientMedications: GetPatientMedications = async (id) => {
+  let medications: PatientMedication[] = [];
+  const data: PatientData = await getPatient(
+    id,
+    false,
+    false,
+    true,
+    false,
+    false
+  );
+  if (data.medications) medications = data.medications;
+  return medications;
+};
+
+export const getPatientMetrics: GetPatientMetrics = async (id) => {
+  let metrics: PatientMetric[] = [];
+  const data: PatientData = await getPatient(
+    id,
+    false,
+    false,
+    false,
+    true,
+    false
+  );
+  if (data.metrics) metrics = data.metrics;
+  return metrics;
+};
+
+export const getPatientNotes: GetPatientNotes = async (id) => {
+  let notes: PatientNote[] = [];
+  const data: PatientData = await getPatient(
+    id,
+    false,
+    false,
+    false,
+    false,
+    true
+  );
+  if (data.notes) notes = data.notes;
+  return notes;
+};
+
+export const getPatientsByBirthdate: GetPatientsByBirthdate = async (
+  birthdate
+) => {
+  const authorization = await getAuthorization();
+  let data: PatientSearchResult[] = [];
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/patients`,
+      headers: authorization,
+      params: {
+        birthdate,
+      },
+    });
+    data = response?.data?.data;
+  } catch (error) {
+    console.error(error);
+  }
+  return data;
+};
+
+export const getPatientsByName: GetPatientsByName = async (name) => {
+  const authorization = await getAuthorization();
+  let data: PatientSearchResult[] = [];
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/patients`,
+      headers: authorization,
+      params: {
+        name,
+      },
+    });
+    data = response?.data?.data;
   } catch (error) {
     console.error(error);
   }
@@ -108,7 +251,7 @@ export const getMedicationCategories: GetMedicationCategories = async () => {
 export const postMedication: PostMedication = async (
   name,
   strength,
-  category_id
+  categoryId
 ) => {
   const authorization = await getAuthorization();
 
@@ -125,7 +268,7 @@ export const postMedication: PostMedication = async (
       data: {
         name,
         strength,
-        category_id,
+        categoryId,
       },
     });
     responseStatus.status = response.status;
@@ -136,112 +279,88 @@ export const postMedication: PostMedication = async (
   return responseStatus;
 };
 
-//----------------------------------------------------------------
-
-export const getItem: GetItem = async (params) => {
+export const postPatientMedication: PostPatientMedication = async (
+  patientId,
+  medicationId
+) => {
   const authorization = await getAuthorization();
-  try {
-    const response: AxiosResponse = await axios({
-      method: 'get',
-      url: `${REACT_APP_URL}/patient`,
-      headers: {
-        ...authorization,
-      },
-      params,
-    });
-    const res = JSON.parse(response?.data?.body) ?? {};
 
-    if (Object.entries(res).length > 0) res.statusCode = 200;
-    else res.statusCode = 404;
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
 
-    return res;
-  } catch (error) {
-    console.error(error);
-    const e = {
-      statusCode: error?.response?.status ?? 500,
-      error: error?.response?.statusText ?? 'Error',
-    };
-    console.log(e);
-    return e;
-  }
-};
-
-export const getItems: GetItems = async (params) => {
-  const authorization = await getAuthorization();
-  try {
-    const response: AxiosResponse = await axios({
-      method: 'get',
-      url: `${REACT_APP_URL}/patients`,
-      headers: {
-        ...authorization,
-      },
-      params,
-    });
-    const res = JSON.parse(response?.data?.body) ?? {};
-
-    if (Object.entries(res).length > 0) res.statusCode = 200;
-    else res.statusCode = 404;
-
-    return res;
-  } catch (error) {
-    console.error(error);
-    return error;
-  }
-};
-
-export const postItem: PostItem = async (data) => {
-  const authorization = await getAuthorization();
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
-      url: `${REACT_APP_URL}/patient`,
-      headers: {
-        ...authorization,
+      url: `${REACT_APP_URL}/patient/medication`,
+      headers: authorization,
+      data: {
+        patientId,
+        medicationId,
       },
-      data,
     });
-    return +response?.data?.statusCode === 201 ?? false;
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
   } catch (error) {
     console.error(error);
-    return false;
   }
+  return responseStatus;
 };
 
-export const putItem: PutItem = async (id, key, data) => {
+export const postPatientMetric: PostPatientMetric = async (
+  patientId,
+  metricId,
+  value
+) => {
   const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
   try {
     const response: AxiosResponse = await axios({
-      method: 'put',
-      url: `${REACT_APP_URL}/patient`,
-      headers: {
-        ...authorization,
+      method: 'post',
+      url: `${REACT_APP_URL}/patient/metric`,
+      headers: authorization,
+      data: {
+        patientId,
+        metricId,
+        value,
       },
-      params: {
-        id,
-        key,
-      },
-      data,
     });
-    return +response?.data?.statusCode === 200 ?? false;
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
   } catch (error) {
     console.error(error);
-    return false;
   }
+  return responseStatus;
 };
 
-export const deleteItem = async (url: string, data: Item): Promise<boolean> => {
+export const postPatientNote: PostPatientNote = async (patientId, note) => {
   const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
   try {
     const response: AxiosResponse = await axios({
-      method: 'delete',
-      url: `${REACT_APP_URL}/patient`,
-      headers: { ...authorization },
-      data,
+      method: 'post',
+      url: `${REACT_APP_URL}/patient/note`,
+      headers: authorization,
+      data: {
+        patientId,
+        note,
+      },
     });
-    const { status } = await response;
-    return +status === 200;
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
   } catch (error) {
     console.error(error);
-    return false;
   }
+  return responseStatus;
 };

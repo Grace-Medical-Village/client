@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
@@ -10,26 +11,36 @@ import {
   Select,
   Table,
 } from 'antd';
-import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  ExclamationCircleOutlined,
+  PlusOutlined,
+  // SearchOutlined,
+} from '@ant-design/icons';
 import { MedicationsContext } from '../../context/medications';
 import {
   deleteMedication,
   getMedicationCategories,
   getMedications,
   postMedication,
+  requestSuccess,
 } from '../../services/api';
 import {
   CategoryFilter,
-  MedicationTableData,
+  MedicationTableRecord,
   MedicationState,
 } from '../../utils/types';
 import { Store } from 'antd/lib/form/interface';
-import { IconType } from 'antd/lib/notification';
 import { notificationHandler } from '../../utils/ui';
+// import { FilterDropdownProps } from 'antd/lib/table/interface';
+import './index.css';
 
 function Medications(): JSX.Element {
   const { state, update } = useContext(MedicationsContext);
-  const [data, set] = useState<MedicationTableData[]>([]);
+  const [data, set] = useState<MedicationTableRecord[]>([]);
+  // const [searchText, setSearchText] = useState('');
+  // const [searchedColumn, setSearchedColumn] = useState('');
+  // const [editingKey, setEditingKey] = useState('');
+
   const [form] = Form.useForm();
   const [showDrawer, setShowDrawer] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter[]>([]);
@@ -47,10 +58,10 @@ function Medications(): JSX.Element {
       }
     };
     buildMedicationState();
-  }, []);
+  }, [state, update]);
 
   useEffect(() => {
-    const d: MedicationTableData[] = [];
+    const d: MedicationTableRecord[] = [];
     state.medications.forEach(({ id, name, strength, category_name }) => {
       const medication = {
         key: id,
@@ -72,19 +83,34 @@ function Medications(): JSX.Element {
     setCategoryFilter(c);
   }, [state]);
 
+  // ADD MEDICATION
+  const onReset = () => form.resetFields();
+
   async function onFinish(data: Store) {
     const { name, strength, categoryId } = data;
     const { status } = await postMedication(name, strength, categoryId);
     const description = 'Medication saved';
     notificationHandler(status, description, 'bottomRight');
+    if (requestSuccess(status)) {
+      onReset();
+      const { categories } = state;
+      const medications = await getMedications();
+      const data: MedicationState = {
+        categories,
+        medications,
+      };
+      update(data);
+    }
   }
 
+  // DELETE MEDICATION
   const onDeleteMedication = async (id: string | number) => {
     const { status } = await deleteMedication(id);
     const description = 'Medication deleted';
     notificationHandler(status, description, 'topRight');
     deleteMedicationFromContext(+id);
   };
+
   const deleteMedicationFromContext = (id: number) => {
     const medications = state.medications.filter(
       (medication) => medication.id !== id
@@ -114,11 +140,131 @@ function Medications(): JSX.Element {
     });
   }
 
+  // SEARCH
+  // const getColumnSearchProps = (dataIndex: string) => ({
+  //   // eslint-disable-next-line react/display-name
+  //   filterDropdown: (f: FilterDropdownProps) => (
+  //     // { setSelectedKeys,
+  //     // selectedKeys,
+  //     // confirm,
+  //     // clearFilters, }
+  //     <div style={{ padding: 8 }}>
+  //       <Input
+  //         ref={(node) => {
+  //           searchInput = node;
+  //         }}
+  //         placeholder={`Search ${dataIndex}`}
+  //         value={f.selectedKeys[0]}
+  //         onChange={(e) =>
+  //           f.setSelectedKeys(e.target.value ? [e.target.value] : [])
+  //         }
+  //         onPressEnter={() => handleSearch(f.selectedKeys, confirm, dataIndex)}
+  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
+  //       />
+  //       <Space>
+  //         <Button
+  //           type="primary"
+  //           onClick={() => handleSearch(f.selectedKeys, confirm, dataIndex)}
+  //           icon={<SearchOutlined />}
+  //           size="small"
+  //           style={{ width: 90 }}
+  //         >
+  //           Search
+  //         </Button>
+  //         <Button
+  //           onClick={() => handleSearchReset(f.clearFilters)}
+  //           size="small"
+  //           style={{ width: 90 }}
+  //         >
+  //           Reset
+  //         </Button>
+  //         <Button
+  //           type="link"
+  //           size="small"
+  //           onClick={() => {
+  //             confirm({ closeDropdown: false });
+  //             setSearchText(f.selectedKeys[0].toString());
+  //             setSearchedColumn(dataIndex);
+  //           }}
+  //         >
+  //           Filter
+  //         </Button>
+  //       </Space>
+  //     </div>
+  //   ),
+  //   // eslint-disable-next-line react/display-name
+  //   filterIcon: (filtered: boolean) => (
+  //     <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+  //   ),
+  //   onFilter: (
+  //     value: string,
+  //     record: { [x: string]: { toString: () => string } }
+  //   ) =>
+  //     record[dataIndex]
+  //       ? record[dataIndex]
+  //           .toString()
+  //           .toLowerCase()
+  //           .includes(value.toLowerCase())
+  //       : '',
+  //   onFilterDropdownVisibleChange: (visible: boolean) => {
+  //     if (visible) setTimeout(() => searchInput.select(), 100);
+  //   },
+  //   render: (text: string) => text,
+  // });
+
+  // const handleSearch = (selectedKeys: any, confirm: any, dataIndex: any) => {
+  //   confirm();
+  //   setSearchText(selectedKeys[0]);
+  //   setSearchedColumn(dataIndex);
+  // };
+
+  // const handleSearchReset = (clearFilters: any) => {
+  //   clearFilters();
+  //   setSearchText('');
+  // };
+
+  // EDIT
+  // https://ant-design.gitee.io/components/table/#components-table-demo-drag-sorting-handler
+  // const isEditing = (record: Item) => record.key === editingKey;
+  // const edit = (record: Partial<Item> & { key: React.Key }) => {
+  //   form.setFieldsValue({ name: '', age: '', address: '', ...record });
+  //   setEditingKey(record.key);
+  // };
+  // const cancel = () => {
+  //   setEditingKey('');
+  // };
+  // const save = async (key: React.Key) => {
+  //   try {
+  //     const row = (await form.validateFields()) as Item;
+
+  //     const newData = [...data];
+  //     const index = newData.findIndex((item) => key === item.key);
+  //     if (index > -1) {
+  //       const item = newData[index];
+  //       newData.splice(index, 1, {
+  //         ...item,
+  //         ...row,
+  //       });
+  //       // todo
+  //       // setData(newData);
+  //       setEditingKey('');
+  //     } else {
+  //       newData.push(row);
+  //       // todo
+  //       // setData(newData);
+  //       setEditingKey('');
+  //     }
+  //   } catch (errInfo) {
+  //     console.log('Validate Failed:', errInfo);
+  //   }
+  // };
+
   const columns = [
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      // ...getColumnSearchProps('name'),
     },
     {
       title: 'Strength',
@@ -142,24 +288,29 @@ function Medications(): JSX.Element {
       key: 'action',
       // eslint-disable-next-line react/display-name
       render: (record: any) => (
-        <a
+        <Button
           onClick={() =>
             showDeleteConfirm(record.id, record.name, record.strength)
           }
+          type="link"
         >
           Delete
-        </a>
+        </Button>
       ),
     },
   ];
 
   return (
     <>
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 100 }}
-      />
+      <Form form={form} component={false}>
+        <Table
+          bordered
+          columns={columns}
+          dataSource={data}
+          pagination={{ pageSize: 50 }}
+          rowClassName="editable-row"
+        />
+      </Form>
       <Button
         block
         onClick={() => setShowDrawer(true)}
@@ -192,18 +343,16 @@ function Medications(): JSX.Element {
                 label="Name"
                 rules={[{ required: true, message: 'Please enter a name' }]}
               >
-                <Input placeholder="Please enter medication name" />
+                <Input placeholder="Enter medication name" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="strength"
                 label="Strength"
-                rules={[
-                  { required: true, message: 'Please enter the strength' },
-                ]}
+                rules={[{ required: false }]}
               >
-                <Input placeholder="Please enter medication strength" />
+                <Input placeholder="Enter medication strength" />
               </Form.Item>
             </Col>
             <Col span={24}>
@@ -211,10 +360,10 @@ function Medications(): JSX.Element {
                 name="categoryId"
                 label="Category"
                 rules={[
-                  { required: true, message: 'Please enter the strength' },
+                  { required: true, message: 'Please select a category' },
                 ]}
               >
-                <Select placeholder="Please choose a category">
+                <Select placeholder="Select a category">
                   {state.categories.map(({ id, name }) => (
                     <Select.Option key={id} value={id}>
                       {name}

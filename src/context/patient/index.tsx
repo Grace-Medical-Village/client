@@ -5,30 +5,26 @@ import React, {
   SetStateAction,
   useState,
 } from 'react';
-import { MedicationState } from '../../utils/types';
+import { PatientData } from '../../utils/types';
 
 function createCtx<A>(defaultValue: A) {
   type UpdateType = Dispatch<SetStateAction<typeof defaultValue>>;
 
   const defaultUpdate: UpdateType = () => defaultValue;
-
-  const MedicationsContext = createContext({
+  const PatientContext = createContext({
     state: defaultValue,
     update: defaultUpdate,
   });
 
   function Provider(props: PropsWithChildren<unknown>) {
     const [state, update] = useState(defaultValue);
-    return <MedicationsContext.Provider value={{ state, update }} {...props} />;
+    return <PatientContext.Provider value={{ state, update }} {...props} />;
   }
-
-  return [MedicationsContext, Provider] as const;
+  return [PatientContext, Provider] as const;
 }
 
-const defaultState: MedicationState = {
-  categories: [],
-  medications: [],
-};
+const defaultState: PatientData = {};
 
-const [MedicationsContext, MedicationsProvider] = createCtx(defaultState);
-export { MedicationsProvider, MedicationsContext };
+const [PatientContext, PatientProvider] = createCtx(defaultState);
+
+export { PatientProvider, PatientContext };

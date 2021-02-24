@@ -1,19 +1,19 @@
 import React, { useContext } from 'react';
-import { Button, Form, Input, message, Row, Select } from 'antd';
+import { Button, Form, Input, message, Row } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Store } from 'antd/lib/form/interface';
-import { ItemType, NoteItem, NoteBuilder } from '../../utils/types';
-import { postItem } from '../../services/api';
-import { useId } from '../../hooks';
-import { NotesContext } from '../../context/notes';
-
-const { TextArea } = Input;
-const { Option } = Select;
+import { PatientContext } from '../../context/patient';
+import {
+  getPatientNotes,
+  postPatientNote,
+  requestSuccess,
+} from '../../services/api';
+import { notificationHandler } from '../../utils/ui';
+import { PatientData } from '../../utils/types';
 
 export default function NotesForm(): JSX.Element {
-  const { state, update } = useContext(NotesContext);
   const [form] = useForm();
-  const id = useId();
+  const { state, update } = useContext(PatientContext);
 
   const layout = {
     wrapperCol: { span: 24 },
@@ -23,36 +23,26 @@ export default function NotesForm(): JSX.Element {
     form.resetFields();
   }
 
-  const noteBuilder: NoteBuilder = (note, noteType) => {
-    const timestamp = Date.now();
-    return {
-      id,
-      key: `note-${timestamp}`,
-      type: ItemType.NOTE,
-      staff: 'n/a', // TODO
-      note: note.trim(),
-      noteType,
-      createdAt: timestamp,
-      modifiedAt: timestamp,
-    };
-  };
-
-  function onFinish(data: Store) {
-    const { note, noteType } = data;
+  async function onFinish(data: Store) {
+    const { note } = data;
     if (!note) message.warn('Note is empty');
-    const item: NoteItem = noteBuilder(note, noteType);
-    postItem(item)
-      .then((success: boolean): void => {
-        if (success) {
-          message.success('Note Saved');
-          update([...state, item]);
-          onReset();
-        } else message.warn('Unable to Save Note');
-      })
-      .catch((e: Error): void => {
-        console.error(e);
-        message.warn('Unable to Connect to Server');
-      });
+    if (!state?.patient?.id) message.warn('No patient selected');
+    else {
+      const { status } = await postPatientNote(state.patient.id, note);
+      const description = 'Note saved';
+      notificationHandler(status, description, 'bottomRight');
+      if (requestSuccess(status)) fetchNotes(state.patient.id);
+    }
+  }
+
+  async function fetchNotes(id: number) {
+    const notes = await getPatientNotes(id);
+    const data: PatientData = {
+      ...state,
+      notes,
+    };
+    update(data);
+    onReset();
   }
 
   return (
@@ -62,16 +52,10 @@ export default function NotesForm(): JSX.Element {
       layout="vertical"
       name="noteForm"
       onFinish={onFinish}
-      style={{ marginTop: '1rem' }}
+      style={{ marginTop: '0.5rem' }}
     >
-      <Form.Item name="noteType">
-        <Select defaultValue="general">
-          <Option value="general">General Note</Option>
-          <Option value="chronicCondition">Chronic Condition</Option>
-        </Select>
-      </Form.Item>
       <Form.Item name="note" style={{ margin: 0 }}>
-        <TextArea
+        <Input.TextArea
           autoSize={{ minRows: 2, maxRows: 5 }}
           placeholder="Take a note about the patient"
           showCount={true}
@@ -79,11 +63,11 @@ export default function NotesForm(): JSX.Element {
         />
       </Form.Item>
       <Form.Item>
-        <Row>
+        <Row style={{ paddingTop: '1rem' }}>
           <Button
-            type="primary"
             htmlType="submit"
             style={{ marginRight: '0.5rem' }}
+            type="primary"
           >
             Submit
           </Button>

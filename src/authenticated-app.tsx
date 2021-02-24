@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Col, Layout, Row } from 'antd';
 import { Switch, Route } from 'react-router-dom';
@@ -10,10 +10,34 @@ import Patient from './pages/patient';
 
 import Header from './components/header';
 import Footer from './components/footer';
+import { PatientContext } from './context/patient';
+import { getPatient } from './services/api';
+import { isEmpty } from 'lodash';
+import { PatientData } from './utils/types';
 
 const { Content } = Layout;
 
 function AuthenticatedApp(): JSX.Element {
+  const { state, update } = useContext(PatientContext);
+
+  useEffect(() => {
+    const fetchPatient = async () => {
+      const patientId: string = localStorage.getItem('patientId') + '';
+      if (isEmpty(state) && !isNaN(Number(patientId))) {
+        const res: PatientData = await getPatient(
+          Number.parseInt(patientId),
+          true,
+          true,
+          true,
+          true,
+          true
+        );
+        if (!isEmpty(res.patient)) update(res);
+      }
+    };
+    fetchPatient();
+  }, [state, update]);
+
   return (
     <>
       <Layout style={{ minHeight: '100vh', overflow: 'auto' }}>

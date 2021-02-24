@@ -2,24 +2,32 @@ import React from 'react';
 import { List, Row } from 'antd';
 
 import { getAge } from '../../utils/dates';
-import { DashboardBackground } from '../../utils/types';
 
-export default function PatientBackground({
-  gender,
-  nativeLanguage,
-}: DashboardBackground): JSX.Element {
+export default function PatientAbout(): JSX.Element {
   const data = [
+    {
+      title: 'Smoker',
+      value: 'TODO',
+    },
+    {
+      title: 'Age',
+      value: 'TODO',
+    },
+    {
+      title: 'Map',
+      value: 'TODO',
+    },
     {
       title: 'Age',
       value: getAge('') ?? 'N/A',
     },
     {
       title: 'Gender',
-      value: gender ?? 'N/A',
+      value: 'TODO',
     },
     {
       title: 'Native Language',
-      value: nativeLanguage ?? 'N/A',
+      value: 'TODO',
     },
     {
       title: 'Last Visit',

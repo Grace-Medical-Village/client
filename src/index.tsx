@@ -3,35 +3,33 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Amplify } from 'aws-amplify';
 import { AuthProvider } from './context/auth';
-import { BackgroundProvider } from './context/background';
 import { ConditionsProvider } from './context/conditions';
 import { MetricsProvider } from './context/metrics';
-import { NotesProvider } from './context/notes';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { config } from './config';
 import './index.css';
 import { MedicationsProvider } from './context/medications';
+import { PatientProvider } from './context/patient';
 
 Amplify.configure(config);
 
 ReactDOM.render(
-  // TODO <React.StrictMode>
+  // <React.StrictMode>
   <AuthProvider>
-    <MedicationsProvider>
-      <BackgroundProvider>
+    <PatientProvider>
+      <MedicationsProvider>
         <ConditionsProvider>
-          <NotesProvider>
-            <MetricsProvider>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </MetricsProvider>
-          </NotesProvider>
+          <MetricsProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </MetricsProvider>
         </ConditionsProvider>
-      </BackgroundProvider>
-    </MedicationsProvider>
+      </MedicationsProvider>
+    </PatientProvider>
   </AuthProvider>,
+  // </React.StrictMode>,
   document.getElementById('root')
 );
 

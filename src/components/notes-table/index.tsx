@@ -1,43 +1,33 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Table } from 'antd';
-import { NotesContext } from '../../context/notes';
-import { NoteItem, NotesTableRecord } from '../../utils/types';
+import { PatientNoteTableRecord, PatientNote } from '../../utils/types';
 import { monthDayYearFullDate } from '../../utils/dates';
-import { noteTypes } from '../../utils/notes';
+import { PatientContext } from '../../context/patient';
 
 export default function NotesTable(): JSX.Element {
-  const [data, set] = useState<NotesTableRecord[]>([]);
-  const { state } = useContext(NotesContext);
+  const [data, set] = useState<PatientNoteTableRecord[]>([]);
+  const { state } = useContext(PatientContext);
 
   useEffect(() => {
-    console.log(state);
-    const d: NotesTableRecord[] = [];
-    state.forEach((item: NoteItem) => {
-      console.log(item);
-      const m: NotesTableRecord = {
-        key: item.createdAt.toString(),
-        date: monthDayYearFullDate(item.createdAt.toString()),
-        note: item.note,
-        noteType: noteTypes[item.noteType] ?? 'General', // todo
-        staff: item.staff,
-      };
-      d.push(m);
-    });
+    const d: PatientNoteTableRecord[] = [];
+    if (state?.notes) {
+      state?.notes?.forEach((note: PatientNote) => {
+        const m: PatientNoteTableRecord = {
+          id: note.id,
+          key: note.id,
+          date: monthDayYearFullDate(note.created_at.toString()),
+          note: note.note,
+        };
+        d.push(m);
+      });
+    }
     set(d);
   }, [state]);
 
   const columns = [
     {
-      title: 'Type',
-      dataIndex: 'noteType',
-    },
-    {
       title: 'Date',
       dataIndex: 'date',
-    },
-    {
-      title: 'Staff',
-      dataIndex: 'staff',
     },
     {
       title: 'Note',
