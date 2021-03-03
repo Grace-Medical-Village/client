@@ -11,13 +11,10 @@ export const toIso8601DateFromTimestamp = (date: number): string =>
   new Date(date).toISOString().split('T')[0];
 
 export const getAge = (birthdate: string): number => {
-  const now = new Date();
-  const past = new Date(birthdate);
-  const nowYear = now.getFullYear();
-  const pastYear = past.getFullYear();
-  const age = nowYear - pastYear;
+  const diffMs = Date.now() - new Date(birthdate).getTime();
+  const ageDate = new Date(diffMs);
 
-  return age;
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
 };
 
 export const monthDayYearFullDate = (date: string): string =>

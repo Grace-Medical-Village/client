@@ -23,22 +23,24 @@ export interface Response {
 export type RequestSuccess = (n: number) => boolean;
 
 // RESPONSE
+export type ID = {
+  id: number;
+};
+
 export type ResponseStatus = {
   status: number;
   statusText: string;
-};
-
-export type MedicationCategory = {
-  id: number;
-  name: string;
-  created_at: string;
-  modified_at: string;
+  id?: number;
 };
 
 // METHODS
 export type DeleteMedication = (id: string | number) => Promise<ResponseStatus>;
+export type DeletePatientCondition = (
+  patientId: number,
+  conditionId: number
+) => Promise<ResponseStatus>;
 
-export type GetConditions = () => Promise<string[]>;
+export type GetConditions = () => Promise<Condition[]>;
 
 export type GetMedications = () => Promise<Medication[]> | any; // todo
 
@@ -77,6 +79,13 @@ export type PostMedication = (
   categoryId: string
 ) => Promise<ResponseStatus>;
 
+export type PostPatient = (newPatient: NewPatient) => Promise<ResponseStatus>;
+
+export type PostPatientCondition = (
+  patientId: number,
+  conditionId: number
+) => Promise<ResponseStatus>;
+
 export type PostPatientMedication = (
   patientId: number,
   medicationId: number
@@ -96,6 +105,18 @@ export type PostPatientNote = (
 /**
  * STATE MANAGEMENT
  */
+export type Condition = {
+  id: number;
+  condition_name: string;
+};
+
+export type MedicationCategory = {
+  id: number;
+  name: string;
+  created_at: string;
+  modified_at: string;
+};
+
 export type Medication = {
   id: number;
   name: string;
@@ -119,6 +140,20 @@ export type Metric = {
   modified_at: string;
 };
 
+export type NewPatient = {
+  firstName: string;
+  lastName: string;
+  birthdate: string;
+  gender: string;
+  email?: string;
+  height?: string;
+  mobile?: string;
+  country: string;
+  nativeLanguage?: string;
+  nativeLiteracy?: string;
+  smoker: boolean;
+};
+
 export type PatientSearchResult = {
   id: number;
   first_name: string;
@@ -127,6 +162,7 @@ export type PatientSearchResult = {
   gender?: string;
   mobile?: string;
 };
+
 export type Patient = {
   id: number;
   first_name: string;
@@ -147,6 +183,7 @@ export type Patient = {
 export type PatientCondition = {
   id: number;
   condition_id: number;
+  condition_name: string;
   patient_id: number;
   created_at: string;
   modified_at: string;

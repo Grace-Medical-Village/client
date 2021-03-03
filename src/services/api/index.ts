@@ -1,7 +1,9 @@
 import { Auth } from 'aws-amplify';
 import axios, { AxiosResponse } from 'axios';
 import {
+  Condition,
   DeleteMedication,
+  DeletePatientCondition,
   GetConditions,
   GetMedicationCategories,
   GetMedications,
@@ -12,6 +14,7 @@ import {
   GetPatientNotes,
   GetPatientsByBirthdate,
   GetPatientsByName,
+  ID,
   Medication,
   MedicationCategory,
   Metric,
@@ -21,6 +24,8 @@ import {
   PatientNote,
   PatientSearchResult,
   PostMedication,
+  PostPatient,
+  PostPatientCondition,
   PostPatientMedication,
   PostPatientMetric,
   PostPatientNote,
@@ -70,16 +75,45 @@ export const deleteMedication: DeleteMedication = async (id) => {
   return responseStatus;
 };
 
+export const deletePatientCondition: DeletePatientCondition = async (
+  patientId,
+  conditionId
+) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'delete',
+      url: `${REACT_APP_URL}/patient/condition`,
+      headers: authorization,
+      params: {
+        patientId,
+        conditionId,
+      },
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
 export const getConditions: GetConditions = async () => {
   const authorization = await getAuthorization();
-  let data: string[] = [];
+  let data: Condition[] = [];
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
       url: `${REACT_APP_URL}/conditions`,
       headers: authorization,
     });
-    data = response?.data;
+    data = response?.data?.data;
   } catch (error) {
     console.error(error);
   }
@@ -269,6 +303,64 @@ export const postMedication: PostMedication = async (
         name,
         strength,
         categoryId,
+      },
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const postPatient: PostPatient = async (newPatient) => {
+  const authorization = await getAuthorization();
+
+  const res: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'post',
+      url: `${REACT_APP_URL}/patient`,
+      headers: authorization,
+      data: {
+        ...newPatient,
+      },
+    });
+    const data: ID | undefined = response?.data?.data[0];
+    if (data?.id) {
+      res.id = data.id;
+    }
+    res.status = response.status;
+    res.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return res;
+};
+
+export const postPatientCondition: PostPatientCondition = async (
+  patientId,
+  conditionId
+) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'post',
+      url: `${REACT_APP_URL}/patient/condition`,
+      headers: authorization,
+      data: {
+        patientId,
+        conditionId,
       },
     });
     responseStatus.status = response.status;

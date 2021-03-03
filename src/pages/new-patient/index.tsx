@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
-import { Button, DatePicker, Form, Input, Radio, Rate, Select } from 'antd';
+import React, { useContext, useState } from 'react';
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Radio,
+  Rate,
+  Select,
+  Switch,
+} from 'antd';
+import { isEmpty } from 'lodash';
+import { useHistory } from 'react-router-dom';
 
 import { countries, languages } from '../../utils/patient/index';
 import { monthDayYear, yearMonthDay } from '../../utils/dates/index';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
+import { getPatient, postPatient, requestSuccess } from '../../services/api';
+import { notificationHandler } from '../../utils/ui';
+import { PatientContext } from '../../context/patient';
+import { NewPatient } from '../../utils/types';
 
 const { Option } = Select;
 
@@ -19,7 +34,9 @@ const tailLayout = {
 
 function NewPatientForm(): JSX.Element {
   const [form] = Form.useForm();
+  const history = useHistory();
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
+  const { update } = useContext(PatientContext);
 
   const nativeLiteracyRatings = [
     'Poor',
@@ -33,36 +50,51 @@ function NewPatientForm(): JSX.Element {
   const onFinishFailed = () => null;
   const onReset = () => form.resetFields();
 
-  function onFinish(data: Store) {
-    const birthdate = data.birthdate.format(yearMonthDay);
-    const time = Date.now();
-    if (!data.mobile) delete data.mobile;
+  async function onFinish(data: Store) {
     console.log(data);
-    const patient = buildPatient(birthdate, time, data);
-    console.log(patient);
-    // TODO -> POST PATIENT
-    // TODO -> SET LOCAL STORAGE
-    // TODO -> PUSH TO DASHBOARD
-    // postNewPatient(patient);
+    const birthdate: string = data.birthdate.format(yearMonthDay);
+    const {
+      firstName,
+      lastName,
+      gender,
+      email,
+      height,
+      mobile,
+      country,
+      nativeLanguage,
+      nativeLiteracy,
+      smoker,
+    } = data;
+
+    const newPatient: NewPatient = {
+      firstName,
+      lastName,
+      gender,
+      email,
+      height,
+      mobile,
+      country,
+      nativeLanguage,
+      nativeLiteracy,
+      smoker,
+      birthdate,
+    };
+    const res = await postPatient(newPatient);
+    const description = 'Patient saved';
+    if (requestSuccess(res.status) && res.id) {
+      notificationHandler(res.status, description, 'bottomRight');
+      onReset();
+      setNewPatient(res.id);
+    }
   }
 
-  // TODO TYPE
-  const buildPatient = (birthdate: string, time: number, data: Store) => {
-    const backgroundData: any = {
-      birthdate,
-      country: data.country,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      gender: data.gender,
-      nativeLanguage: data.nativeLanguage,
-      nativeLiteracy: data.nativeLiteracy,
-      zipCode5: data.zipCode5,
-      createdAt: time,
-      modifiedAt: time,
-    };
-    if (data.mobile) backgroundData.mobile = data.mobile;
-
-    return backgroundData;
+  const setNewPatient = async (id: number) => {
+    const result = await getPatient(id, true, true, true, true, true);
+    if (!isEmpty(result.patient)) {
+      localStorage.setItem('patientId', id.toString());
+      update(result);
+    }
+    history.push('/dashboard');
   };
 
   return (
@@ -170,6 +202,9 @@ function NewPatientForm(): JSX.Element {
               </Option>
             ))}
           </Select>
+        </Form.Item>
+        <Form.Item label="Smoker" name="smoker" valuePropName="checked">
+          <Switch />
         </Form.Item>
         <Form.Item {...tailLayout}>
           <Button className="submit-btn" type="primary" htmlType="submit">

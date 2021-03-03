@@ -43,7 +43,6 @@ export default function NotesForm(): JSX.Element {
   }
 
   async function onFinish(data: Store) {
-    console.log(data);
     if (!data.medication || !state?.patient?.id)
       message.warn('Unable to save medication');
     else {

@@ -32,7 +32,6 @@ function PatientSearch(): JSX.Element {
   const history = useHistory();
   const [toggle, setToggle] = useState(true);
   const [searching, setSearching] = useState(false);
-  const [patientFound, setPatientFound] = useState(false);
   const [patientSelected, setPatientSelected] = useState(false);
   const [patientSearchResult, setPatientSearchResult] = useState<
     PatientSearchResult[]
@@ -62,7 +61,6 @@ function PatientSearch(): JSX.Element {
       setPatientSearchResult(
         searchResult.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
       );
-      setPatientFound(true);
     }
   };
 
@@ -75,7 +73,6 @@ function PatientSearch(): JSX.Element {
       setPatientSearchResult(
         searchResult.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
       );
-      setPatientFound(true);
     }
   };
 
@@ -136,7 +133,9 @@ function PatientSearch(): JSX.Element {
               return (
                 <Card
                   extra={
-                    <a onClick={() => selectPatient(res.id)}>Select Patient</a>
+                    <Button onClick={() => selectPatient(res.id)} type="link">
+                      Select Patient
+                    </Button>
                   }
                   key={i}
                   style={{ marginTop: i > 0 ? 16 : 0 }}

@@ -1,12 +1,3 @@
-export const idGenerator = (
-  birthdate: string,
-  firstName: string,
-  lastName: string
-): string => `${lastName}${firstName}_${birthdate}`.toLowerCase().trim();
-
-export const capitalize = (s: string): string =>
-  s.charAt(0).toUpperCase() + s.slice(1);
-
 export const languages: string[] = [
   'english',
   'arabic',

@@ -1,37 +1,41 @@
-import React from 'react';
-import { List, Row } from 'antd';
+import React, { useContext } from 'react';
+import { List, Row, Typography } from 'antd';
 
-import { getAge } from '../../utils/dates';
+import { getAge, monthDayYearFullDate } from '../../utils/dates';
+import { PatientContext } from '../../context/patient';
+import { capitalize } from 'lodash';
 
 export default function PatientAbout(): JSX.Element {
+  const { state } = useContext(PatientContext);
+
   const data = [
     {
-      title: 'Smoker',
-      value: 'TODO',
+      title: 'Birthday',
+      value: state?.patient?.birthdate
+        ? monthDayYearFullDate(state.patient.birthdate)
+        : 'N/A',
     },
     {
       title: 'Age',
-      value: 'TODO',
-    },
-    {
-      title: 'Map',
-      value: 'TODO',
-    },
-    {
-      title: 'Age',
-      value: getAge('') ?? 'N/A',
+      value: state?.patient?.birthdate
+        ? getAge(state.patient.birthdate)
+        : 'N/A',
     },
     {
       title: 'Gender',
-      value: 'TODO',
+      value: capitalize(state?.patient?.gender) ?? 'N/A',
     },
     {
       title: 'Native Language',
-      value: 'TODO',
+      value: state?.patient?.native_language ?? 'N/A',
     },
     {
-      title: 'Last Visit',
-      value: 'N/A', // todo
+      title: 'Map',
+      value: capitalize(state?.patient?.map.toString()) ?? 'N/A',
+    },
+    {
+      title: 'Smoker',
+      value: capitalize(state?.patient?.smoker.toString()) ?? 'N/A',
     },
   ];
 
@@ -39,12 +43,17 @@ export default function PatientAbout(): JSX.Element {
     <>
       <Row>
         <List
-          size="small"
+          bordered={false}
           dataSource={data}
+          size="large"
           renderItem={(item) => (
             <List.Item>
-              <strong>{item.title}:</strong>
-              {item.value}
+              <Row align="middle" justify="space-between">
+                <Typography.Text strong style={{ marginRight: '1rem' }}>
+                  {item.title}:
+                </Typography.Text>
+                <Typography.Text>{item.value}</Typography.Text>
+              </Row>
             </List.Item>
           )}
         />

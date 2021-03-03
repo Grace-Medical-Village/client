@@ -3,11 +3,10 @@ import React, {
   Dispatch,
   PropsWithChildren,
   SetStateAction,
+  useState,
 } from 'react';
-import { useStateWithStorage } from '../../hooks';
-import { GetConditionsFromStorage, Storage } from '../../utils/types';
+import { Condition } from '../../utils/types';
 
-const LOCAL_STORAGE_KEY = Storage.CONDITIONS;
 function createCtx<A>(defaultValue: A) {
   type UpdateType = Dispatch<SetStateAction<typeof defaultValue>>;
 
@@ -19,27 +18,16 @@ function createCtx<A>(defaultValue: A) {
   });
 
   function Provider(props: PropsWithChildren<unknown>) {
-    const [state, update] = useStateWithStorage(
-      LOCAL_STORAGE_KEY,
-      defaultValue
-    );
+    const [state, update] = useState(defaultValue);
     return <ConditionsContext.Provider value={{ state, update }} {...props} />;
   }
   return [ConditionsContext, Provider] as const;
 }
 
-const defaultConditionsState: string[] = [];
-
-const getConditionsFromStorage: GetConditionsFromStorage = () => {
-  const localItem = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (localItem) {
-    const parsedItem: string[] = JSON.parse(localItem);
-    return parsedItem;
-  } else return defaultConditionsState;
-};
+const defaultConditionsState: Condition[] = [];
 
 const [ConditionsContext, ConditionsProvider] = createCtx(
-  getConditionsFromStorage()
+  defaultConditionsState
 );
 
-export { ConditionsProvider, ConditionsContext, defaultConditionsState };
+export { ConditionsProvider, ConditionsContext };

@@ -37,7 +37,7 @@ export default function NotesTable(): JSX.Element {
         if (metric) {
           const m: PatientMetricTableRecord = {
             id: patientMetric.metric_id,
-            key: patientMetric.metric_id,
+            key: patientMetric.id,
             date: monthDayYearFullDate(patientMetric.created_at.toString()),
             metric: metric.metric_name,
             value: `${patientMetric.value} ${metric.uom}`,

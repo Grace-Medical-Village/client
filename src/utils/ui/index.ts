@@ -5,7 +5,7 @@ export const notificationHandler = (
   status: number,
   description: string,
   placement: NotificationPlacement
-) => {
+): void => {
   const type: IconType = status <= 299 && status >= 200 ? 'success' : 'error';
   const message = status <= 299 && status >= 200 ? 'Success' : 'Error';
   openNotificationWithIcon(message, description, type, placement);

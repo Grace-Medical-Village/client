@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Collapse, Divider, Radio, Typography } from 'antd';
 
 import NoPatient from '../../components/no-patient';
@@ -104,7 +104,7 @@ export default function Dashboard(): JSX.Element {
               {state?.patient?.first_name} {state?.patient?.last_name}
             </Title>
             <Collapse defaultActiveKey={['1', '2']}>
-              <Collapse.Panel header="Background" key="1">
+              <Collapse.Panel header="About" key="1">
                 <PatientAbout />
               </Collapse.Panel>
               <Collapse.Panel header="Conditions" key="2">

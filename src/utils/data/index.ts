@@ -5,3 +5,11 @@ export function clearStorage(): void {
     localStorage.removeItem(o);
   });
 }
+
+export function stringArrayToNumberArray(a: string[]): number[] {
+  const b: number[] = [];
+  a.forEach((x) => {
+    if (!isNaN(Number(x))) b.push(Number(x));
+  });
+  return b;
+}
