@@ -13,7 +13,7 @@ function Footer(): JSX.Element {
             <a href="mailto:timothy_lee@alumni.emory.edu,brettbotto@gmail.com">
               dev team
             </a>{' '}
-            with feedback so we can improve.
+            with feedback and suggestions.
           </Text>
         </Row>
         <Row justify="center">

@@ -62,13 +62,13 @@ function Medications(): JSX.Element {
 
   useEffect(() => {
     const d: MedicationTableRecord[] = [];
-    state.medications.forEach(({ id, name, strength, category_name }) => {
+    state.medications.forEach(({ id, name, strength, categoryName }) => {
       const medication = {
         key: id,
         id,
         name,
         strength,
-        category_name,
+        categoryName,
       };
       d.push(medication);
     });
@@ -273,13 +273,13 @@ function Medications(): JSX.Element {
     },
     {
       title: 'Category',
-      dataIndex: 'category_name',
-      key: 'category_name',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
       filters: categoryFilter,
       onFilter: (value: any, record: any) =>
-        record.category_name.indexOf(value) === 0,
+        record.categoryName.indexOf(value) === 0,
       // sorter: (a: any, b: any) =>
-      //   a.category_name.length - b.category_name.length,
+      //   a.categoryName.length - b.categoryName.length,
       // sortDirections: ['descend', 'ascend'],
     },
     {

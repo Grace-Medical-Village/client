@@ -1,17 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Form, Input, message, Row, Select } from 'antd';
+import { Button, Form, Input, Row, Select } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Store } from 'antd/lib/form/interface';
 import { PatientContext } from '../../context/patient';
 import {
   getMetrics,
-  getPatientMetrics,
   postPatientMetric,
   requestSuccess,
 } from '../../services/api';
-import { notificationHandler } from '../../utils/ui';
-import { PatientData } from '../../utils/types';
+import { messageUserResult } from '../../utils/ui';
 import { MetricsContext } from '../../context/metrics';
+import { PatientMetric } from '../../utils/types';
 
 export default function NotesForm(): JSX.Element {
   const [form] = useForm();
@@ -36,27 +35,70 @@ export default function NotesForm(): JSX.Element {
   }
 
   async function onFinish(data: Store) {
-    if (!data.id || !data.value || !state?.patient?.id)
-      message.warn('Unable to save metric');
-    else {
-      const { status } = await postPatientMetric(
-        state.patient.id,
-        data.id,
-        data.value
+    console.log(data);
+    if (state?.patient?.id && data?.id && data?.value) {
+      const patientId = state.patient.id;
+      const metricId = data.id;
+      const value = data.value;
+      const {
+        id = null,
+        status,
+        createdAt = null,
+        modifiedAt = null,
+      } = await postPatientMetric(patientId, metricId, value);
+      const success = requestSuccess(status);
+      handleSaveMetricResult(
+        success,
+        id,
+        patientId,
+        metricId,
+        value,
+        createdAt,
+        modifiedAt
       );
-      const description = 'Metric saved';
-      notificationHandler(status, description, 'bottomRight');
-      if (requestSuccess(status)) fetchMetrics(state.patient.id);
     }
   }
 
-  async function fetchMetrics(id: number) {
-    const metrics = await getPatientMetrics(id);
-    const data: PatientData = {
-      ...state,
-      metrics,
+  function handleSaveMetricResult(
+    success: boolean,
+    id: number | null,
+    patientId: number,
+    metricId: number,
+    value: string,
+    createdAt: string | null,
+    modifiedAt: string | null
+  ) {
+    const successMessage = 'Metric saved';
+    const failureMessage = 'Failed to save metric';
+    messageUserResult(success, successMessage, failureMessage);
+    if (id && createdAt && modifiedAt) {
+      addMetricToContext(id, patientId, metricId, value, createdAt, modifiedAt);
+    }
+  }
+
+  function addMetricToContext(
+    id: number,
+    patientId: number,
+    metricId: number,
+    value: string,
+    createdAt: string,
+    modifiedAt: string
+  ) {
+    const pm: PatientMetric = {
+      id,
+      metricId,
+      value,
+      patientId,
+      createdAt,
+      modifiedAt,
     };
-    update(data);
+
+    const existingState = state.metrics ?? [];
+    const newState: PatientMetric[] = [pm, ...existingState];
+    update({
+      ...state,
+      metrics: newState,
+    });
     onReset();
   }
 
@@ -89,7 +131,7 @@ export default function NotesForm(): JSX.Element {
           >
             {metricsCtx.state.map((metric) => (
               <Select.Option key={metric.id} value={metric.id}>
-                {metric.metric_name}
+                {metric.metricName}
               </Select.Option>
             ))}
           </Select>

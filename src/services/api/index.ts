@@ -9,9 +9,6 @@ import {
   GetMedications,
   GetMetrics,
   GetPatient,
-  GetPatientMedications,
-  GetPatientMetrics,
-  GetPatientNotes,
   GetPatientsByBirthdate,
   GetPatientsByName,
   ID,
@@ -19,9 +16,6 @@ import {
   MedicationCategory,
   Metric,
   PatientData,
-  PatientMedication,
-  PatientMetric,
-  PatientNote,
   PatientSearchResult,
   PostMedication,
   PostPatient,
@@ -61,11 +55,8 @@ export const deleteMedication: DeleteMedication = async (id) => {
   try {
     const response: AxiosResponse = await axios({
       method: 'delete',
-      url: `${REACT_APP_URL}/medication`,
+      url: `${REACT_APP_URL}/medications/${id}`,
       headers: authorization,
-      params: {
-        id,
-      },
     });
     responseStatus.status = response.status;
     responseStatus.statusText = response.statusText;
@@ -75,10 +66,7 @@ export const deleteMedication: DeleteMedication = async (id) => {
   return responseStatus;
 };
 
-export const deletePatientCondition: DeletePatientCondition = async (
-  patientId,
-  conditionId
-) => {
+export const deletePatientCondition: DeletePatientCondition = async (id) => {
   const authorization = await getAuthorization();
 
   const responseStatus: ResponseStatus = {
@@ -89,12 +77,8 @@ export const deletePatientCondition: DeletePatientCondition = async (
   try {
     const response: AxiosResponse = await axios({
       method: 'delete',
-      url: `${REACT_APP_URL}/patient/condition`,
+      url: `${REACT_APP_URL}/patients/condition/${id}`,
       headers: authorization,
-      params: {
-        patientId,
-        conditionId,
-      },
     });
     responseStatus.status = response.status;
     responseStatus.statusText = response.statusText;
@@ -113,7 +97,7 @@ export const getConditions: GetConditions = async () => {
       url: `${REACT_APP_URL}/conditions`,
       headers: authorization,
     });
-    data = response?.data?.data;
+    data = response?.data;
   } catch (error) {
     console.error(error);
   }
@@ -129,7 +113,7 @@ export const getMedications: GetMedications = async () => {
       url: `${REACT_APP_URL}/medications`,
       headers: authorization,
     });
-    data = response?.data?.data;
+    data = response?.data;
   } catch (error) {
     console.error(error);
   }
@@ -142,10 +126,10 @@ export const getMedicationCategories: GetMedicationCategories = async () => {
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
-      url: `${REACT_APP_URL}/medication-categories`,
+      url: `${REACT_APP_URL}/medications/categories`,
       headers: authorization,
     });
-    data = response?.data?.data;
+    data = response?.data;
   } catch (error) {
     console.error(error);
   }
@@ -161,85 +145,27 @@ export const getMetrics: GetMetrics = async () => {
       url: `${REACT_APP_URL}/metrics`,
       headers: authorization,
     });
-    data = response?.data?.data;
+    data = response?.data;
   } catch (error) {
     console.error(error);
   }
   return data;
 };
 
-export const getPatient: GetPatient = async (
-  id,
-  patient,
-  conditions,
-  medications,
-  metrics,
-  notes
-) => {
+export const getPatient: GetPatient = async (id) => {
   const authorization = await getAuthorization();
   let data: PatientData = {};
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
-      url: `${REACT_APP_URL}/patient`,
+      url: `${REACT_APP_URL}/patients/${id}`,
       headers: authorization,
-      params: {
-        id,
-        patient,
-        conditions,
-        medications,
-        metrics,
-        notes,
-      },
     });
-    data = response?.data?.data;
-    console.log(data);
+    data = response?.data;
   } catch (error) {
     console.error(error);
   }
   return data;
-};
-
-export const getPatientMedications: GetPatientMedications = async (id) => {
-  let medications: PatientMedication[] = [];
-  const data: PatientData = await getPatient(
-    id,
-    false,
-    false,
-    true,
-    false,
-    false
-  );
-  if (data.medications) medications = data.medications;
-  return medications;
-};
-
-export const getPatientMetrics: GetPatientMetrics = async (id) => {
-  let metrics: PatientMetric[] = [];
-  const data: PatientData = await getPatient(
-    id,
-    false,
-    false,
-    false,
-    true,
-    false
-  );
-  if (data.metrics) metrics = data.metrics;
-  return metrics;
-};
-
-export const getPatientNotes: GetPatientNotes = async (id) => {
-  let notes: PatientNote[] = [];
-  const data: PatientData = await getPatient(
-    id,
-    false,
-    false,
-    false,
-    false,
-    true
-  );
-  if (data.notes) notes = data.notes;
-  return notes;
 };
 
 export const getPatientsByBirthdate: GetPatientsByBirthdate = async (
@@ -256,7 +182,7 @@ export const getPatientsByBirthdate: GetPatientsByBirthdate = async (
         birthdate,
       },
     });
-    data = response?.data?.data;
+    data = response?.data;
   } catch (error) {
     console.error(error);
   }
@@ -275,7 +201,7 @@ export const getPatientsByName: GetPatientsByName = async (name) => {
         name,
       },
     });
-    data = response?.data?.data;
+    data = response?.data;
   } catch (error) {
     console.error(error);
   }
@@ -297,7 +223,7 @@ export const postMedication: PostMedication = async (
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
-      url: `${REACT_APP_URL}/medication`,
+      url: `${REACT_APP_URL}/medications`,
       headers: authorization,
       data: {
         name,
@@ -324,13 +250,13 @@ export const postPatient: PostPatient = async (newPatient) => {
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
-      url: `${REACT_APP_URL}/patient`,
+      url: `${REACT_APP_URL}/patients`,
       headers: authorization,
       data: {
         ...newPatient,
       },
     });
-    const data: ID | undefined = response?.data?.data[0];
+    const data: ID | undefined = response?.data[0];
     if (data?.id) {
       res.id = data.id;
     }
@@ -348,7 +274,7 @@ export const postPatientCondition: PostPatientCondition = async (
 ) => {
   const authorization = await getAuthorization();
 
-  const responseStatus: ResponseStatus = {
+  const res: ResponseStatus = {
     status: 400,
     statusText: 'Server Error',
   };
@@ -356,19 +282,20 @@ export const postPatientCondition: PostPatientCondition = async (
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
-      url: `${REACT_APP_URL}/patient/condition`,
+      url: `${REACT_APP_URL}/patients/condition`,
       headers: authorization,
       data: {
         patientId,
         conditionId,
       },
     });
-    responseStatus.status = response.status;
-    responseStatus.statusText = response.statusText;
+    res.status = response.status;
+    res.statusText = response.statusText;
+    res.id = response.data.id ?? null;
   } catch (error) {
     console.error(error);
   }
-  return responseStatus;
+  return res;
 };
 
 export const postPatientMedication: PostPatientMedication = async (
@@ -377,7 +304,7 @@ export const postPatientMedication: PostPatientMedication = async (
 ) => {
   const authorization = await getAuthorization();
 
-  const responseStatus: ResponseStatus = {
+  const res: ResponseStatus = {
     status: 400,
     statusText: 'Server Error',
   };
@@ -385,19 +312,22 @@ export const postPatientMedication: PostPatientMedication = async (
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
-      url: `${REACT_APP_URL}/patient/medication`,
+      url: `${REACT_APP_URL}/patients/medication`,
       headers: authorization,
       data: {
         patientId,
         medicationId,
       },
     });
-    responseStatus.status = response.status;
-    responseStatus.statusText = response.statusText;
+    res.status = response.status;
+    res.statusText = response.statusText;
+    res.id = response.data.id ?? null;
+    res.createdAt = response.data.createdAt ?? null;
+    res.modifiedAt = response.data.modifiedAt ?? null;
   } catch (error) {
     console.error(error);
   }
-  return responseStatus;
+  return res;
 };
 
 export const postPatientMetric: PostPatientMetric = async (
@@ -407,7 +337,7 @@ export const postPatientMetric: PostPatientMetric = async (
 ) => {
   const authorization = await getAuthorization();
 
-  const responseStatus: ResponseStatus = {
+  const res: ResponseStatus = {
     status: 400,
     statusText: 'Server Error',
   };
@@ -415,26 +345,29 @@ export const postPatientMetric: PostPatientMetric = async (
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
-      url: `${REACT_APP_URL}/patient/metric`,
+      url: `${REACT_APP_URL}/patients/metric`,
       headers: authorization,
       data: {
         patientId,
         metricId,
-        value,
+        value: value.toString().trim(),
       },
     });
-    responseStatus.status = response.status;
-    responseStatus.statusText = response.statusText;
+    res.status = response.status;
+    res.statusText = response.statusText;
+    res.id = response.data.id ?? null;
+    res.createdAt = response.data.createdAt ?? null;
+    res.modifiedAt = response.data.modifiedAt ?? null;
   } catch (error) {
     console.error(error);
   }
-  return responseStatus;
+  return res;
 };
 
 export const postPatientNote: PostPatientNote = async (patientId, note) => {
   const authorization = await getAuthorization();
 
-  const responseStatus: ResponseStatus = {
+  const res: ResponseStatus = {
     status: 400,
     statusText: 'Server Error',
   };
@@ -442,17 +375,20 @@ export const postPatientNote: PostPatientNote = async (patientId, note) => {
   try {
     const response: AxiosResponse = await axios({
       method: 'post',
-      url: `${REACT_APP_URL}/patient/note`,
+      url: `${REACT_APP_URL}/patients/note`,
       headers: authorization,
       data: {
         patientId,
         note,
       },
     });
-    responseStatus.status = response.status;
-    responseStatus.statusText = response.statusText;
+    res.status = response.status;
+    res.statusText = response.statusText;
+    res.id = response.data.id ?? null;
+    res.createdAt = response.data.createdAt ?? null;
+    res.modifiedAt = response.data.modifiedAt ?? null;
   } catch (error) {
     console.error(error);
   }
-  return responseStatus;
+  return res;
 };

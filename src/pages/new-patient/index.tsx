@@ -12,8 +12,8 @@ import {
 import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
-import { countries, languages } from '../../utils/patient/index';
-import { monthDayYear, yearMonthDay } from '../../utils/dates/index';
+import { countries, languages } from '../../utils/patient';
+import { monthDayYear, yearMonthDay } from '../../utils/dates';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
 import { getPatient, postPatient, requestSuccess } from '../../services/api';
@@ -46,12 +46,10 @@ function NewPatientForm(): JSX.Element {
     'Excellent',
   ];
 
-  // todo
-  const onFinishFailed = () => null;
+  const onFinishFailed = () => null; // todo
   const onReset = () => form.resetFields();
 
   async function onFinish(data: Store) {
-    console.log(data);
     const birthdate: string = data.birthdate.format(yearMonthDay);
     const {
       firstName,
@@ -84,12 +82,14 @@ function NewPatientForm(): JSX.Element {
     if (requestSuccess(res.status) && res.id) {
       notificationHandler(res.status, description, 'bottomRight');
       onReset();
-      setNewPatient(res.id);
+      setNewPatient(res.id)
+        .then((r) => r)
+        .catch((err) => console.error(err));
     }
   }
 
   const setNewPatient = async (id: number) => {
-    const result = await getPatient(id, true, true, true, true, true);
+    const result = await getPatient(id);
     if (!isEmpty(result.patient)) {
       localStorage.setItem('patientId', id.toString());
       update(result);

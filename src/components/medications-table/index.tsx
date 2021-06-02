@@ -17,6 +17,7 @@ export default function NotesTable(): JSX.Element {
   const patientCtx = useContext(PatientContext);
 
   useEffect(() => {
+    console.log(patientCtx.state);
     const buildMedicationState = async () => {
       if (
         medicationCtx.state.medications.length === 0 ||
@@ -31,7 +32,9 @@ export default function NotesTable(): JSX.Element {
         medicationCtx.update(data);
       }
     };
-    buildMedicationState();
+    buildMedicationState()
+      .then((r) => r)
+      .catch((err) => console.error(err));
   }, [medicationCtx]);
 
   useEffect(() => {
@@ -42,15 +45,15 @@ export default function NotesTable(): JSX.Element {
 
     if (patientCtx?.state?.medications) {
       patientCtx?.state?.medications.forEach((med: PatientMedication) => {
-        const medication = getMedication(med.medication_id);
+        const medication = getMedication(med.medicationId);
         if (medication) {
           const m: PatientMedicationTableRecord = {
-            id: med.medication_id,
+            id: med.medicationId,
             key: med.id,
-            date: monthDayYearFullDate(med.created_at.toString()),
+            date: monthDayYearFullDate(med.createdAt.toString()),
             name: medication.name,
             strength: medication.strength,
-            category: medication.category_name,
+            category: medication.categoryName,
           };
           d.push(m);
         }

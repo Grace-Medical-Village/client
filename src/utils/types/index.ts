@@ -31,14 +31,13 @@ export type ResponseStatus = {
   status: number;
   statusText: string;
   id?: number;
+  createdAt?: string;
+  modifiedAt?: string;
 };
 
 // METHODS
 export type DeleteMedication = (id: string | number) => Promise<ResponseStatus>;
-export type DeletePatientCondition = (
-  patientId: number,
-  conditionId: number
-) => Promise<ResponseStatus>;
+export type DeletePatientCondition = (id: number) => Promise<ResponseStatus>;
 
 export type GetConditions = () => Promise<Condition[]>;
 
@@ -48,22 +47,7 @@ export type GetMetrics = () => Promise<Metric[]>;
 
 export type GetMedicationCategories = () => Promise<MedicationCategory[]>;
 
-export type GetPatient = (
-  id: number,
-  patient: boolean,
-  conditions: boolean,
-  medications: boolean,
-  metrics: boolean,
-  notes: boolean
-) => Promise<PatientData>;
-
-export type GetPatientMedications = (
-  id: number
-) => Promise<PatientMedication[]>;
-
-export type GetPatientMetrics = (id: number) => Promise<PatientMetric[]>;
-
-export type GetPatientNotes = (id: number) => Promise<PatientNote[]>;
+export type GetPatient = (id: number) => Promise<PatientData>;
 
 export type GetPatientsByBirthdate = (
   date: string
@@ -107,37 +91,37 @@ export type PostPatientNote = (
  */
 export type Condition = {
   id: number;
-  condition_name: string;
+  conditionName: string;
 };
 
 export type MedicationCategory = {
   id: number;
   name: string;
-  created_at: string;
-  modified_at: string;
+  createdAt: string;
+  modifiedAt: string;
 };
 
 export type Medication = {
   id: number;
   name: string;
   strength: string;
-  category_id: number;
-  category_name: string;
-  created_at: string;
-  modified_at: string;
+  categoryId: number;
+  categoryName: string;
+  createdAt: string;
+  modifiedAt: string;
 };
 
 export type Metric = {
   id: number;
-  metric_name: string;
+  metricName: string;
   unit_of_measure: string;
   uom: string;
   map: boolean;
   default_value?: number | string | boolean;
   min_value?: number | string;
   max_value?: number | string;
-  created_at: string;
-  modified_at: string;
+  createdAt: string;
+  modifiedAt: string;
 };
 
 export type NewPatient = {
@@ -146,7 +130,7 @@ export type NewPatient = {
   birthdate: string;
   gender: string;
   email?: string;
-  height?: string;
+  height?: number;
   mobile?: string;
   country: string;
   nativeLanguage?: string;
@@ -156,18 +140,17 @@ export type NewPatient = {
 
 export type PatientSearchResult = {
   id: number;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   birthdate: string;
   gender?: string;
-  mobile?: string;
 };
 
 export type Patient = {
   id: number;
-  first_name: string;
-  last_name: string;
-  full_name: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
   birthdate?: string;
   gender?: string;
   email?: string;
@@ -175,43 +158,43 @@ export type Patient = {
   mobile?: string;
   map: boolean;
   country?: string;
-  native_language?: string;
-  native_literacy?: string;
+  nativeLanguage?: string;
+  nativeLiteracy?: string;
   smoker: boolean;
 };
 
 export type PatientCondition = {
   id: number;
-  condition_id: number;
-  condition_name: string;
-  patient_id: number;
-  created_at: string;
-  modified_at: string;
+  conditionId: number;
+  conditionName?: string;
+  patientId: number;
+  createdAt?: string;
+  modifiedAt?: string;
 };
 
 export type PatientMedication = {
   id: number;
-  medication_id: number;
-  patient_id: number;
-  created_at: string;
-  modified_at: string;
+  medicationId: number;
+  patientId: number;
+  createdAt: string;
+  modifiedAt: string;
 };
 
 export type PatientMetric = {
   id: number;
-  metric_id: number;
-  patient_id: number;
+  metricId: number;
+  patientId: number;
   value: string;
-  created_at: string;
-  modified_at: string;
+  createdAt: string;
+  modifiedAt: string;
 };
 
 export type PatientNote = {
   id: number;
   note: string;
-  patient_id: number;
-  created_at: string;
-  modified_at: string;
+  patientId: number;
+  createdAt: string;
+  modifiedAt: string;
 };
 
 export type PatientData = {
@@ -249,7 +232,7 @@ export type MedicationTableRecord = {
   id: number;
   name: string;
   strength: string | null;
-  category_name: string;
+  categoryName: string;
 };
 
 export type PatientMedicationTableRecord = {

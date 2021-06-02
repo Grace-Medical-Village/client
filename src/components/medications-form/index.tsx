@@ -6,15 +6,15 @@ import { PatientContext } from '../../context/patient';
 import {
   getMedicationCategories,
   getMedications,
-  getPatientMedications,
   postPatientMedication,
+  postPatientNote,
   requestSuccess,
 } from '../../services/api';
-import { notificationHandler } from '../../utils/ui';
-import { MedicationState, PatientData } from '../../utils/types';
+import { messageUserResult, notificationHandler } from '../../utils/ui';
+import { MedicationState, PatientMedication } from '../../utils/types';
 import { MedicationsContext } from '../../context/medications';
 
-export default function NotesForm(): JSX.Element {
+export default function MedicationsForm(): JSX.Element {
   const [form] = useForm();
   const { state, update } = useContext(PatientContext);
   const medicationsCtx = useContext(MedicationsContext);
@@ -34,7 +34,11 @@ export default function NotesForm(): JSX.Element {
       };
       medicationsCtx.update(data);
     };
-    if (medicationsCtx?.state?.medications.length === 0) setMedications();
+    if (medicationsCtx?.state?.medications.length === 0) {
+      setMedications()
+        .then((r) => r)
+        .catch((err) => console.error(err));
+    }
   }, [medicationsCtx]);
 
   function onReset() {
@@ -43,26 +47,70 @@ export default function NotesForm(): JSX.Element {
   }
 
   async function onFinish(data: Store) {
-    if (!data.medication || !state?.patient?.id)
-      message.warn('Unable to save medication');
-    else {
-      const { status } = await postPatientMedication(
-        state.patient.id,
-        data.medication
+    if (state?.patient?.id && data?.medication) {
+      const patientId = state.patient.id;
+      const medicationId = data.medication;
+      const {
+        id = null,
+        status,
+        createdAt = null,
+        modifiedAt = null,
+      } = await postPatientMedication(patientId, medicationId);
+      const success = requestSuccess(status);
+      handleSaveMedicationResult(
+        success,
+        id,
+        patientId,
+        medicationId,
+        createdAt,
+        modifiedAt
       );
-      const description = 'Medication saved';
-      notificationHandler(status, description, 'bottomRight');
-      if (requestSuccess(status)) fetchMedications(state.patient.id);
     }
   }
 
-  async function fetchMedications(id: number) {
-    const medications = await getPatientMedications(id);
-    const data: PatientData = {
-      ...state,
-      medications,
+  function handleSaveMedicationResult(
+    success: boolean,
+    id: number | null,
+    patientId: number,
+    medicationId: number,
+    createdAt: string | null,
+    modifiedAt: string | null
+  ) {
+    const successMessage = 'Medication saved';
+    const failureMessage = 'Failed to save medication';
+    messageUserResult(success, successMessage, failureMessage);
+    if (id && createdAt && modifiedAt) {
+      addMedicationToContext(
+        id,
+        patientId,
+        medicationId,
+        createdAt,
+        modifiedAt
+      );
+    }
+  }
+
+  function addMedicationToContext(
+    id: number,
+    patientId: number,
+    medicationId: number,
+    createdAt: string,
+    modifiedAt: string
+  ) {
+    const pm: PatientMedication = {
+      id,
+      medicationId,
+      patientId,
+      createdAt,
+      modifiedAt,
     };
-    update(data);
+
+    const existingState = state.medications ?? [];
+    const newState: PatientMedication[] = [pm, ...existingState];
+    update({
+      ...state,
+      medications: newState,
+    });
     onReset();
   }
 
@@ -79,7 +127,7 @@ export default function NotesForm(): JSX.Element {
     const medication = medicationsCtx.state.medications.filter(
       (med) => med.id === medicationId
     );
-    return medication ? medication[0].category_id : -1;
+    return medication ? medication[0].categoryId : -1;
   };
 
   return (
@@ -134,7 +182,7 @@ export default function NotesForm(): JSX.Element {
               {medicationsCtx.state.medications
                 .filter((med) => {
                   if (activeCategory > -1)
-                    return med.category_id === activeCategory;
+                    return med.categoryId === activeCategory;
                   else return med;
                 })
                 .sort()

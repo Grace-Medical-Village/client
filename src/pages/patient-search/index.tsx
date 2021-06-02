@@ -50,34 +50,48 @@ function PatientSearch(): JSX.Element {
   const onReset = () => form.resetFields();
   const onFinishFailed = () => null;
   const onFinish = (data: Store) => {
-    if (toggle) searchPatientsByName(data.name);
-    else searchPatientsByBirthdate(data.birthdate);
+    if (toggle) {
+      searchPatientsByName(data.name)
+        .then((r) => r)
+        .catch((err) => {
+          console.error(err);
+          setSearching(false);
+        });
+    } else {
+      searchPatientsByBirthdate(data.birthdate)
+        .then((r) => r)
+        .catch((err) => {
+          console.error(err);
+          setSearching(false);
+        });
+    }
   };
 
-  const searchPatientsByName = async (name: string) => {
+  const searchPatientsByName = async (name: string): Promise<void> => {
     setSearching(true);
     const searchResult = await getPatientsByName(name);
-    if (searchResult.length > 0) {
+    if (searchResult?.length > 0) {
       setPatientSearchResult(
-        searchResult.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
+        searchResult.sort((a, b) => (a.firstName > b.firstName ? 1 : -1))
       );
     }
   };
 
-  const searchPatientsByBirthdate = async (date: Date) => {
+  const searchPatientsByBirthdate = async (date: Date): Promise<void> => {
     setSearching(true);
     const searchResult = await getPatientsByBirthdate(
       toIso8601DateFromDate(date)
     );
     if (searchResult.length > 0) {
       setPatientSearchResult(
-        searchResult.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
+        searchResult.sort((a, b) => (a.firstName > b.firstName ? 1 : -1))
       );
     }
   };
 
   const selectPatient = async (id: number) => {
-    const result = await getPatient(id, true, true, true, true, true);
+    const result = await getPatient(id);
+    console.log(result);
     if (!isEmpty(result.patient)) {
       update(result);
       setPatientSelected(true);
@@ -129,7 +143,7 @@ function PatientSearch(): JSX.Element {
         <Card title="Patients Found">
           {patientSearchResult.length > 0 ? (
             patientSearchResult.map((res, i) => {
-              const fullName = `${res.first_name} ${res.last_name}`;
+              const fullName = `${res.firstName} ${res.lastName}`;
               return (
                 <Card
                   extra={
@@ -146,7 +160,6 @@ function PatientSearch(): JSX.Element {
                     <p>Date of Birth: {monthDayYearFullDate(res.birthdate)}</p>
                   ) : null}
                   {res.gender ? <p>Gender: {capitalize(res.gender)}</p> : null}
-                  {res.mobile ? <p>Mobile: {res.mobile}</p> : null}
                 </Card>
               );
             })

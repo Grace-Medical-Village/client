@@ -71,7 +71,7 @@ function Header(): JSX.Element {
         >
           <Menu.Item key="dashboard" icon={<IdcardOutlined />}>
             {state.patient
-              ? `${state.patient.first_name} ${state.patient.last_name}`
+              ? `${state.patient.firstName} ${state.patient.lastName}`
               : 'Dashboard'}
           </Menu.Item>
           <Menu.Item key="patient" icon={<UserAddOutlined />}>

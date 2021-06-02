@@ -20,13 +20,17 @@ const { Title } = Typography;
 
 export default function Dashboard(): JSX.Element {
   const { state } = useContext(PatientContext);
-  const [formSelection, setFormSelection] = useState<ItemType>(ItemType.METRIC);
-  const [tableSelection, setTableSelection] = useState<ItemType>(
-    ItemType.UNKNOWN
+  const [formSelection, setFormSelection] = useState<ItemType>(
+    ItemType.MEDICATION
   );
-  const [dataEntryComponent, setDataEntryComponent] = useState(<MetricsForm />);
+  const [tableSelection, setTableSelection] = useState<ItemType>(
+    ItemType.MEDICATION
+  );
+  const [dataEntryComponent, setDataEntryComponent] = useState(
+    <MedicationsForm />
+  );
   const [dataTableComponent, setDataTableComponent] = useState(
-    <MetricsTable />
+    <MedicationsTable />
   );
 
   const entryOptions = [
@@ -48,18 +52,17 @@ export default function Dashboard(): JSX.Element {
     {
       label: 'Medications',
       value: ItemType.MEDICATION,
-      disabled:
-        state.medications && state.medications.length === 0 ? true : false,
+      disabled: !!(state.medications && state.medications.length === 0),
     },
     {
       label: 'Metrics',
       value: ItemType.METRIC,
-      disabled: state.metrics && state.metrics.length === 0 ? true : false,
+      disabled: !!(state.metrics && state.metrics.length === 0),
     },
     {
-      label: 'Note',
+      label: 'Notes',
       value: ItemType.NOTE,
-      disabled: state.notes && state.notes.length === 0 ? true : false,
+      disabled: !!(state.notes && state.notes.length === 0),
     },
   ];
 
@@ -101,7 +104,7 @@ export default function Dashboard(): JSX.Element {
         {state?.patient?.id ? (
           <>
             <Title level={3}>
-              {state?.patient?.first_name} {state?.patient?.last_name}
+              {state?.patient?.firstName} {state?.patient?.lastName}
             </Title>
             <Collapse defaultActiveKey={['1', '2']}>
               <Collapse.Panel header="About" key="1">

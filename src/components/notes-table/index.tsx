@@ -15,7 +15,7 @@ export default function NotesTable(): JSX.Element {
         const m: PatientNoteTableRecord = {
           id: note.id,
           key: note.id,
-          date: monthDayYearFullDate(note.created_at.toString()),
+          date: monthDayYearFullDate(note.createdAt.toString()),
           note: note.note,
         };
         d.push(m);

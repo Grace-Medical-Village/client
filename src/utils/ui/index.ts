@@ -1,6 +1,18 @@
 import { notification } from 'antd';
 import { IconType, NotificationPlacement } from 'antd/lib/notification';
 
+export const messageUserResult = (
+  success: boolean,
+  successMessage: string,
+  failureMessage: string
+): void => {
+  if (success) {
+    notificationHandler(200, successMessage, 'bottomRight');
+  } else {
+    notificationHandler(400, failureMessage, 'bottomRight');
+  }
+};
+
 export const notificationHandler = (
   status: number,
   description: string,

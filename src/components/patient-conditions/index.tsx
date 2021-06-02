@@ -1,6 +1,5 @@
 import { Select } from 'antd';
-import { difference, filter } from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ConditionsContext } from '../../context/conditions';
 import { PatientContext } from '../../context/patient';
 import {
@@ -9,14 +8,13 @@ import {
   postPatientCondition,
   requestSuccess,
 } from '../../services/api';
-import { stringArrayToNumberArray } from '../../utils/data';
-import { Condition, PatientCondition } from '../../utils/types';
-import { notificationHandler } from '../../utils/ui';
+import { messageUserResult } from '../../utils/ui';
+import { LabeledValue } from 'antd/es/select';
+import { PatientCondition } from '../../utils/types';
 
 export default function PatientConditions(): JSX.Element {
   const { state, update } = useContext(ConditionsContext);
   const patientCtx = useContext(PatientContext);
-  const [existingConditions, setExistingConditions] = useState<string[]>([]);
 
   useEffect(() => {
     const buildConditionState = async () => {
@@ -25,86 +23,93 @@ export default function PatientConditions(): JSX.Element {
         update(conditions);
       }
     };
-    buildConditionState();
+    buildConditionState()
+      .then((r) => r)
+      .catch((err) => console.error(err));
   }, [state, update]);
 
-  function handleChange(conditionIds: string[]) {
-    const ids = stringArrayToNumberArray(conditionIds);
-    const previousIds = getConditionIds();
-    const idsToPost = difference(ids, previousIds);
-    const idsToDelete = difference(previousIds, ids);
-    const patientId = patientCtx?.state?.patient?.id ?? null;
-    if (patientId) handleConditionsUpdate(patientId, idsToPost, idsToDelete);
-  }
+  const handleOnSelect = async (
+    v: string | number | LabeledValue
+  ): Promise<void> => {
+    let success = false;
+    if (patientCtx?.state?.patient?.id) {
+      const conditionId = Number(v);
+      const patientId = patientCtx.state.patient.id;
+      const { id, status } = await postPatientCondition(patientId, conditionId);
+      success = requestSuccess(status);
+      if (success)
+        addConditionToPatientContext(patientId, conditionId, Number(id));
+    }
+    const successMessage = 'Saved condition';
+    const failureMessage = 'Unable to save condition';
+    messageUserResult(success, successMessage, failureMessage);
+  };
 
-  function handleConditionsUpdate(
-    patientId: number,
-    idsToPost: number[],
-    idsToDelete: number[]
-  ) {
-    if (idsToPost.length > 0) postPatientConditions(patientId, idsToPost);
-    if (idsToDelete.length > 0) deletePatientConditions(patientId, idsToDelete);
-  }
+  const handleOnDeselect = async (
+    v: string | number | LabeledValue
+  ): Promise<void> => {
+    const conditionId = Number(v);
+    const id = getIdFromContext(conditionId);
+    let success = false;
+    if (id) {
+      const { status } = await deletePatientCondition(id);
+      success = requestSuccess(status);
+      if (success) deleteConditionFromPatientContext(id);
+    }
 
-  async function postPatientConditions(
+    const successMessage = 'Deleted condition';
+    const failureMessage = 'Unable to delete condition';
+    messageUserResult(success, successMessage, failureMessage);
+  };
+
+  const addConditionToPatientContext = (
     patientId: number,
-    ids: number[]
-  ): Promise<void> {
-    let success = true;
-    Promise.all(
-      ids.map(async (id) => {
-        const { status } = await postPatientCondition(patientId, id);
-        if (!requestSuccess(status)) success = false;
-      })
+    conditionId: number,
+    id: number
+  ) => {
+    const pc: PatientCondition = {
+      patientId,
+      conditionId,
+      id,
+    };
+
+    const existingState = patientCtx.state.conditions ?? [];
+    const newState: PatientCondition[] = [pc, ...existingState];
+    patientCtx.update({
+      ...patientCtx.state,
+      conditions: newState,
+    });
+  };
+
+  const deleteConditionFromPatientContext = (id: number) => {
+    const existingState = patientCtx.state.conditions ?? [];
+    const newState = existingState.filter(
+      (pc: PatientCondition) => pc.id !== id
     );
-    if (success) {
-      const description = 'Condition saved';
-      notificationHandler(200, description, 'bottomRight');
-    } else {
-      const description = 'Failed to save condition';
-      notificationHandler(400, description, 'bottomRight');
-    }
-  }
+    patientCtx.update({
+      ...patientCtx.state,
+      conditions: newState,
+    });
+  };
 
-  async function deletePatientConditions(
-    patientId: number,
-    ids: number[]
-  ): Promise<void> {
-    let success = true;
-    Promise.all(
-      ids.map(async (id) => {
-        const { status } = await deletePatientCondition(patientId, id);
-        if (!requestSuccess(status)) success = false;
-      })
+  const getIdFromContext = (conditionId: number): number | null => {
+    const { conditions = [] } = patientCtx?.state;
+    const patientCondition = conditions.filter(
+      (pc: PatientCondition) => pc.conditionId === conditionId
     );
-    if (success) {
-      const description = 'Condition deleted';
-      notificationHandler(200, description, 'bottomRight');
-    } else {
-      const description = 'Failed to delete condition';
-      notificationHandler(400, description, 'bottomRight');
-    }
-  }
-
-  const getConditionIds = (): number[] => {
-    const conditionIds: number[] = [];
-    if (patientCtx?.state?.conditions) {
-      patientCtx.state.conditions.forEach((c) => {
-        conditionIds.push(c.condition_id);
-      });
-    }
-    return conditionIds;
+    return patientCondition[0].id ?? null;
   };
 
   return (
     <Select
       defaultValue={
         patientCtx?.state?.conditions
-          ?.map((c) => c.condition_id.toString())
+          ?.map((c) => c.conditionId.toString())
           .sort() ?? []
       }
       mode="tags"
-      onChange={handleChange}
+      onDeselect={handleOnDeselect}
+      onSelect={handleOnSelect}
       placeholder="Please select"
       showSearch
       size="large"
@@ -112,7 +117,7 @@ export default function PatientConditions(): JSX.Element {
     >
       {state.map((c) => (
         <Select.Option key={c.id} value={c.id.toString()}>
-          {c.condition_name}
+          {c.conditionName}
         </Select.Option>
       ))}
     </Select>

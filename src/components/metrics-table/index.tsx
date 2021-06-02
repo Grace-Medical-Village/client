@@ -33,13 +33,13 @@ export default function NotesTable(): JSX.Element {
 
     if (patientCtx?.state?.metrics) {
       patientCtx?.state?.metrics.forEach((patientMetric: PatientMetric) => {
-        const metric = getMetric(patientMetric.metric_id);
+        const metric = getMetric(patientMetric.metricId);
         if (metric) {
           const m: PatientMetricTableRecord = {
-            id: patientMetric.metric_id,
+            id: patientMetric.metricId,
             key: patientMetric.id,
-            date: monthDayYearFullDate(patientMetric.created_at.toString()),
-            metric: metric.metric_name,
+            date: monthDayYearFullDate(patientMetric.createdAt.toString()),
+            metric: metric.metricName,
             value: `${patientMetric.value} ${metric.uom}`,
           };
           d.push(m);

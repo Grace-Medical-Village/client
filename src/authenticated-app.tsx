@@ -24,14 +24,7 @@ function AuthenticatedApp(): JSX.Element {
     const fetchPatient = async () => {
       const patientId: string = localStorage.getItem('patientId') + '';
       if (isEmpty(state) && !isNaN(Number(patientId))) {
-        const res: PatientData = await getPatient(
-          Number.parseInt(patientId),
-          true,
-          true,
-          true,
-          true,
-          true
-        );
+        const res: PatientData = await getPatient(Number.parseInt(patientId));
         if (!isEmpty(res.patient)) update(res);
       }
     };
