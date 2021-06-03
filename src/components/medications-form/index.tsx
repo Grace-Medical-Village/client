@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Form, Input, message, Row, Select } from 'antd';
+import { Button, Form, Input, Row, Select } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Store } from 'antd/lib/form/interface';
 import { PatientContext } from '../../context/patient';
@@ -7,10 +7,9 @@ import {
   getMedicationCategories,
   getMedications,
   postPatientMedication,
-  postPatientNote,
   requestSuccess,
 } from '../../services/api';
-import { messageUserResult, notificationHandler } from '../../utils/ui';
+import { messageUserResult } from '../../utils/ui';
 import { MedicationState, PatientMedication } from '../../utils/types';
 import { MedicationsContext } from '../../context/medications';
 
