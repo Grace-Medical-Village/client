@@ -26,7 +26,6 @@ export default function NotesTable(): JSX.Element {
     if (state?.medications) {
       state.medications.forEach((med: PatientMedication) => {
         const medication = getMedication(med.medicationId);
-        console.log(med);
         if (medication) {
           const m: PatientMedicationTableRecord = {
             id: med.medicationId,

@@ -91,7 +91,6 @@ function PatientSearch(): JSX.Element {
 
   const selectPatient = async (id: number) => {
     const result = await getPatient(id);
-    console.log(result);
     if (!isEmpty(result.patient)) {
       update(result);
       setPatientSelected(true);

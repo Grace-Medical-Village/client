@@ -35,7 +35,6 @@ export default function NotesForm(): JSX.Element {
   }
 
   async function onFinish(data: Store) {
-    console.log(data);
     if (state?.patient?.id && data?.id && data?.value) {
       const patientId = state.patient.id;
       const metricId = data.id;

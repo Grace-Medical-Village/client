@@ -11,11 +11,7 @@ import {
   Select,
   Table,
 } from 'antd';
-import {
-  ExclamationCircleOutlined,
-  PlusOutlined,
-  // SearchOutlined,
-} from '@ant-design/icons';
+import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { MedicationsContext } from '../../context/medications';
 import {
   deleteMedication,
@@ -31,15 +27,11 @@ import {
 } from '../../utils/types';
 import { Store } from 'antd/lib/form/interface';
 import { notificationHandler } from '../../utils/ui';
-// import { FilterDropdownProps } from 'antd/lib/table/interface';
 import './index.css';
 
 function Medications(): JSX.Element {
   const { state, update } = useContext(MedicationsContext);
   const [data, set] = useState<MedicationTableRecord[]>([]);
-  // const [searchText, setSearchText] = useState('');
-  // const [searchedColumn, setSearchedColumn] = useState('');
-  // const [editingKey, setEditingKey] = useState('');
 
   const [form] = Form.useForm();
   const [showDrawer, setShowDrawer] = useState(false);
@@ -140,131 +132,11 @@ function Medications(): JSX.Element {
     });
   }
 
-  // SEARCH
-  // const getColumnSearchProps = (dataIndex: string) => ({
-  //   // eslint-disable-next-line react/display-name
-  //   filterDropdown: (f: FilterDropdownProps) => (
-  //     // { setSelectedKeys,
-  //     // selectedKeys,
-  //     // confirm,
-  //     // clearFilters, }
-  //     <div style={{ padding: 8 }}>
-  //       <Input
-  //         ref={(node) => {
-  //           searchInput = node;
-  //         }}
-  //         placeholder={`Search ${dataIndex}`}
-  //         value={f.selectedKeys[0]}
-  //         onChange={(e) =>
-  //           f.setSelectedKeys(e.target.value ? [e.target.value] : [])
-  //         }
-  //         onPressEnter={() => handleSearch(f.selectedKeys, confirm, dataIndex)}
-  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
-  //       />
-  //       <Space>
-  //         <Button
-  //           type="primary"
-  //           onClick={() => handleSearch(f.selectedKeys, confirm, dataIndex)}
-  //           icon={<SearchOutlined />}
-  //           size="small"
-  //           style={{ width: 90 }}
-  //         >
-  //           Search
-  //         </Button>
-  //         <Button
-  //           onClick={() => handleSearchReset(f.clearFilters)}
-  //           size="small"
-  //           style={{ width: 90 }}
-  //         >
-  //           Reset
-  //         </Button>
-  //         <Button
-  //           type="link"
-  //           size="small"
-  //           onClick={() => {
-  //             confirm({ closeDropdown: false });
-  //             setSearchText(f.selectedKeys[0].toString());
-  //             setSearchedColumn(dataIndex);
-  //           }}
-  //         >
-  //           Filter
-  //         </Button>
-  //       </Space>
-  //     </div>
-  //   ),
-  //   // eslint-disable-next-line react/display-name
-  //   filterIcon: (filtered: boolean) => (
-  //     <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-  //   ),
-  //   onFilter: (
-  //     value: string,
-  //     record: { [x: string]: { toString: () => string } }
-  //   ) =>
-  //     record[dataIndex]
-  //       ? record[dataIndex]
-  //           .toString()
-  //           .toLowerCase()
-  //           .includes(value.toLowerCase())
-  //       : '',
-  //   onFilterDropdownVisibleChange: (visible: boolean) => {
-  //     if (visible) setTimeout(() => searchInput.select(), 100);
-  //   },
-  //   render: (text: string) => text,
-  // });
-
-  // const handleSearch = (selectedKeys: any, confirm: any, dataIndex: any) => {
-  //   confirm();
-  //   setSearchText(selectedKeys[0]);
-  //   setSearchedColumn(dataIndex);
-  // };
-
-  // const handleSearchReset = (clearFilters: any) => {
-  //   clearFilters();
-  //   setSearchText('');
-  // };
-
-  // EDIT
-  // https://ant-design.gitee.io/components/table/#components-table-demo-drag-sorting-handler
-  // const isEditing = (record: Item) => record.key === editingKey;
-  // const edit = (record: Partial<Item> & { key: React.Key }) => {
-  //   form.setFieldsValue({ name: '', age: '', address: '', ...record });
-  //   setEditingKey(record.key);
-  // };
-  // const cancel = () => {
-  //   setEditingKey('');
-  // };
-  // const save = async (key: React.Key) => {
-  //   try {
-  //     const row = (await form.validateFields()) as Item;
-
-  //     const newData = [...data];
-  //     const index = newData.findIndex((item) => key === item.key);
-  //     if (index > -1) {
-  //       const item = newData[index];
-  //       newData.splice(index, 1, {
-  //         ...item,
-  //         ...row,
-  //       });
-  //       // todo
-  //       // setData(newData);
-  //       setEditingKey('');
-  //     } else {
-  //       newData.push(row);
-  //       // todo
-  //       // setData(newData);
-  //       setEditingKey('');
-  //     }
-  //   } catch (errInfo) {
-  //     console.log('Validate Failed:', errInfo);
-  //   }
-  // };
-
   const columns = [
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      // ...getColumnSearchProps('name'),
     },
     {
       title: 'Strength',
@@ -278,9 +150,6 @@ function Medications(): JSX.Element {
       filters: categoryFilter,
       onFilter: (value: any, record: any) =>
         record.categoryName.indexOf(value) === 0,
-      // sorter: (a: any, b: any) =>
-      //   a.categoryName.length - b.categoryName.length,
-      // sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Action',

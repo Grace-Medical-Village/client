@@ -16,10 +16,6 @@ const layout = {
 function Patient(): JSX.Element {
   const [newPatient, toggle] = useState(false);
 
-  useEffect(() => {
-    console.log(process.env.REACT_AP_URL ?? 'fail');
-  }, []);
-
   const onChange = () => {
     toggle(!newPatient);
   };
