@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Radio, Row, Typography, Form } from 'antd';
 
 import NewPatient from '../new-patient';
@@ -15,6 +15,10 @@ const layout = {
 
 function Patient(): JSX.Element {
   const [newPatient, toggle] = useState(false);
+
+  useEffect(() => {
+    console.log(process.env.REACT_AP_URL ?? 'fail');
+  }, []);
 
   const onChange = () => {
     toggle(!newPatient);
