@@ -9,9 +9,12 @@ import { monthDayYearFullDate } from '../../utils/dates';
 import { PatientContext } from '../../context/patient';
 import { MetricsContext } from '../../context/metrics';
 import { getMetrics } from '../../services/api';
+import { ColumnFilterItem } from 'antd/lib/table/interface';
 
 export default function NotesTable(): JSX.Element {
   const [data, set] = useState<PatientMetricTableRecord[]>([]);
+  const [metricFilters, setMetricFilters] = useState<ColumnFilterItem[]>([]);
+  const [dateFilters, setDateFilters] = useState<ColumnFilterItem[]>([]);
   const metricCtx = useContext(MetricsContext);
   const patientCtx = useContext(PatientContext);
 
@@ -49,10 +52,45 @@ export default function NotesTable(): JSX.Element {
     set(d);
   }, [metricCtx, patientCtx]);
 
+  useEffect(() => {
+    buildFilters();
+  }, [data]);
+
+  const buildFilters = () => {
+    const metric = new Set<string>();
+    const date = new Set<string>();
+
+    data.forEach((d) => {
+      metric.add(d.metric);
+      date.add(d.date);
+    });
+
+    const mf = buildColumnFilterItems(metric);
+    const df = buildColumnFilterItems(date);
+
+    setMetricFilters(mf);
+    setDateFilters(df);
+  };
+
+  const buildColumnFilterItems = (s: Set<string>): ColumnFilterItem[] => {
+    return Array.from(s)
+      .sort()
+      .map((i) => {
+        return {
+          text: i,
+          value: i,
+        };
+      }) as ColumnFilterItem[];
+  };
+
   const columns = [
     {
       title: 'Metric',
       dataIndex: 'metric',
+      filters: metricFilters,
+      onFilter: (value: any, record: PatientMetricTableRecord) => {
+        return record.metric.indexOf(value) === 0;
+      },
     },
     {
       title: 'Value',
@@ -61,6 +99,10 @@ export default function NotesTable(): JSX.Element {
     {
       title: 'Date',
       dataIndex: 'date',
+      filters: dateFilters,
+      onFilter: (value: any, record: PatientMetricTableRecord) => {
+        return record.date.indexOf(value) === 0;
+      },
     },
   ];
 

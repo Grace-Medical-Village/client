@@ -28,6 +28,7 @@ import {
 import { Store } from 'antd/lib/form/interface';
 import { notificationHandler } from '../../utils/ui';
 import './index.css';
+import { ColumnFilterItem } from 'antd/lib/table/interface';
 
 function Medications(): JSX.Element {
   const { state, update } = useContext(MedicationsContext);
@@ -35,8 +36,9 @@ function Medications(): JSX.Element {
 
   const [form] = Form.useForm();
   const [showDrawer, setShowDrawer] = useState(false);
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter[]>([]);
-
+  const [categoryFilters, setCategoryFilters] = useState<ColumnFilterItem[]>(
+    []
+  );
   useEffect(() => {
     const buildMedicationState = async () => {
       if (state.medications.length === 0 || state.categories.length === 0) {
@@ -65,15 +67,34 @@ function Medications(): JSX.Element {
       d.push(medication);
     });
     set(d);
-
-    const categories: string[] = state.categories
-      .map((category) => category.name)
-      .sort();
-
-    const c: CategoryFilter[] = [];
-    categories.forEach((name) => c.push({ text: name, value: name }));
-    setCategoryFilter(c);
   }, [state]);
+
+  useEffect(() => {
+    buildFilters();
+  }, [data]);
+
+  const buildFilters = () => {
+    const category = new Set<string>();
+
+    data.forEach((d) => {
+      category.add(d.categoryName);
+    });
+
+    const cf = buildColumnFilterItems(category);
+
+    setCategoryFilters(cf);
+  };
+
+  const buildColumnFilterItems = (s: Set<string>): ColumnFilterItem[] => {
+    return Array.from(s)
+      .sort()
+      .map((i) => {
+        return {
+          text: i,
+          value: i,
+        };
+      }) as ColumnFilterItem[];
+  };
 
   // ADD MEDICATION
   const onReset = () => form.resetFields();
@@ -147,7 +168,7 @@ function Medications(): JSX.Element {
       title: 'Category',
       dataIndex: 'categoryName',
       key: 'categoryName',
-      filters: categoryFilter,
+      filters: categoryFilters,
       onFilter: (value: any, record: any) =>
         record.categoryName.indexOf(value) === 0,
     },

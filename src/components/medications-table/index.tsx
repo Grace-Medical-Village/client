@@ -8,9 +8,15 @@ import {
 import { monthDayYearFullDate } from '../../utils/dates';
 import { PatientContext } from '../../context/patient';
 import { MedicationsContext } from '../../context/medications';
+import { ColumnFilterItem } from 'antd/lib/table/interface';
 
 export default function NotesTable(): JSX.Element {
   const [data, set] = useState<PatientMedicationTableRecord[]>([]);
+  const [nameFilters, setNameFilters] = useState<ColumnFilterItem[]>([]);
+  const [categoryFilters, setCategoryFilters] = useState<ColumnFilterItem[]>(
+    []
+  );
+  const [dateFilters, setDateFilters] = useState<ColumnFilterItem[]>([]);
   const medicationCtx = useContext(MedicationsContext);
   const { state } = useContext(PatientContext);
 
@@ -42,10 +48,49 @@ export default function NotesTable(): JSX.Element {
     set(d);
   }, [state, medicationCtx]);
 
+  useEffect(() => {
+    buildFilters();
+  }, [data]);
+
+  const buildFilters = () => {
+    const name = new Set<string>();
+    const category = new Set<string>();
+    const date = new Set<string>();
+
+    data.forEach((d) => {
+      name.add(d.name);
+      category.add(d.category);
+      date.add(d.date);
+    });
+
+    const nf = buildColumnFilterItems(name);
+    const cf = buildColumnFilterItems(category);
+    const df = buildColumnFilterItems(date);
+
+    setNameFilters(nf);
+    setCategoryFilters(cf);
+    setDateFilters(df);
+  };
+
+  const buildColumnFilterItems = (s: Set<string>): ColumnFilterItem[] => {
+    return Array.from(s)
+      .sort()
+      .map((i) => {
+        return {
+          text: i,
+          value: i,
+        };
+      }) as ColumnFilterItem[];
+  };
+
   const columns = [
     {
       title: 'Medication',
       dataIndex: 'name',
+      filters: nameFilters,
+      onFilter: (value: any, record: PatientMedicationTableRecord) => {
+        return record.name.indexOf(value) === 0;
+      },
     },
     {
       title: 'Strength',
@@ -54,10 +99,24 @@ export default function NotesTable(): JSX.Element {
     {
       title: 'Category',
       dataIndex: 'category',
+      filters: categoryFilters,
+      onFilter: (value: any, record: PatientMedicationTableRecord) => {
+        return record.category.indexOf(value) === 0;
+      },
     },
     {
       title: 'Date',
       dataIndex: 'date',
+      filters: dateFilters,
+      onFilter: (value: any, record: PatientMedicationTableRecord) => {
+        return record.date.indexOf(value) === 0;
+      },
+      // sorter: (a: unknown, b: unknown) => {
+      // console.log(a);
+      // if (typeof b === 'number') console.log(new Date(b).getTime());
+      // return a;
+      // },
+      // sortDirections: ['descend'],
     },
   ];
 

@@ -20,3 +20,7 @@ export const monthDayYearFullDate = (date: string): string =>
     month: 'long',
     day: 'numeric',
   });
+
+export const timestampFromDateString = (date: string): number => {
+  return new Date(date).getTime();
+};
