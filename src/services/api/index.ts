@@ -31,6 +31,7 @@ const { REACT_APP_URL } = process.env;
 
 const canSend = () => {
   if (!REACT_APP_URL) throw new Error('API URL is undefined');
+  else console.log(REACT_APP_URL);
 };
 
 export const requestSuccess: RequestSuccess = (n) => n >= 200 && n <= 299;
