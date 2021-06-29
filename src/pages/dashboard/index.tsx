@@ -106,7 +106,7 @@ export default function Dashboard(): JSX.Element {
             <Title level={3}>
               {state?.patient?.firstName} {state?.patient?.lastName}
             </Title>
-            <Collapse defaultActiveKey={['1', '2']}>
+            <Collapse defaultActiveKey={['1', '2', '3']}>
               <Collapse.Panel header="About" key="1">
                 <PatientAbout />
               </Collapse.Panel>

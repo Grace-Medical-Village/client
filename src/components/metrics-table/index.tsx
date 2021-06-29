@@ -1,22 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Button, Popconfirm, Table } from 'antd';
 import {
   Metric,
+  PatientData,
   PatientMetric,
   PatientMetricTableRecord,
 } from '../../utils/types';
-import { monthDayYearFullDate } from '../../utils/dates';
+import {
+  monthDayYearFullDate,
+  timestampFromDateString,
+} from '../../utils/dates';
 import { PatientContext } from '../../context/patient';
 import { MetricsContext } from '../../context/metrics';
-import { getMetrics } from '../../services/api';
+import { deletePatientMetric, getMetrics } from '../../services/api';
 import { ColumnFilterItem } from 'antd/lib/table/interface';
+import { notificationHandler } from '../../utils/ui';
 
 export default function NotesTable(): JSX.Element {
   const [data, set] = useState<PatientMetricTableRecord[]>([]);
   const [metricFilters, setMetricFilters] = useState<ColumnFilterItem[]>([]);
   const [dateFilters, setDateFilters] = useState<ColumnFilterItem[]>([]);
   const metricCtx = useContext(MetricsContext);
-  const patientCtx = useContext(PatientContext);
+  const { state, update } = useContext(PatientContext);
 
   useEffect(() => {
     const buildMetricState = async () => {
@@ -25,7 +30,9 @@ export default function NotesTable(): JSX.Element {
         if (metrics.length > 0) metricCtx.update(metrics);
       }
     };
-    buildMetricState();
+    buildMetricState()
+      .then((r) => r)
+      .catch((err) => console.error(err));
   }, [metricCtx]);
 
   useEffect(() => {
@@ -34,14 +41,15 @@ export default function NotesTable(): JSX.Element {
     const getMetric = (id: number): Metric =>
       metricCtx?.state?.filter((metric) => metric.id === id)[0];
 
-    if (patientCtx?.state?.metrics) {
-      patientCtx?.state?.metrics.forEach((patientMetric: PatientMetric) => {
+    if (state?.metrics) {
+      state?.metrics.forEach((patientMetric: PatientMetric) => {
         const metric = getMetric(patientMetric.metricId);
         if (metric) {
           const m: PatientMetricTableRecord = {
             id: patientMetric.metricId,
             key: patientMetric.id,
             date: monthDayYearFullDate(patientMetric.createdAt.toString()),
+            timestamp: timestampFromDateString(patientMetric.createdAt),
             metric: metric.metricName,
             value: `${patientMetric.value} ${metric.uom}`,
           };
@@ -50,13 +58,9 @@ export default function NotesTable(): JSX.Element {
       });
     }
     set(d);
-  }, [metricCtx, patientCtx]);
+  }, [metricCtx, state]);
 
   useEffect(() => {
-    buildFilters();
-  }, [data]);
-
-  const buildFilters = () => {
     const metric = new Set<string>();
     const date = new Set<string>();
 
@@ -70,6 +74,23 @@ export default function NotesTable(): JSX.Element {
 
     setMetricFilters(mf);
     setDateFilters(df);
+  }, [data]);
+
+  const handleDelete = async (id: number): Promise<void> => {
+    const { status } = await deletePatientMetric(id);
+    const description = 'Metric deleted';
+    notificationHandler(status, description, 'bottomRight');
+    deleteMetricFromContext(id);
+  };
+
+  const deleteMetricFromContext = (id: number): void => {
+    const metrics: PatientMetric[] =
+      state?.metrics?.filter((metric) => metric.id !== id) ?? [];
+    const updatedPatientState: PatientData = {
+      ...state,
+      metrics,
+    };
+    update(updatedPatientState);
   };
 
   const buildColumnFilterItems = (s: Set<string>): ColumnFilterItem[] => {
@@ -91,6 +112,12 @@ export default function NotesTable(): JSX.Element {
       onFilter: (value: any, record: PatientMetricTableRecord) => {
         return record.metric.indexOf(value) === 0;
       },
+      sorter: {
+        compare: (a: PatientMetricTableRecord, b: PatientMetricTableRecord) => {
+          return a.metric.toLowerCase() < b.metric.toLowerCase() ? 0 : -1;
+        },
+        multiple: 2,
+      },
     },
     {
       title: 'Value',
@@ -103,6 +130,26 @@ export default function NotesTable(): JSX.Element {
       onFilter: (value: any, record: PatientMetricTableRecord) => {
         return record.date.indexOf(value) === 0;
       },
+      sorter: {
+        compare: (a: PatientMetricTableRecord, b: PatientMetricTableRecord) => {
+          return a.timestamp - b.timestamp;
+        },
+        multiple: 1,
+      },
+    },
+    {
+      title: 'Operation',
+      dataIndex: 'operation',
+      // eslint-disable-next-line react/display-name
+      render: (_: any, record: PatientMetricTableRecord): JSX.Element | null =>
+        data.length >= 1 ? (
+          <Popconfirm
+            title="Delete?"
+            onConfirm={() => handleDelete(record.key)}
+          >
+            <Button type="link">Delete</Button>
+          </Popconfirm>
+        ) : null,
     },
   ];
 

@@ -180,10 +180,11 @@ export default function MedicationsForm(): JSX.Element {
             >
               {medicationsCtx.state.medications
                 .filter((med) => {
-                  if (activeCategory > -1)
+                  if (activeCategory > -1) {
                     return med.categoryId === activeCategory;
-                  else return med;
+                  } else return med;
                 })
+                .filter((med) => !med.archived)
                 .sort()
                 .map((med) => (
                   <Select.Option key={med.id} value={med.id}>

@@ -12,14 +12,18 @@ import {
 import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
-import { countries, languages } from '../../utils/patient';
+import {
+  countries,
+  languages,
+  nativeLiteracyRatings,
+} from '../../utils/patient';
 import { monthDayYear, yearMonthDay } from '../../utils/dates';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
 import { getPatient, postPatient, requestSuccess } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
 import { PatientContext } from '../../context/patient';
-import { NewPatient } from '../../utils/types';
+import { PatientBackground } from '../../utils/types';
 
 const { Option } = Select;
 
@@ -38,14 +42,6 @@ function NewPatientForm(): JSX.Element {
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
   const { update } = useContext(PatientContext);
 
-  const nativeLiteracyRatings = [
-    'Poor',
-    'Below Average',
-    'Average',
-    'Above Average',
-    'Excellent',
-  ];
-
   const onFinishFailed = () => null; // todo
   const onReset = () => form.resetFields();
 
@@ -56,35 +52,35 @@ function NewPatientForm(): JSX.Element {
       lastName,
       gender,
       email,
-      height,
       mobile,
       country,
       nativeLanguage,
-      nativeLiteracy,
       smoker,
     } = data;
 
-    const newPatient: NewPatient = {
+    const newPatient: PatientBackground = {
       firstName,
       lastName,
       gender,
       email,
-      height,
+      map: false,
       mobile,
       country,
       nativeLanguage,
-      nativeLiteracy,
+      nativeLiteracy: nativeLiteracyRating,
       smoker,
       birthdate,
     };
     const res = await postPatient(newPatient);
-    const description = 'Patient saved';
     if (requestSuccess(res.status) && res.id) {
-      notificationHandler(res.status, description, 'bottomRight');
+      notificationHandler(res.status, 'Patient Saved', 'bottomRight');
       onReset();
       setNewPatient(res.id)
         .then((r) => r)
         .catch((err) => console.error(err));
+    } else if (res.status === 409) {
+      console.log(82);
+      notificationHandler(res.status, 'Patient Already Exists', 'bottomRight');
     }
   }
 

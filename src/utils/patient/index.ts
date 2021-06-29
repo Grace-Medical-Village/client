@@ -1,3 +1,11 @@
+export const nativeLiteracyRatings: string[] = [
+  'Poor',
+  'Below Average',
+  'Average',
+  'Above Average',
+  'Excellent',
+];
+
 export const languages: string[] = [
   'english',
   'arabic',

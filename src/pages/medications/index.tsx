@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
@@ -9,26 +8,35 @@ import {
   Modal,
   Row,
   Select,
+  Space,
   Table,
 } from 'antd';
-import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  ExclamationCircleOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import { Store } from 'antd/lib/form/interface';
+import { ColumnFilterItem, ColumnsType } from 'antd/lib/table/interface';
+import { FilterDropdownProps } from 'antd/es/table/interface';
+import Highlighter from 'react-highlight-words';
 import { MedicationsContext } from '../../context/medications';
 import {
-  deleteMedication,
   getMedicationCategories,
   getMedications,
   postMedication,
   requestSuccess,
+  deleteMedication,
+  putMedication,
 } from '../../services/api';
+import { notificationHandler } from '../../utils/ui';
 import {
-  CategoryFilter,
   MedicationTableRecord,
   MedicationState,
+  Medication,
 } from '../../utils/types';
-import { Store } from 'antd/lib/form/interface';
-import { notificationHandler } from '../../utils/ui';
 import './index.css';
-import { ColumnFilterItem } from 'antd/lib/table/interface';
+import { capitalize } from 'lodash';
 
 function Medications(): JSX.Element {
   const { state, update } = useContext(MedicationsContext);
@@ -36,6 +44,10 @@ function Medications(): JSX.Element {
 
   const [form] = Form.useForm();
   const [showDrawer, setShowDrawer] = useState(false);
+  const [searchText, setSearchText] = useState<React.Key | string>('');
+  const [archivedFilters, setArchivedFilters] = useState<ColumnFilterItem[]>(
+    []
+  );
   const [categoryFilters, setCategoryFilters] = useState<ColumnFilterItem[]>(
     []
   );
@@ -51,39 +63,38 @@ function Medications(): JSX.Element {
         update(data);
       }
     };
-    buildMedicationState();
+    buildMedicationState()
+      .then((r) => r)
+      .catch((err) => console.error(err));
   }, [state, update]);
 
   useEffect(() => {
-    const d: MedicationTableRecord[] = [];
-    state.medications.forEach(({ id, name, strength, categoryName }) => {
-      const medication = {
-        key: id,
-        id,
-        name,
-        strength,
-        categoryName,
+    const mtr: MedicationTableRecord[] = state.medications.map((med, idx) => {
+      return {
+        ...med,
+        archived: capitalize(med.archived.toString()),
+        key: idx,
       };
-      d.push(medication);
     });
-    set(d);
+    console.log(mtr);
+    set(mtr);
   }, [state]);
 
   useEffect(() => {
-    buildFilters();
-  }, [data]);
-
-  const buildFilters = () => {
+    const a = new Set<string>();
     const category = new Set<string>();
 
     data.forEach((d) => {
+      a.add(d.archived.toString());
       category.add(d.categoryName);
     });
 
+    const af = buildColumnFilterItems(a);
     const cf = buildColumnFilterItems(category);
 
+    setArchivedFilters(af);
     setCategoryFilters(cf);
-  };
+  }, [data]);
 
   const buildColumnFilterItems = (s: Set<string>): ColumnFilterItem[] => {
     return Array.from(s)
@@ -96,7 +107,19 @@ function Medications(): JSX.Element {
       }) as ColumnFilterItem[];
   };
 
-  // ADD MEDICATION
+  const handleReset = (clearFilters: (() => void) | undefined): void => {
+    if (clearFilters) clearFilters();
+    setSearchText('');
+  };
+
+  const handleSearch = (
+    selectedKeys: React.Key[],
+    confirm: () => void
+  ): void => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+  };
+
   const onReset = () => form.resetFields();
 
   async function onFinish(data: Store) {
@@ -116,77 +139,222 @@ function Medications(): JSX.Element {
     }
   }
 
-  // DELETE MEDICATION
-  const onDeleteMedication = async (id: string | number) => {
+  const onDeleteMedication = async (id: number): Promise<void> => {
     const { status } = await deleteMedication(id);
     const description = 'Medication deleted';
     notificationHandler(status, description, 'topRight');
-    deleteMedicationFromContext(+id);
+    deleteMedicationFromContext(id);
   };
 
-  const deleteMedicationFromContext = (id: number) => {
-    const medications = state.medications.filter(
+  const onPutMedication = async (med: Medication): Promise<void> => {
+    const { status } = await putMedication(med);
+    const description = 'Medication updated';
+    notificationHandler(status, description, 'topRight');
+    updatedMedicationInContext(med);
+  };
+
+  const deleteMedicationFromContext = (id: number): void => {
+    const medications: Medication[] = state.medications.filter(
       (medication) => medication.id !== id
     );
-    const newMedicationState = {
+    const newMedicationState: MedicationState = {
       medications,
       categories: state.categories,
     };
     update(newMedicationState);
   };
 
-  function showDeleteConfirm(
-    id: string | number,
-    medicineName: string,
-    medicineStrength: string
-  ) {
+  const updatedMedicationInContext = (med: Medication): void => {
+    const medications: Medication[] = state.medications.map((medication) => {
+      if (medication.id !== med.id) return medication;
+      else return med;
+    });
+
+    const newMedicationState: MedicationState = {
+      medications,
+      categories: state.categories,
+    };
+    update(newMedicationState);
+  };
+
+  function showArchiveConfirm(
+    med: MedicationTableRecord,
+    archive: boolean,
+    archiveAction: string
+  ): void {
+    const archivedMed: Medication = {
+      id: med.id,
+      name: med.name,
+      strength: med.strength,
+      categoryId: med.categoryId,
+      categoryName: med.categoryName,
+      archived: !(med.archived.toString().toLowerCase() === 'true'),
+      createdAt: med.createdAt,
+      modifiedAt: med.modifiedAt,
+    };
+
     Modal.confirm({
-      title: 'Are you sure you want to delete this medication?',
+      title: `Are you sure you want to ${archiveAction.toLowerCase()} this medication?
+        You will no longer be able to offer it to patients.`,
       icon: <ExclamationCircleOutlined />,
-      content: `${medicineName} ${medicineStrength}`,
-      okText: 'Delete',
-      okType: 'danger',
+      content: `${med.name} ${med.strength}`,
+      okText: archiveAction,
+      okType: 'ghost',
       cancelText: 'Cancel',
       onOk() {
-        onDeleteMedication(id);
+        onPutMedication(archivedMed)
+          .then((r) => r)
+          .catch((err) => console.error(err));
       },
     });
   }
 
-  const columns = [
+  function showDeleteConfirm(med: MedicationTableRecord) {
+    Modal.confirm({
+      title: `Are you sure you want to delete this medication? 
+        It will remove all records for patients that have this medication.`,
+      icon: <ExclamationCircleOutlined />,
+      content: `${med.name} ${med.strength}`,
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk() {
+        onDeleteMedication(med.id)
+          .then((r) => r)
+          .catch((err) => console.error(err));
+      },
+    });
+  }
+
+  const columns: ColumnsType<MedicationTableRecord> = [
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      width: 400,
+      // eslint-disable-next-line react/display-name
+      filterDropdown: ({
+        clearFilters,
+        confirm,
+        selectedKeys,
+        setSelectedKeys,
+      }: FilterDropdownProps) => {
+        return (
+          <div style={{ padding: 8 }}>
+            <Input
+              onChange={(e) =>
+                setSelectedKeys(e.target.value ? [e.target.value] : [])
+              }
+              onPressEnter={() => handleSearch(selectedKeys, confirm)}
+              placeholder="Search"
+              style={{ marginBottom: 8, display: 'block' }}
+              value={selectedKeys[0]}
+            />
+            <Space>
+              <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                onClick={() => handleSearch(selectedKeys, confirm)}
+                size="small"
+                style={{ width: 90 }}
+              >
+                Search
+              </Button>
+              <Button
+                onClick={() => handleReset(clearFilters)}
+                size="small"
+                style={{ width: 90 }}
+              >
+                Reset
+              </Button>
+            </Space>
+          </div>
+        );
+      },
+      filterIcon: <SearchOutlined />,
+      onFilter: (value, record) =>
+        record.name
+          ? record.name
+              .toString()
+              .toLowerCase()
+              .includes(value.toString().toLowerCase())
+          : false,
+      // eslint-disable-next-line react/display-name
+      render: (text: string) => (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText.toString()]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ),
     },
     {
       title: 'Strength',
       dataIndex: 'strength',
       key: 'strength',
+      width: 250,
     },
     {
       title: 'Category',
       dataIndex: 'categoryName',
       key: 'categoryName',
       filters: categoryFilters,
-      onFilter: (value: any, record: any) =>
-        record.categoryName.indexOf(value) === 0,
+      onFilter: (
+        value: string | number | boolean,
+        record: MedicationTableRecord
+      ) => record.categoryName.indexOf(value.toString()) === 0,
+      sorter: {
+        compare: (a: MedicationTableRecord, b: MedicationTableRecord) => {
+          return a.categoryName.toLowerCase() > b.categoryName.toLowerCase()
+            ? 0
+            : -1;
+        },
+      },
+      sortDirections: ['descend'],
     },
     {
-      title: 'Action',
+      title: 'Archived',
+      dataIndex: 'archived',
+      key: 'archived',
+      width: 50,
+      filters: archivedFilters,
+      onFilter: (
+        value: string | number | boolean,
+        record: MedicationTableRecord
+      ) =>
+        record.archived.toString().toLowerCase() ===
+        value.toString().toLowerCase(),
+    },
+    {
+      title: 'Actions',
       dataIndex: '',
       key: 'action',
+      width: 250,
       // eslint-disable-next-line react/display-name
-      render: (record: any) => (
-        <Button
-          onClick={() =>
-            showDeleteConfirm(record.id, record.name, record.strength)
-          }
-          type="link"
-        >
-          Delete
-        </Button>
-      ),
+      render: (record: MedicationTableRecord): JSX.Element => {
+        const currentlyArchived =
+          record.archived.toString().toLowerCase() === 'false';
+        const archiveAction = currentlyArchived ? 'Archive' : 'Activate';
+        return (
+          <>
+            <Button disabled type="link">
+              Edit
+            </Button>
+            <Button
+              onClick={() =>
+                showArchiveConfirm(record, currentlyArchived, archiveAction)
+              }
+              type="link"
+            >
+              {archiveAction}
+            </Button>
+            <Button onClick={() => showDeleteConfirm(record)} type="link">
+              Delete
+            </Button>
+          </>
+        );
+      },
     },
   ];
 

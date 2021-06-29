@@ -1,14 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Button, Input, Popconfirm, Space, Table } from 'antd';
 import {
   Medication,
+  PatientData,
   PatientMedication,
   PatientMedicationTableRecord,
 } from '../../utils/types';
-import { monthDayYearFullDate } from '../../utils/dates';
+import {
+  monthDayYearFullDate,
+  timestampFromDateString,
+} from '../../utils/dates';
 import { PatientContext } from '../../context/patient';
 import { MedicationsContext } from '../../context/medications';
 import { ColumnFilterItem } from 'antd/lib/table/interface';
+import { FilterDropdownProps } from 'antd/es/table/interface';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
+import { deletePatientMedication } from '../../services/api';
+import { notificationHandler } from '../../utils/ui';
 
 export default function NotesTable(): JSX.Element {
   const [data, set] = useState<PatientMedicationTableRecord[]>([]);
@@ -16,20 +25,16 @@ export default function NotesTable(): JSX.Element {
   const [categoryFilters, setCategoryFilters] = useState<ColumnFilterItem[]>(
     []
   );
+  const [searchText, setSearchText] = useState<React.Key | string>('');
+
   const [dateFilters, setDateFilters] = useState<ColumnFilterItem[]>([]);
+
   const medicationCtx = useContext(MedicationsContext);
-  const { state } = useContext(PatientContext);
+  const { state, update } = useContext(PatientContext);
 
   useEffect(() => {
     const d: PatientMedicationTableRecord[] = [];
-
-    const getMedication = (medicationId: number): Medication => {
-      return medicationCtx?.state?.medications.filter(
-        (med) => med.id === medicationId
-      )[0];
-    };
-
-    if (state?.medications) {
+    if (state.medications && state.medications.length > 0) {
       state.medications.forEach((med: PatientMedication) => {
         const medication = getMedication(med.medicationId);
         if (medication) {
@@ -37,6 +42,7 @@ export default function NotesTable(): JSX.Element {
             id: med.medicationId,
             key: med.id,
             date: monthDayYearFullDate(med.createdAt.toString()),
+            timestamp: timestampFromDateString(med.createdAt),
             name: medication.name,
             strength: medication.strength,
             category: medication.categoryName,
@@ -46,13 +52,15 @@ export default function NotesTable(): JSX.Element {
       });
     }
     set(d);
-  }, [state, medicationCtx]);
+  }, [state]);
+
+  const getMedication = (medicationId: number): Medication => {
+    return medicationCtx?.state?.medications.filter(
+      (med) => med.id === medicationId
+    )[0];
+  };
 
   useEffect(() => {
-    buildFilters();
-  }, [data]);
-
-  const buildFilters = () => {
     const name = new Set<string>();
     const category = new Set<string>();
     const date = new Set<string>();
@@ -70,7 +78,7 @@ export default function NotesTable(): JSX.Element {
     setNameFilters(nf);
     setCategoryFilters(cf);
     setDateFilters(df);
-  };
+  }, [data]);
 
   const buildColumnFilterItems = (s: Set<string>): ColumnFilterItem[] => {
     return Array.from(s)
@@ -83,13 +91,107 @@ export default function NotesTable(): JSX.Element {
       }) as ColumnFilterItem[];
   };
 
+  const handleDelete = async (id: number): Promise<void> => {
+    const { status } = await deletePatientMedication(id);
+    const description = 'Medication deleted';
+    notificationHandler(status, description, 'bottomRight');
+    deleteMedicationFromContext(id);
+  };
+
+  const deleteMedicationFromContext = (id: number): void => {
+    const medications: PatientMedication[] =
+      state?.medications?.filter((med) => med.id !== id) ?? [];
+
+    const updatedPatientState: PatientData = {
+      ...state,
+      medications,
+    };
+
+    update(updatedPatientState);
+  };
+
+  const handleReset = (clearFilters: (() => void) | undefined): void => {
+    if (clearFilters) clearFilters();
+    setSearchText('');
+  };
+
+  const handleSearch = (
+    selectedKeys: React.Key[],
+    confirm: () => void
+  ): void => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+  };
+
   const columns = [
     {
       title: 'Medication',
       dataIndex: 'name',
       filters: nameFilters,
-      onFilter: (value: any, record: PatientMedicationTableRecord) => {
-        return record.name.indexOf(value) === 0;
+      // eslint-disable-next-line react/display-name
+      filterDropdown: ({
+        clearFilters,
+        confirm,
+        selectedKeys,
+        setSelectedKeys,
+      }: FilterDropdownProps) => {
+        return (
+          <div style={{ padding: 8 }}>
+            <Input
+              onChange={(e) =>
+                setSelectedKeys(e.target.value ? [e.target.value] : [])
+              }
+              onPressEnter={() => handleSearch(selectedKeys, confirm)}
+              placeholder="Search"
+              style={{ marginBottom: 8, display: 'block' }}
+              value={selectedKeys[0]}
+            />
+            <Space>
+              <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                onClick={() => handleSearch(selectedKeys, confirm)}
+                size="small"
+                style={{ width: 90 }}
+              >
+                Search
+              </Button>
+              <Button
+                onClick={() => handleReset(clearFilters)}
+                size="small"
+                style={{ width: 90 }}
+              >
+                Reset
+              </Button>
+            </Space>
+          </div>
+        );
+      },
+      filterIcon: <SearchOutlined />,
+      onFilter: (
+        value: string | boolean | number,
+        record: PatientMedicationTableRecord
+      ) =>
+        record.name
+          ? record.name.toLowerCase().includes(value.toString().toLowerCase())
+          : false,
+      // eslint-disable-next-line react/display-name
+      render: (text: string) => (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText.toString()]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ),
+      sorter: {
+        compare: (
+          a: PatientMedicationTableRecord,
+          b: PatientMedicationTableRecord
+        ) => {
+          return a.name.toLowerCase() < b.name.toLowerCase() ? 0 : -1;
+        },
+        multiple: 3,
       },
     },
     {
@@ -100,23 +202,56 @@ export default function NotesTable(): JSX.Element {
       title: 'Category',
       dataIndex: 'category',
       filters: categoryFilters,
-      onFilter: (value: any, record: PatientMedicationTableRecord) => {
-        return record.category.indexOf(value) === 0;
+      onFilter: (
+        value: string | boolean | number,
+        record: PatientMedicationTableRecord
+      ) => {
+        return record.category.indexOf(value.toString()) === 0;
+      },
+      sorter: {
+        compare: (
+          a: PatientMedicationTableRecord,
+          b: PatientMedicationTableRecord
+        ) => {
+          return a.category.toLowerCase() < b.category.toLowerCase() ? 0 : -1;
+        },
+        multiple: 2,
       },
     },
     {
       title: 'Date',
       dataIndex: 'date',
       filters: dateFilters,
-      onFilter: (value: any, record: PatientMedicationTableRecord) => {
-        return record.date.indexOf(value) === 0;
+      onFilter: (
+        value: string | boolean | number,
+        record: PatientMedicationTableRecord
+      ) => {
+        return record.date.indexOf(value.toString()) === 0;
       },
-      // sorter: (a: unknown, b: unknown) => {
-      // console.log(a);
-      // if (typeof b === 'number') console.log(new Date(b).getTime());
-      // return a;
-      // },
-      // sortDirections: ['descend'],
+      sorter: {
+        compare: (
+          a: PatientMedicationTableRecord,
+          b: PatientMedicationTableRecord
+        ) => {
+          return a.timestamp - b.timestamp;
+        },
+        multiple: 1,
+      },
+    },
+    {
+      title: 'Operation',
+      dataIndex: 'operation',
+      // eslint-disable-next-line react/display-name
+      render: (_: any, record: PatientMedicationTableRecord): JSX.Element => {
+        return (
+          <Popconfirm
+            title="Delete?"
+            onConfirm={() => handleDelete(record.key)}
+          >
+            <Button type="link">Delete</Button>
+          </Popconfirm>
+        );
+      },
     },
   ];
 

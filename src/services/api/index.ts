@@ -4,6 +4,9 @@ import {
   Condition,
   DeleteMedication,
   DeletePatientCondition,
+  DeletePatientMedication,
+  DeletePatientMetric,
+  DeletePatientNote,
   GetConditions,
   GetMedicationCategories,
   GetMedications,
@@ -23,6 +26,9 @@ import {
   PostPatientMedication,
   PostPatientMetric,
   PostPatientNote,
+  PutMedication,
+  PutPatient,
+  PutPatientNote,
   RequestSuccess,
   ResponseStatus,
 } from '../../utils/types';
@@ -44,28 +50,6 @@ const getAuthorization = async () => {
   };
 };
 
-export const deleteMedication: DeleteMedication = async (id) => {
-  const authorization = await getAuthorization();
-
-  const responseStatus: ResponseStatus = {
-    status: 400,
-    statusText: 'Server Error',
-  };
-
-  try {
-    const response: AxiosResponse = await axios({
-      method: 'delete',
-      url: `${REACT_APP_URL}/medications/${id}`,
-      headers: authorization,
-    });
-    responseStatus.status = response.status;
-    responseStatus.statusText = response.statusText;
-  } catch (error) {
-    console.error(error);
-  }
-  return responseStatus;
-};
-
 export const deletePatientCondition: DeletePatientCondition = async (id) => {
   const authorization = await getAuthorization();
 
@@ -78,6 +62,94 @@ export const deletePatientCondition: DeletePatientCondition = async (id) => {
     const response: AxiosResponse = await axios({
       method: 'delete',
       url: `${REACT_APP_URL}/patients/condition/${id}`,
+      headers: authorization,
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const deletePatientMedication: DeletePatientMedication = async (id) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'delete',
+      url: `${REACT_APP_URL}/patients/medication/${id}`,
+      headers: authorization,
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const deletePatientMetric: DeletePatientMetric = async (id) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'delete',
+      url: `${REACT_APP_URL}/patients/metric/${id}`,
+      headers: authorization,
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const deletePatientNote: DeletePatientNote = async (id) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'delete',
+      url: `${REACT_APP_URL}/patients/note/${id}`,
+      headers: authorization,
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const deleteMedication: DeleteMedication = async (id: number) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'delete',
+      url: `${REACT_APP_URL}/medications/${id}`,
       headers: authorization,
     });
     responseStatus.status = response.status;
@@ -256,14 +328,16 @@ export const postPatient: PostPatient = async (newPatient) => {
         ...newPatient,
       },
     });
-    const data: ID | undefined = response?.data[0];
-    if (data?.id) {
-      res.id = data.id;
-    }
+
     res.status = response.status;
     res.statusText = response.statusText;
+
+    const data: ID | undefined = response?.data[0];
+    if (data?.id) res.id = data.id;
   } catch (error) {
     console.error(error);
+    res.status = error.response.status;
+    res.statusText = error.response.statusText;
   }
   return res;
 };
@@ -391,4 +465,74 @@ export const postPatientNote: PostPatientNote = async (patientId, note) => {
     console.error(error);
   }
   return res;
+};
+
+export const putMedication: PutMedication = async (med) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'put',
+      url: `${REACT_APP_URL}/medications`,
+      headers: authorization,
+      data: med,
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const putPatient: PutPatient = async (id, patient) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'put',
+      url: `${REACT_APP_URL}/patients/${id}`,
+      headers: authorization,
+      data: patient,
+    });
+    console.log(response);
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const putPatientNote: PutPatientNote = async (id, note) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'put',
+      url: `${REACT_APP_URL}/patients/note/${id}`,
+      headers: authorization,
+      data: note,
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
 };

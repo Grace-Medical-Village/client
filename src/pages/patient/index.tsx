@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Radio, Row, Typography, Form } from 'antd';
 
 import NewPatient from '../new-patient';

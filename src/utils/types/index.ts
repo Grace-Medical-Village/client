@@ -1,11 +1,7 @@
 export enum ItemType {
-  BACKGROUND = 'background',
-  CONDITION = 'conditions',
   METRIC = 'metrics',
   MEDICATION = 'medications',
   NOTE = 'notes',
-  PATIENT_SEARCH = 'patientSearch',
-  UNKNOWN = '',
 }
 
 export type ResponseBody = string;
@@ -36,54 +32,55 @@ export type ResponseStatus = {
 };
 
 // METHODS
-export type DeleteMedication = (id: string | number) => Promise<ResponseStatus>;
+export type DeleteMedication = (id: number) => Promise<ResponseStatus>;
 export type DeletePatientCondition = (id: number) => Promise<ResponseStatus>;
-
+export type DeletePatientMedication = (id: number) => Promise<ResponseStatus>;
+export type DeletePatientMetric = (id: number) => Promise<ResponseStatus>;
+export type DeletePatientNote = (id: number) => Promise<ResponseStatus>;
 export type GetConditions = () => Promise<Condition[]>;
-
-export type GetMedications = () => Promise<Medication[]> | any; // todo
-
+export type GetMedications = () => Promise<Medication[]>;
 export type GetMetrics = () => Promise<Metric[]>;
-
 export type GetMedicationCategories = () => Promise<MedicationCategory[]>;
-
 export type GetPatient = (id: number) => Promise<PatientData>;
-
 export type GetPatientsByBirthdate = (
   date: string
 ) => Promise<PatientSearchResult[]>;
-
 export type GetPatientsByName = (
   name: string
 ) => Promise<PatientSearchResult[]>;
-
 export type PostMedication = (
   name: string,
   strength: string,
   categoryId: string
 ) => Promise<ResponseStatus>;
-
-export type PostPatient = (newPatient: NewPatient) => Promise<ResponseStatus>;
-
+export type PostPatient = (
+  newPatient: PatientBackground
+) => Promise<ResponseStatus>;
 export type PostPatientCondition = (
   patientId: number,
   conditionId: number
 ) => Promise<ResponseStatus>;
-
 export type PostPatientMedication = (
   patientId: number,
   medicationId: number
 ) => Promise<ResponseStatus>;
-
 export type PostPatientMetric = (
   patientId: number,
   medicationId: number,
   value: number | string | boolean
 ) => Promise<ResponseStatus>;
-
 export type PostPatientNote = (
   patientId: number,
   note: string
+) => Promise<ResponseStatus>;
+export type PutMedication = (med: Medication) => Promise<ResponseStatus>;
+export type PutPatient = (
+  id: number,
+  patient: PatientBackground
+) => Promise<ResponseStatus>;
+export type PutPatientNote = (
+  id: number,
+  note: Note
 ) => Promise<ResponseStatus>;
 
 /**
@@ -107,9 +104,20 @@ export type Medication = {
   strength: string;
   categoryId: number;
   categoryName: string;
+  archived: boolean | string;
   createdAt: string;
   modifiedAt: string;
 };
+
+type Key = {
+  key: number;
+};
+
+type Note = {
+  note: string;
+};
+
+export type MedicationTableRecord = Medication & Key;
 
 export type Metric = {
   id: number;
@@ -124,18 +132,22 @@ export type Metric = {
   modifiedAt: string;
 };
 
-export type NewPatient = {
+export type Patient = ID & PatientBackground;
+
+export type PatientBackground = {
   firstName: string;
   lastName: string;
-  birthdate: string;
-  gender: string;
+  fullName?: string;
+  birthdate?: string;
+  gender?: string;
   email?: string;
-  height?: number;
   mobile?: string;
-  country: string;
+  map: boolean;
+  country?: string;
   nativeLanguage?: string;
-  nativeLiteracy?: string;
+  nativeLiteracy?: number;
   smoker: boolean;
+  zipCode5?: string;
 };
 
 export type PatientSearchResult = {
@@ -144,23 +156,6 @@ export type PatientSearchResult = {
   lastName: string;
   birthdate: string;
   gender?: string;
-};
-
-export type Patient = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  birthdate?: string;
-  gender?: string;
-  email?: string;
-  height?: string;
-  mobile?: string;
-  map: boolean;
-  country?: string;
-  nativeLanguage?: string;
-  nativeLiteracy?: string;
-  smoker: boolean;
 };
 
 export type PatientCondition = {
@@ -206,7 +201,6 @@ export type PatientData = {
 };
 
 // CONTEXT
-export type GetConditionsFromStorage = () => string[];
 export interface MedicationState {
   categories: MedicationCategory[];
   medications: Medication[];
@@ -215,26 +209,12 @@ export interface MedicationState {
 // LOCAL STORAGE
 export enum Storage {
   CONDITIONS = 'conditions',
-  METRICS = 'metrics',
 }
 
 /**
  * TABLES
  */
 // MEDICATIONS
-export type CategoryFilter = {
-  text: string;
-  value: string;
-};
-
-export type MedicationTableRecord = {
-  key: number;
-  id: number;
-  name: string;
-  strength: string | null;
-  categoryName: string;
-};
-
 export type PatientMedicationTableRecord = {
   key: number;
   id: number;
@@ -242,6 +222,7 @@ export type PatientMedicationTableRecord = {
   name: string;
   strength: string | null;
   category: string;
+  timestamp: number;
 };
 
 export type PatientMetricTableRecord = {
@@ -250,6 +231,7 @@ export type PatientMetricTableRecord = {
   date: string;
   metric: string;
   value: string | null;
+  timestamp: number;
 };
 
 export type PatientNoteTableRecord = {
@@ -257,4 +239,5 @@ export type PatientNoteTableRecord = {
   key: number;
   note: string;
   date: string;
+  timestamp: number;
 };
