@@ -139,7 +139,7 @@ export default function NotesForm(): JSX.Element {
           <Select
             onChange={handleMetricChange}
             placeholder="Select metric"
-            style={{ width: '30%' }}
+            style={{ width: '25%' }}
           >
             {metricsCtx.state.map((metric) => (
               <Select.Option key={metric.id} value={metric.id}>
@@ -153,17 +153,23 @@ export default function NotesForm(): JSX.Element {
           noStyle
           rules={[{ required: true, message: 'Value is required' }]}
         >
-          <Input style={{ width: '30%' }} placeholder="Input value" />
+          <Input
+            style={{ marginLeft: '0.5rem', width: '25%' }}
+            placeholder="Input value"
+          />
         </Form.Item>
         <span style={{ paddingLeft: '4px' }}>
           {label.length > 0 ? label : null}
         </span>
-        <Form.Item name="comment" style={{ margin: 0 }}>
+        <Form.Item
+          name="comment"
+          style={{ marginLeft: '0.5rem', width: '35%' }}
+        >
           <Input.TextArea
-            autoSize={{ minRows: 1, maxRows: 3 }}
-            placeholder=""
-            showCount={true}
+            autoSize={{ minRows: 2, maxRows: 3 }}
             maxLength={140}
+            placeholder="Comments"
+            showCount={true}
           />
         </Form.Item>
       </Input.Group>

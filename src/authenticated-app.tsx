@@ -28,7 +28,7 @@ function AuthenticatedApp(): JSX.Element {
         if (!isEmpty(res.patient)) update(res);
       }
     };
-    fetchPatient();
+    fetchPatient(); // TODO
   }, [state, update]);
 
   return (
@@ -42,7 +42,7 @@ function AuthenticatedApp(): JSX.Element {
                 <Route exact path="/medications" component={Medications} />
                 <Route exact path="/patient" component={Patient} />
                 <Route exact path="/dashboard" component={Dashboard} />
-                <Route component={Error} />
+                <Route path="/" component={Error} />
               </Switch>
             </Col>
           </Row>

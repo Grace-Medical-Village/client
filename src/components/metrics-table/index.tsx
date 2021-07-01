@@ -44,11 +44,12 @@ export default function NotesTable(): JSX.Element {
     if (state?.metrics) {
       state?.metrics.forEach((patientMetric: PatientMetric) => {
         const metric = getMetric(patientMetric.metricId);
+        console.log(patientMetric);
         if (metric) {
           const m: PatientMetricTableRecord = {
             id: patientMetric.metricId,
             key: patientMetric.id,
-            date: monthDayYearFullDate(patientMetric.createdAt.toString()),
+            date: monthDayYearFullDate(patientMetric.createdAt),
             timestamp: timestampFromDateString(patientMetric.createdAt),
             metric: metric.metricName,
             value: `${patientMetric.value} ${metric.uom}`,

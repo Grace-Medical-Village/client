@@ -176,7 +176,7 @@ export default function MedicationsForm(): JSX.Element {
             <Select
               onChange={handleMedicationChange}
               placeholder="Select medication"
-              style={{ width: '40vw' }}
+              style={{ marginLeft: '1rem', width: '40vw' }}
             >
               {medicationsCtx.state.medications
                 .filter((med) => {
