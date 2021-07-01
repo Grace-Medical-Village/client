@@ -12,6 +12,7 @@ import {
   Select,
   Space,
   Switch,
+  Tooltip,
 } from 'antd';
 
 import {
@@ -36,6 +37,7 @@ import { Store } from 'antd/lib/form/interface';
 import moment from 'moment';
 import { putPatient } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
+
 const { Option } = Select;
 
 export default function PatientAbout(): JSX.Element {
@@ -44,6 +46,9 @@ export default function PatientAbout(): JSX.Element {
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
   const { state, update } = useContext(PatientContext);
   const [form] = Form.useForm();
+
+  const MAP_DESCRIPTION = `A patient without insurance or is underinsured that has Asthma, Hypertension, Diabetes (I & II), or High Cholesterol.
+    This is tracked in order to gain funding.`;
 
   const getMostRecentMetricDate = useCallback(() => {
     let result = 'N/A';
@@ -87,7 +92,7 @@ export default function PatientAbout(): JSX.Element {
         value: capitalize(state?.patient?.nativeLanguage) ?? 'N/A',
       },
       {
-        title: 'Map',
+        title: 'MAP',
         value: capitalize(state?.patient?.map.toString()) ?? 'N/A',
       },
       {
@@ -171,11 +176,13 @@ export default function PatientAbout(): JSX.Element {
       <Row>
         <Space direction="vertical">
           <Descriptions bordered>
-            {data.map(({ title, value }) => (
-              <Descriptions.Item key={title} label={title}>
-                {value}
-              </Descriptions.Item>
-            ))}
+            {data.map(({ title, value }) => {
+              return (
+                <Descriptions.Item key={title} label={title}>
+                  {value}
+                </Descriptions.Item>
+              );
+            })}
           </Descriptions>
           <Button block ghost onClick={(e) => handleClick(e)} type="primary">
             Edit
@@ -306,14 +313,16 @@ export default function PatientAbout(): JSX.Element {
           >
             <Switch />
           </Form.Item>
-          <Form.Item
-            initialValue={state.patient?.map ?? false}
-            label="Map"
-            name="map"
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
+          <Tooltip placement="left" title={MAP_DESCRIPTION}>
+            <Form.Item
+              initialValue={state.patient?.map ?? false}
+              label="MAP"
+              name="map"
+              valuePropName="checked"
+            >
+              <Switch />
+            </Form.Item>
+          </Tooltip>
           <Form.Item>
             <Button
               onClick={() => setShowDrawer(false)}

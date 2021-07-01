@@ -67,7 +67,8 @@ export type PostPatientMedication = (
 export type PostPatientMetric = (
   patientId: number,
   medicationId: number,
-  value: number | string | boolean
+  value: number | string | boolean,
+  comment: string | null
 ) => Promise<ResponseStatus>;
 export type PostPatientNote = (
   patientId: number,
@@ -180,6 +181,7 @@ export type PatientMetric = {
   metricId: number;
   patientId: number;
   value: string;
+  comment: string | null;
   createdAt: string;
   modifiedAt: string;
 };
@@ -231,6 +233,7 @@ export type PatientMetricTableRecord = {
   date: string;
   metric: string;
   value: string | null;
+  comment: string;
   timestamp: number;
 };
 

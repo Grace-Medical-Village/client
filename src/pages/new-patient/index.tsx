@@ -39,7 +39,7 @@ const tailLayout = {
 function NewPatientForm(): JSX.Element {
   const [form] = Form.useForm();
   const history = useHistory();
-  const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
+  const [nativeLiteracyRating, setNativeLiteracyRating] = useState(0);
   const { update } = useContext(PatientContext);
 
   const onFinishFailed = () => null; // todo
@@ -72,15 +72,21 @@ function NewPatientForm(): JSX.Element {
       birthdate,
     };
     const res = await postPatient(newPatient);
-    if (requestSuccess(res.status) && res.id) {
+    if (requestSuccess(res.status)) {
       notificationHandler(res.status, 'Patient Saved', 'bottomRight');
-      onReset();
-      setNewPatient(res.id)
-        .then((r) => r)
-        .catch((err) => console.error(err));
+      console.log(res);
+      // onReset();
+      if (res.id) {
+        setNewPatient(res.id)
+          .then((r) => {
+            console.log(r);
+          })
+          .catch((err) => console.error(err));
+      }
     } else if (res.status === 409) {
-      console.log(82);
       notificationHandler(res.status, 'Patient Already Exists', 'bottomRight');
+    } else {
+      notificationHandler(res.status, 'Unknown Error', 'bottomRight');
     }
   }
 

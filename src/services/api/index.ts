@@ -14,7 +14,6 @@ import {
   GetPatient,
   GetPatientsByBirthdate,
   GetPatientsByName,
-  ID,
   Medication,
   MedicationCategory,
   Metric,
@@ -329,11 +328,12 @@ export const postPatient: PostPatient = async (newPatient) => {
       },
     });
 
-    res.status = response.status;
-    res.statusText = response.statusText;
-
-    const data: ID | undefined = response?.data[0];
-    if (data?.id) res.id = data.id;
+    const { data, status, statusText } = response;
+    res.status = status;
+    res.statusText = statusText;
+    if (data.id) {
+      res.id = data.id;
+    }
   } catch (error) {
     console.error(error);
     res.status = error.response.status;
@@ -363,9 +363,12 @@ export const postPatientCondition: PostPatientCondition = async (
         conditionId,
       },
     });
-    res.status = response.status;
-    res.statusText = response.statusText;
-    res.id = response.data.id ?? null;
+    const { data, status, statusText } = response;
+    res.status = status;
+    res.statusText = statusText;
+    if (data.id) {
+      res.id = data.id;
+    }
   } catch (error) {
     console.error(error);
   }
@@ -407,7 +410,8 @@ export const postPatientMedication: PostPatientMedication = async (
 export const postPatientMetric: PostPatientMetric = async (
   patientId,
   metricId,
-  value
+  value,
+  comment
 ) => {
   const authorization = await getAuthorization();
 
@@ -425,13 +429,15 @@ export const postPatientMetric: PostPatientMetric = async (
         patientId,
         metricId,
         value: value.toString().trim(),
+        comment,
       },
     });
-    res.status = response.status;
-    res.statusText = response.statusText;
-    res.id = response.data.id ?? null;
-    res.createdAt = response.data.createdAt ?? null;
-    res.modifiedAt = response.data.modifiedAt ?? null;
+    const { data, status, statusText } = response;
+    res.status = status;
+    res.statusText = statusText;
+    res.id = data?.id ?? null;
+    res.createdAt = data?.createdAt ?? null;
+    res.modifiedAt = data?.modifiedAt ?? null;
   } catch (error) {
     console.error(error);
   }

@@ -52,6 +52,8 @@ export default function NotesTable(): JSX.Element {
             timestamp: timestampFromDateString(patientMetric.createdAt),
             metric: metric.metricName,
             value: `${patientMetric.value} ${metric.uom}`,
+            comment:
+              patientMetric.comment !== null ? patientMetric.comment : '',
           };
           d.push(m);
         }
@@ -122,6 +124,10 @@ export default function NotesTable(): JSX.Element {
     {
       title: 'Value',
       dataIndex: 'value',
+    },
+    {
+      title: 'Comment',
+      dataIndex: 'comment',
     },
     {
       title: 'Date',

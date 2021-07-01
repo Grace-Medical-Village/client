@@ -39,12 +39,13 @@ export default function NotesForm(): JSX.Element {
       const patientId = state.patient.id;
       const metricId = data.id;
       const value = data.value;
+      const comment = data?.comment ?? null;
       const {
         id = null,
         status,
         createdAt = null,
         modifiedAt = null,
-      } = await postPatientMetric(patientId, metricId, value);
+      } = await postPatientMetric(patientId, metricId, value, comment);
       const success = requestSuccess(status);
       handleSaveMetricResult(
         success,
@@ -52,6 +53,7 @@ export default function NotesForm(): JSX.Element {
         patientId,
         metricId,
         value,
+        comment,
         createdAt,
         modifiedAt
       );
@@ -64,6 +66,7 @@ export default function NotesForm(): JSX.Element {
     patientId: number,
     metricId: number,
     value: string,
+    comment: string | null,
     createdAt: string | null,
     modifiedAt: string | null
   ) {
@@ -71,7 +74,15 @@ export default function NotesForm(): JSX.Element {
     const failureMessage = 'Failed to save metric';
     messageUserResult(success, successMessage, failureMessage);
     if (id && createdAt && modifiedAt) {
-      addMetricToContext(id, patientId, metricId, value, createdAt, modifiedAt);
+      addMetricToContext(
+        id,
+        patientId,
+        metricId,
+        value,
+        comment,
+        createdAt,
+        modifiedAt
+      );
     }
   }
 
@@ -80,6 +91,7 @@ export default function NotesForm(): JSX.Element {
     patientId: number,
     metricId: number,
     value: string,
+    comment: string | null,
     createdAt: string,
     modifiedAt: string
   ) {
@@ -87,6 +99,7 @@ export default function NotesForm(): JSX.Element {
       id,
       metricId,
       value,
+      comment,
       patientId,
       createdAt,
       modifiedAt,
@@ -145,6 +158,14 @@ export default function NotesForm(): JSX.Element {
         <span style={{ paddingLeft: '4px' }}>
           {label.length > 0 ? label : null}
         </span>
+        <Form.Item name="comment" style={{ margin: 0 }}>
+          <Input.TextArea
+            autoSize={{ minRows: 1, maxRows: 3 }}
+            placeholder=""
+            showCount={true}
+            maxLength={140}
+          />
+        </Form.Item>
       </Input.Group>
       <Form.Item>
         <Row style={{ paddingTop: '1rem' }}>

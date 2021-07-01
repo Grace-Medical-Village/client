@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Input, Popconfirm, Space, Table } from 'antd';
 import {
-  Medication,
   PatientData,
   PatientMedication,
   PatientMedicationTableRecord,
@@ -36,7 +35,9 @@ export default function NotesTable(): JSX.Element {
     const d: PatientMedicationTableRecord[] = [];
     if (state.medications && state.medications.length > 0) {
       state.medications.forEach((med: PatientMedication) => {
-        const medication = getMedication(med.medicationId);
+        const medication = medicationCtx?.state?.medications.filter(
+          (m) => m.id === med.medicationId
+        )[0];
         if (medication) {
           const m: PatientMedicationTableRecord = {
             id: med.medicationId,
@@ -52,13 +53,7 @@ export default function NotesTable(): JSX.Element {
       });
     }
     set(d);
-  }, [state]);
-
-  const getMedication = (medicationId: number): Medication => {
-    return medicationCtx?.state?.medications.filter(
-      (med) => med.id === medicationId
-    )[0];
-  };
+  }, [medicationCtx, state]);
 
   useEffect(() => {
     const name = new Set<string>();
