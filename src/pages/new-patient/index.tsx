@@ -24,6 +24,8 @@ import { getPatient, postPatient, requestSuccess } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
 import { PatientContext } from '../../context/patient';
 import { PatientBackground } from '../../utils/types';
+import MaskedInput from 'antd-mask-input';
+import { mobileCleaner } from '../../utils/data';
 
 const { Option } = Select;
 
@@ -56,7 +58,10 @@ function NewPatientForm(): JSX.Element {
       country,
       nativeLanguage,
       smoker,
+      zipCode5,
     } = data;
+
+    const mobileCleaned = mobile.replace(mobileCleaner, '');
 
     const newPatient: PatientBackground = {
       firstName,
@@ -64,23 +69,21 @@ function NewPatientForm(): JSX.Element {
       gender,
       email,
       map: false,
-      mobile,
+      mobile: mobileCleaned,
       country,
       nativeLanguage,
       nativeLiteracy: nativeLiteracyRating,
       smoker,
       birthdate,
+      zipCode5,
     };
     const res = await postPatient(newPatient);
     if (requestSuccess(res.status)) {
       notificationHandler(res.status, 'Patient Saved', 'bottomRight');
-      console.log(res);
       // onReset();
       if (res.id) {
         setNewPatient(res.id)
-          .then((r) => {
-            console.log(r);
-          })
+          .then(() => null)
           .catch((err) => console.error(err));
       }
     } else if (res.status === 409) {
@@ -122,14 +125,18 @@ function NewPatientForm(): JSX.Element {
           <Input />
         </Form.Item>
         <Form.Item label="Mobile" name="mobile">
-          <Input />
+          <MaskedInput
+            mask="(111) 111-1111"
+            name="mobile"
+            placeholderChar="X"
+          />
         </Form.Item>
         <Form.Item
           label="Birthdate"
           name="birthdate"
           rules={[{ required: true, message: 'Birthdate is required.' }]}
         >
-          <DatePicker format={monthDayYear} />
+          <DatePicker format={monthDayYear} placeholder={monthDayYear} />
         </Form.Item>
         <Form.Item
           label="Gender"
@@ -147,7 +154,7 @@ function NewPatientForm(): JSX.Element {
           name="zipCode5"
           rules={[{ required: true, message: 'Zip code is required.' }]}
         >
-          <Input maxLength={5} />
+          <MaskedInput mask="11111" name="zipCode5" placeholderChar="_" />
         </Form.Item>
         <Form.Item
           initialValue="English"

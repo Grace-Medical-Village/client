@@ -10,13 +10,14 @@ import {
 } from '../../services/api';
 import { messageUserResult } from '../../utils/ui';
 import { MetricsContext } from '../../context/metrics';
-import { PatientMetric } from '../../utils/types';
+import { PatientMetric, Metric } from '../../utils/types';
+import MaskedInput from 'antd-mask-input';
 
 export default function NotesForm(): JSX.Element {
   const [form] = useForm();
+  const [m, setMetric] = useState<Metric | null>(null);
   const { state, update } = useContext(PatientContext);
   const metricsCtx = useContext(MetricsContext);
-  const [label, setLabel] = useState('');
 
   const layout = {
     wrapperCol: { span: 24 },
@@ -27,7 +28,10 @@ export default function NotesForm(): JSX.Element {
       const data = await getMetrics();
       metricsCtx.update(data);
     };
-    if (metricsCtx.state.length === 0) setMetrics();
+    if (metricsCtx.state.length === 0)
+      setMetrics()
+        .then((r) => r)
+        .catch((err) => console.error(err));
   }, [metricsCtx]);
 
   function onReset() {
@@ -115,10 +119,12 @@ export default function NotesForm(): JSX.Element {
   }
 
   const handleMetricChange = (id: number) => {
-    const metrics = metricsCtx.state.filter((metric) => metric.id === id);
-    if (metrics.length === 1) {
-      setLabel(metrics[0].uom);
-    }
+    metricsCtx.state.forEach((metric) => {
+      if (metric.id === id) {
+        console.log(metric);
+        setMetric(metric);
+      }
+    });
   };
 
   return (
@@ -153,14 +159,17 @@ export default function NotesForm(): JSX.Element {
           noStyle
           rules={[{ required: true, message: 'Value is required' }]}
         >
-          <Input
-            style={{ marginLeft: '0.5rem', width: '25%' }}
-            placeholder="Input value"
-          />
+          {m?.mask ? (
+            <MaskedInput
+              mask={m.mask}
+              name={m?.metricName ?? ''}
+              placeholderChar="X"
+              style={{ marginLeft: '0.5rem', width: '25%' }}
+            />
+          ) : (
+            <Input style={{ marginLeft: '0.5rem', width: '25%' }} />
+          )}
         </Form.Item>
-        <span style={{ paddingLeft: '4px' }}>
-          {label.length > 0 ? label : null}
-        </span>
         <Form.Item
           name="comment"
           style={{ marginLeft: '0.5rem', width: '35%' }}

@@ -129,6 +129,7 @@ export type Metric = {
   default_value?: number | string | boolean;
   min_value?: number | string;
   max_value?: number | string;
+  mask?: string;
   createdAt: string;
   modifiedAt: string;
 };

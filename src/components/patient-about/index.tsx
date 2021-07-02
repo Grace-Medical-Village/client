@@ -37,13 +37,15 @@ import { Store } from 'antd/lib/form/interface';
 import moment from 'moment';
 import { putPatient } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
+import MaskedInput from 'antd-mask-input';
+import { mobileCleaner } from '../../utils/data';
 
 const { Option } = Select;
 
 export default function PatientAbout(): JSX.Element {
   const [data, setData] = useState<AboutDescriptionData[]>([]);
   const [showDrawer, setShowDrawer] = useState(false);
-  const [nativeLiteracyRating, setNativeLiteracyRating] = useState(3);
+  const [nativeLiteracyRating, setNativeLiteracyRating] = useState(0);
   const { state, update } = useContext(PatientContext);
   const [form] = Form.useForm();
 
@@ -66,6 +68,8 @@ export default function PatientAbout(): JSX.Element {
   }, [state]);
 
   useEffect(() => {
+    setNativeLiteracyRating(state?.patient?.nativeLiteracy ?? 0);
+
     const d: AboutDescriptionData[] = [
       {
         title: 'Age',
@@ -122,12 +126,14 @@ export default function PatientAbout(): JSX.Element {
       zipCode5,
     } = data;
 
+    const mobileCleaned = mobile.replace(mobileCleaner, '');
+
     const patient: PatientBackground = {
       firstName,
       lastName,
       gender,
       map,
-      mobile,
+      mobile: mobileCleaned,
       country,
       nativeLanguage,
       nativeLiteracy: nativeLiteracyRating,
@@ -218,7 +224,11 @@ export default function PatientAbout(): JSX.Element {
             label="Mobile"
             name="mobile"
           >
-            <Input />
+            <MaskedInput
+              mask="(111) 111-1111"
+              name="mobile"
+              placeholderChar="X"
+            />
           </Form.Item>
           <Form.Item
             initialValue={moment(state.patient?.birthdate, 'YYYY-MM-DD')}
@@ -226,7 +236,7 @@ export default function PatientAbout(): JSX.Element {
             name="birthdate"
             rules={[{ required: true, message: 'Birthdate is required.' }]}
           >
-            <DatePicker format={monthDayYear} />
+            <DatePicker format={monthDayYear} placeholder={monthDayYear} />
           </Form.Item>
           <Form.Item
             initialValue={state.patient?.gender}
@@ -242,12 +252,11 @@ export default function PatientAbout(): JSX.Element {
           </Form.Item>
           <Form.Item
             initialValue={state.patient?.zipCode5}
-            // maxLength={5}
             label="Zip Code"
             name="zipCode5"
             rules={[{ required: true, message: 'Zip code is required.' }]}
           >
-            <Input />
+            <MaskedInput mask="11111" name="zipCode5" placeholderChar="X" />
           </Form.Item>
           <Form.Item
             initialValue={state.patient?.nativeLanguage}
