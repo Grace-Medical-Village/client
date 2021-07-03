@@ -64,7 +64,11 @@ function Formulary(): JSX.Element {
     };
     buildMedicationState()
       .then((result) => {
-        if (result) {
+        if (
+          result &&
+          result.categories.length > 0 &&
+          result.medications.length > 0
+        ) {
           update(result);
         } else {
           console.error(
@@ -83,7 +87,6 @@ function Formulary(): JSX.Element {
         key: idx,
       };
     });
-    console.log(mtr);
     set(mtr);
   }, [state]);
 
