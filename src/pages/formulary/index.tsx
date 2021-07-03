@@ -22,23 +22,23 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { MedicationsContext } from '../../context/medications';
 import {
+  deleteMedication,
   getMedicationCategories,
   getMedications,
   postMedication,
-  requestSuccess,
-  deleteMedication,
   putMedication,
+  requestSuccess,
 } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
 import {
-  MedicationTableRecord,
-  MedicationState,
   Medication,
+  MedicationState,
+  MedicationTableRecord,
 } from '../../utils/types';
 import './index.css';
 import { capitalize } from 'lodash';
 
-function Medications(): JSX.Element {
+function Formulary(): JSX.Element {
   const { state, update } = useContext(MedicationsContext);
   const [data, set] = useState<MedicationTableRecord[]>([]);
 
@@ -52,19 +52,26 @@ function Medications(): JSX.Element {
     []
   );
   useEffect(() => {
-    const buildMedicationState = async () => {
+    const buildMedicationState = async (): Promise<MedicationState | void> => {
       if (state.medications.length === 0 || state.categories.length === 0) {
         const categories = await getMedicationCategories();
         const medications = await getMedications();
-        const data: MedicationState = {
+        return {
           categories,
           medications,
         };
-        update(data);
       }
     };
     buildMedicationState()
-      .then((r) => r)
+      .then((result) => {
+        if (result) {
+          update(result);
+        } else {
+          console.error(
+            'Error: unable to fetch medications and/or medication categories'
+          );
+        }
+      })
       .catch((err) => console.error(err));
   }, [state, update]);
 
@@ -448,4 +455,4 @@ function Medications(): JSX.Element {
   );
 }
 
-export default Medications;
+export default Formulary;

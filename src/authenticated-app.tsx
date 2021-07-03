@@ -1,11 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 
 import { Col, Layout, Row } from 'antd';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import Dashboard from './pages/dashboard';
-import Error from './pages/error';
-import Medications from './pages/medications';
+import Formulary from './pages/formulary';
 import Patient from './pages/patient';
 
 import Header from './components/header';
@@ -21,14 +20,19 @@ function AuthenticatedApp(): JSX.Element {
   const { state, update } = useContext(PatientContext);
 
   useEffect(() => {
-    const fetchPatient = async () => {
+    const fetchPatient = async (): Promise<PatientData | void> => {
       const patientId: string = localStorage.getItem('patientId') + '';
       if (isEmpty(state) && !isNaN(Number(patientId))) {
-        const res: PatientData = await getPatient(Number.parseInt(patientId));
-        if (!isEmpty(res.patient)) update(res);
+        return await getPatient(Number.parseInt(patientId));
       }
     };
-    fetchPatient(); // TODO
+    fetchPatient()
+      .then((result) => {
+        if (result && result.patient && !isEmpty(result.patient)) {
+          update(result);
+        }
+      })
+      .catch((err) => console.error(err)); // TODO
   }, [state, update]);
 
   return (
@@ -39,7 +43,7 @@ function AuthenticatedApp(): JSX.Element {
           <Row align="middle" justify="center">
             <Col span={24}>
               <Switch>
-                <Route exact path="/medications" component={Medications} />
+                <Route exact path="/medications" component={Formulary} />
                 <Route exact path="/patient" component={Patient} />
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/" component={Patient} />
