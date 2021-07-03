@@ -6,6 +6,8 @@ function clearStorage(): void {
   });
 }
 
+const mobileCleaner = new RegExp(/[\D]/, 'gi');
+
 function stringArrayToNumberArray(a: string[]): number[] {
   const b: number[] = [];
   a.forEach((x) => {
@@ -13,7 +15,5 @@ function stringArrayToNumberArray(a: string[]): number[] {
   });
   return b;
 }
-
-const mobileCleaner = new RegExp(/[\D]/, 'gi');
 
 export { clearStorage, mobileCleaner, stringArrayToNumberArray };

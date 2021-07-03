@@ -126,10 +126,10 @@ export type Metric = {
   unit_of_measure: string;
   uom: string;
   map: boolean;
-  default_value?: number | string | boolean;
-  min_value?: number | string;
-  max_value?: number | string;
-  mask?: string;
+  format: string;
+  pattern: string;
+  minValue: number;
+  maxValue: number;
   createdAt: string;
   modifiedAt: string;
 };

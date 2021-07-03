@@ -11,7 +11,6 @@ import {
 import { messageUserResult } from '../../utils/ui';
 import { MetricsContext } from '../../context/metrics';
 import { PatientMetric, Metric } from '../../utils/types';
-import MaskedInput from 'antd-mask-input';
 
 export default function NotesForm(): JSX.Element {
   const [form] = useForm();
@@ -39,6 +38,7 @@ export default function NotesForm(): JSX.Element {
   }
 
   async function onFinish(data: Store) {
+    // TODO VALIDATE FORMAT
     if (state?.patient?.id && data?.id && data?.value) {
       const patientId = state.patient.id;
       const metricId = data.id;
@@ -121,7 +121,6 @@ export default function NotesForm(): JSX.Element {
   const handleMetricChange = (id: number) => {
     metricsCtx.state.forEach((metric) => {
       if (metric.id === id) {
-        console.log(metric);
         setMetric(metric);
       }
     });
@@ -159,15 +158,15 @@ export default function NotesForm(): JSX.Element {
           noStyle
           rules={[{ required: true, message: 'Value is required' }]}
         >
-          {m?.mask ? (
-            <MaskedInput
-              mask={m.mask}
-              name={m?.metricName ?? ''}
-              placeholderChar="X"
+          {m ? (
+            <Input
+              maxLength={10}
+              placeholder={m.format}
               style={{ marginLeft: '0.5rem', width: '25%' }}
+              suffix={m.uom}
             />
           ) : (
-            <Input style={{ marginLeft: '0.5rem', width: '25%' }} />
+            <Input disabled style={{ marginLeft: '0.5rem', width: '25%' }} />
           )}
         </Form.Item>
         <Form.Item
