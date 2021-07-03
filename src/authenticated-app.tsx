@@ -42,7 +42,7 @@ function AuthenticatedApp(): JSX.Element {
                 <Route exact path="/medications" component={Medications} />
                 <Route exact path="/patient" component={Patient} />
                 <Route exact path="/dashboard" component={Dashboard} />
-                <Route path="/" component={Error} />
+                <Route exact path="/" component={Patient} />
               </Switch>
             </Col>
           </Row>
