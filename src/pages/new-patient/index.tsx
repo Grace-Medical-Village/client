@@ -54,7 +54,7 @@ function NewPatientForm(): JSX.Element {
       lastName,
       gender,
       email,
-      mobile,
+      mobile = '',
       country,
       nativeLanguage,
       smoker,

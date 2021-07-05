@@ -119,7 +119,7 @@ export default function PatientAbout(): JSX.Element {
       lastName,
       gender,
       map,
-      mobile,
+      mobile = '',
       country,
       nativeLanguage,
       smoker,

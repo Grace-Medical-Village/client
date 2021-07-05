@@ -19,6 +19,7 @@ export const monthDayYearFullDate = (date: string): string =>
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
   });
 
 export const timestampFromDateString = (date: string): number => {
