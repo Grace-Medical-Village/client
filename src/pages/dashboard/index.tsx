@@ -20,17 +20,13 @@ const { Title } = Typography;
 
 export default function Dashboard(): JSX.Element {
   const { state } = useContext(PatientContext);
-  const [formSelection, setFormSelection] = useState<ItemType>(
-    ItemType.MEDICATION
-  );
+  const [formSelection, setFormSelection] = useState<ItemType>(ItemType.METRIC);
   const [tableSelection, setTableSelection] = useState<ItemType>(
-    ItemType.MEDICATION
+    ItemType.METRIC
   );
-  const [dataEntryComponent, setDataEntryComponent] = useState(
-    <MedicationsForm />
-  );
+  const [dataEntryComponent, setDataEntryComponent] = useState(<MetricsForm />);
   const [dataTableComponent, setDataTableComponent] = useState(
-    <MedicationsTable />
+    <MetricsTable />
   );
 
   const entryOptions = [

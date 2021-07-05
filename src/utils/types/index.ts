@@ -27,6 +27,7 @@ export type ResponseStatus = {
   status: number;
   statusText: string;
   id?: number;
+  error?: string;
   createdAt?: string;
   modifiedAt?: string;
 };

@@ -15,6 +15,7 @@ import { PatientMetric, Metric } from '../../utils/types';
 export default function NotesForm(): JSX.Element {
   const [form] = useForm();
   const [m, setMetric] = useState<Metric | null>(null);
+  const [disabled, setDisabled] = useState<boolean>(true);
   const { state, update } = useContext(PatientContext);
   const metricsCtx = useContext(MetricsContext);
 
@@ -35,21 +36,23 @@ export default function NotesForm(): JSX.Element {
 
   function onReset() {
     form.resetFields();
+    setDisabled(true);
   }
 
   async function onFinish(data: Store) {
-    // TODO VALIDATE FORMAT
     if (state?.patient?.id && data?.id && data?.value) {
       const patientId = state.patient.id;
       const metricId = data.id;
       const value = data.value;
       const comment = data?.comment ?? null;
       const {
-        id = null,
         status,
+        id = null,
+        error = null,
         createdAt = null,
         modifiedAt = null,
       } = await postPatientMetric(patientId, metricId, value, comment);
+      console.log(error);
       const success = requestSuccess(status);
       handleSaveMetricResult(
         success,
@@ -59,7 +62,8 @@ export default function NotesForm(): JSX.Element {
         value,
         comment,
         createdAt,
-        modifiedAt
+        modifiedAt,
+        error
       );
     }
   }
@@ -72,10 +76,11 @@ export default function NotesForm(): JSX.Element {
     value: string,
     comment: string | null,
     createdAt: string | null,
-    modifiedAt: string | null
+    modifiedAt: string | null,
+    error: string | null
   ) {
     const successMessage = 'Metric saved';
-    const failureMessage = 'Failed to save metric';
+    const failureMessage = error ? error : 'Failed to save metric';
     messageUserResult(success, successMessage, failureMessage);
     if (id && createdAt && modifiedAt) {
       addMetricToContext(
@@ -124,6 +129,7 @@ export default function NotesForm(): JSX.Element {
         setMetric(metric);
       }
     });
+    setDisabled(false);
   };
 
   return (
@@ -158,7 +164,7 @@ export default function NotesForm(): JSX.Element {
           noStyle
           rules={[{ required: true, message: 'Value is required' }]}
         >
-          {m ? (
+          {m && !disabled ? (
             <Input
               maxLength={10}
               placeholder={m.format}

@@ -381,7 +381,7 @@ export const postPatientMedication: PostPatientMedication = async (
 ) => {
   const authorization = await getAuthorization();
 
-  const res: ResponseStatus = {
+  let result: ResponseStatus = {
     status: 400,
     statusText: 'Server Error',
   };
@@ -396,15 +396,11 @@ export const postPatientMedication: PostPatientMedication = async (
         medicationId,
       },
     });
-    res.status = response.status;
-    res.statusText = response.statusText;
-    res.id = response.data.id ?? null;
-    res.createdAt = response.data.createdAt ?? null;
-    res.modifiedAt = response.data.modifiedAt ?? null;
+    result = buildPostResult(response);
   } catch (error) {
     console.error(error);
   }
-  return res;
+  return result;
 };
 
 export const postPatientMetric: PostPatientMetric = async (
@@ -415,7 +411,7 @@ export const postPatientMetric: PostPatientMetric = async (
 ) => {
   const authorization = await getAuthorization();
 
-  const res: ResponseStatus = {
+  let result: ResponseStatus = {
     status: 400,
     statusText: 'Server Error',
   };
@@ -432,22 +428,21 @@ export const postPatientMetric: PostPatientMetric = async (
         comment,
       },
     });
-    const { data, status, statusText } = response;
-    res.status = status;
-    res.statusText = statusText;
-    res.id = data?.id ?? null;
-    res.createdAt = data?.createdAt ?? null;
-    res.modifiedAt = data?.modifiedAt ?? null;
+    result = buildPostResult(response);
   } catch (error) {
-    console.error(error);
+    if (error.isAxiosError) {
+      result.error = error.response?.data?.error ?? null;
+    } else {
+      console.error(error);
+    }
   }
-  return res;
+  return result;
 };
 
 export const postPatientNote: PostPatientNote = async (patientId, note) => {
   const authorization = await getAuthorization();
 
-  const res: ResponseStatus = {
+  let result: ResponseStatus = {
     status: 400,
     statusText: 'Server Error',
   };
@@ -462,15 +457,11 @@ export const postPatientNote: PostPatientNote = async (patientId, note) => {
         note,
       },
     });
-    res.status = response.status;
-    res.statusText = response.statusText;
-    res.id = response.data.id ?? null;
-    res.createdAt = response.data.createdAt ?? null;
-    res.modifiedAt = response.data.modifiedAt ?? null;
+    result = buildPostResult(response);
   } catch (error) {
     console.error(error);
   }
-  return res;
+  return result;
 };
 
 export const putMedication: PutMedication = async (med) => {
@@ -541,4 +532,16 @@ export const putPatientNote: PutPatientNote = async (id, note) => {
     console.error(error);
   }
   return responseStatus;
+};
+
+const buildPostResult = (response: AxiosResponse): ResponseStatus => {
+  const { data = {}, status, statusText } = response;
+  return {
+    status,
+    statusText,
+    id: data?.id ?? null,
+    createdAt: data?.createdAt ?? null,
+    modifiedAt: data?.modifiedAt ?? null,
+    error: data?.error ?? null,
+  };
 };
