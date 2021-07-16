@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Input, Popconfirm, Space, Table } from 'antd';
 import {
+  MedicationState,
   PatientData,
   PatientMedication,
   PatientMedicationTableRecord,
@@ -15,7 +16,11 @@ import { ColumnFilterItem } from 'antd/lib/table/interface';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { deletePatientMedication } from '../../services/api';
+import {
+  deletePatientMedication,
+  getMedicationCategories,
+  getMedications,
+} from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
 
 export default function NotesTable(): JSX.Element {
@@ -30,6 +35,23 @@ export default function NotesTable(): JSX.Element {
 
   const medicationCtx = useContext(MedicationsContext);
   const { state, update } = useContext(PatientContext);
+
+  useEffect(() => {
+    const setMedications = async (): Promise<void> => {
+      const categories = await getMedicationCategories();
+      const medications = await getMedications();
+      const data: MedicationState = {
+        categories,
+        medications,
+      };
+      medicationCtx.update(data);
+    };
+    if (medicationCtx?.state?.medications.length === 0) {
+      setMedications()
+        .then((r) => r)
+        .catch((err) => console.error(err));
+    }
+  }, [medicationCtx]);
 
   useEffect(() => {
     const d: PatientMedicationTableRecord[] = [];

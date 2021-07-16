@@ -16,6 +16,7 @@ import {
 import { PatientSearchResult } from '../../utils/types';
 import { capitalize, isEmpty } from 'lodash';
 import { PatientContext } from '../../context/patient';
+import { notificationHandler } from '../../utils/ui';
 
 const layout = {
   labelCol: { span: 6 },
@@ -74,6 +75,8 @@ function PatientSearch(): JSX.Element {
       setPatientSearchResult(
         searchResult.sort((a, b) => (a.firstName > b.firstName ? 1 : -1))
       );
+    } else {
+      notificationHandler(404, 'No Patients Found', 'bottomRight');
     }
   };
 
@@ -86,6 +89,8 @@ function PatientSearch(): JSX.Element {
       setPatientSearchResult(
         searchResult.sort((a, b) => (a.firstName > b.firstName ? 1 : -1))
       );
+    } else {
+      notificationHandler(404, 'No Patients Found', 'bottomRight');
     }
   };
 
@@ -126,7 +131,7 @@ function PatientSearch(): JSX.Element {
             name="birthdate"
             rules={[{ required: true, message: 'Birthdate is required.' }]}
           >
-            <DatePicker format={monthDayYear} />
+            <DatePicker format={monthDayYear} placeholder={monthDayYear} />
           </Form.Item>
         )}
         <Form.Item {...tailLayout}>
