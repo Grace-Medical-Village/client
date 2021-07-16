@@ -16,7 +16,7 @@
     "postdeploy:development": "aws cloudfront create-invalidation --distribution-id E220JCUPR3SPWA --paths '/*'",
     "predeploy:production": "REACT_APP_STAGE=production env-cmd -f ./.env.production npm run build",
     "deploy:production": "aws s3 sync build/ s3://gracemedicalvillage.com --delete",
-    "postdeploy:production": "aws cloudfront create-invalidation --distribution-id TODO --paths /"
+    "postdeploy:production": "aws cloudfront create-invalidation --distribution-id E1R8RN9OT35TWL --paths /"
   },
   "eslintConfig": {
     "extends": "react-app"
