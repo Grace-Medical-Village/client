@@ -52,15 +52,27 @@ function ChangeLog(): JSX.Element {
           {changes.map((change, idx) => (
             <Panel header={change.dateRange} key={idx}>
               <Typography.Title level={5}>Medical Team</Typography.Title>
-              {change.medicalTeam.map((description, idx) => (
-                <Typography.Text key={idx}>{description}</Typography.Text>
-              ))}
+              <Typography.Paragraph>
+                <ul>
+                  {change.medicalTeam.map((description, idx) => (
+                    <li key={idx}>
+                      <Typography.Text key={idx}>{description}</Typography.Text>
+                    </li>
+                  ))}
+                </ul>
+              </Typography.Paragraph>
               <Typography.Title level={5}>Dev Team</Typography.Title>
-              {change.devTeam.map((description, idx) => (
-                <Typography.Text key={idx.toString()}>
-                  {description}
-                </Typography.Text>
-              ))}
+              <Typography.Paragraph>
+                <ul>
+                  {change.devTeam.map((description, idx) => (
+                    <li key={idx}>
+                      <Typography.Text key={idx.toString()}>
+                        {description}
+                      </Typography.Text>
+                    </li>
+                  ))}
+                </ul>
+              </Typography.Paragraph>
             </Panel>
           ))}
         </Collapse>
