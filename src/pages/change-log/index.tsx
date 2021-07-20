@@ -29,9 +29,11 @@ function ChangeLog(): JSX.Element {
         'Blood Pressure Metric Max Value is 500 (was 300 before)',
         'Pain Metric added (range 0-10)',
         'PulseOx Metric added (range 50-100)',
+        'Unique Patients in Analytics (no date range)',
+        'MAP Patients in Analytics (no date range)',
       ],
       devTeam: [
-        'Backend Test Suite',
+        'Analytics API',
         'Change Log',
         'Health Check API',
         'TypeScript Cleanup',
