@@ -16,6 +16,7 @@ import {
 } from '../../services/api';
 import './styles.css';
 import { MedicationState } from '../../utils/types';
+import { UserLogin } from './types';
 
 const { Title } = Typography;
 
@@ -39,9 +40,17 @@ function SignIn(): JSX.Element {
   }
 
   function setData() {
-    setConditions();
-    setMedications();
-    setMetrics();
+    setConditions()
+      .then((r) => r)
+      .catch((err) => console.error(err));
+
+    setMedications()
+      .then((r) => r)
+      .catch((err) => console.error(err));
+
+    setMetrics()
+      .then((r) => r)
+      .catch((err) => console.error(err));
   }
 
   const setConditions = async (): Promise<void> => {
@@ -64,8 +73,10 @@ function SignIn(): JSX.Element {
     metricsCtx.update(data);
   };
 
-  function onFinish({ username, password }: any) {
-    signIn(username, password);
+  function onFinish({ username, password }: UserLogin) {
+    signIn(username, password)
+      .then((r) => r)
+      .catch((err) => console.error(err));
   }
 
   return (

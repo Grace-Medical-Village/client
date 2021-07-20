@@ -12,7 +12,6 @@ import {
   Select,
   Space,
   Switch,
-  Tooltip,
 } from 'antd';
 
 import {
@@ -48,9 +47,6 @@ export default function PatientAbout(): JSX.Element {
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(0);
   const { state, update } = useContext(PatientContext);
   const [form] = Form.useForm();
-
-  const MAP_DESCRIPTION = `A patient without insurance or is underinsured that has Asthma, Hypertension, Diabetes (I & II), or High Cholesterol.
-    This is tracked in order to gain funding.`;
 
   const getMostRecentMetricDate = useCallback(() => {
     let result = 'N/A';
@@ -94,10 +90,6 @@ export default function PatientAbout(): JSX.Element {
       {
         title: 'Native Language',
         value: capitalize(state?.patient?.nativeLanguage) ?? 'N/A',
-      },
-      {
-        title: 'MAP',
-        value: capitalize(state?.patient?.map.toString()) ?? 'N/A',
       },
       {
         title: 'Smoker',
@@ -322,16 +314,6 @@ export default function PatientAbout(): JSX.Element {
           >
             <Switch />
           </Form.Item>
-          <Tooltip placement="left" title={MAP_DESCRIPTION}>
-            <Form.Item
-              initialValue={state.patient?.map ?? false}
-              label="MAP"
-              name="map"
-              valuePropName="checked"
-            >
-              <Switch />
-            </Form.Item>
-          </Tooltip>
           <Form.Item>
             <Button
               onClick={() => setShowDrawer(false)}

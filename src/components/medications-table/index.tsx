@@ -259,7 +259,10 @@ export default function NotesTable(): JSX.Element {
       title: 'Operation',
       dataIndex: 'operation',
       // eslint-disable-next-line react/display-name
-      render: (_: any, record: PatientMedicationTableRecord): JSX.Element => {
+      render: (
+        _: unknown,
+        record: PatientMedicationTableRecord
+      ): JSX.Element => {
         return (
           <Popconfirm
             title="Delete?"

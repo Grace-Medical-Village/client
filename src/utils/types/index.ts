@@ -5,6 +5,7 @@ export enum ItemType {
 }
 
 export type ResponseBody = string;
+
 export interface Response {
   body: ResponseBody;
   error: string;
@@ -43,6 +44,7 @@ export type GetMedications = () => Promise<Medication[]>;
 export type GetMetrics = () => Promise<Metric[]>;
 export type GetMedicationCategories = () => Promise<MedicationCategory[]>;
 export type GetPatient = (id: number) => Promise<PatientData>;
+export type GetPatientCount = () => Promise<number>;
 export type GetPatientsByBirthdate = (
   date: string
 ) => Promise<PatientSearchResult[]>;

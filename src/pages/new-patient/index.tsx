@@ -154,7 +154,7 @@ function NewPatientForm(): JSX.Element {
           name="zipCode5"
           rules={[{ required: true, message: 'Zip code is required.' }]}
         >
-          <MaskedInput mask="11111" name="zipCode5" placeholderChar="_" />
+          <MaskedInput mask="11111" name="zipCode5" placeholderChar="X" />
         </Form.Item>
         <Form.Item
           initialValue="English"

@@ -35,7 +35,7 @@ import {
   MedicationState,
   MedicationTableRecord,
 } from '../../utils/types';
-import './index.css';
+import './styles.css';
 import { capitalize } from 'lodash';
 
 function Formulary(): JSX.Element {

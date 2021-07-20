@@ -111,8 +111,10 @@ export default function NotesTable(): JSX.Element {
       title: 'Metric',
       dataIndex: 'metric',
       filters: metricFilters,
-      onFilter: (value: any, record: PatientMetricTableRecord) => {
-        return record.metric.indexOf(value) === 0;
+      onFilter: (value: unknown, record: PatientMetricTableRecord) => {
+        return typeof value === 'string'
+          ? record.metric.indexOf(value) === 0
+          : false;
       },
       sorter: {
         compare: (a: PatientMetricTableRecord, b: PatientMetricTableRecord) => {
@@ -133,8 +135,10 @@ export default function NotesTable(): JSX.Element {
       title: 'Date',
       dataIndex: 'date',
       filters: dateFilters,
-      onFilter: (value: any, record: PatientMetricTableRecord) => {
-        return record.date.indexOf(value) === 0;
+      onFilter: (value: unknown, record: PatientMetricTableRecord) => {
+        return typeof value === 'string'
+          ? record.date.indexOf(value) === 0
+          : false;
       },
       sorter: {
         compare: (a: PatientMetricTableRecord, b: PatientMetricTableRecord) => {
@@ -147,7 +151,10 @@ export default function NotesTable(): JSX.Element {
       title: 'Operation',
       dataIndex: 'operation',
       // eslint-disable-next-line react/display-name
-      render: (_: any, record: PatientMetricTableRecord): JSX.Element | null =>
+      render: (
+        _: unknown,
+        record: PatientMetricTableRecord
+      ): JSX.Element | null =>
         data.length >= 1 ? (
           <Popconfirm
             title="Delete?"

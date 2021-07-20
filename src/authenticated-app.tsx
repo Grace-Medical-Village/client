@@ -13,6 +13,8 @@ import { PatientContext } from './context/patient';
 import { getPatient } from './services/api';
 import { isEmpty } from 'lodash';
 import { PatientData } from './utils/types';
+import ChangeLog from './pages/change-log';
+import Analytics from './pages/analytics';
 
 const { Content } = Layout;
 
@@ -43,9 +45,11 @@ function AuthenticatedApp(): JSX.Element {
           <Row align="middle" justify="center">
             <Col span={24}>
               <Switch>
+                <Route exact path="/analytics" component={Analytics} />
                 <Route exact path="/medications" component={Formulary} />
                 <Route exact path="/patient" component={Patient} />
                 <Route exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/change-log" component={ChangeLog} />
                 <Route exact path="/" component={Patient} />
               </Switch>
             </Col>

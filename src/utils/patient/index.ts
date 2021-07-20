@@ -8,6 +8,7 @@ export const nativeLiteracyRatings: string[] = [
 
 export const languages: string[] = [
   'english',
+  'amharic',
   'arabic',
   'burmese',
   'farsi',

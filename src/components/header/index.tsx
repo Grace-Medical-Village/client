@@ -8,10 +8,11 @@ import {
   SettingOutlined,
   UserAddOutlined,
 } from '@ant-design/icons';
+import { Auth } from 'aws-amplify';
+import { MenuClickEventHandler } from 'rc-menu/lib/interface';
 import { AuthContext, defaultAuthState } from '../../context/auth';
 import logo from '../../assets/gmv-logo-white-heart.png';
 import './styles.css';
-import { Auth } from 'aws-amplify';
 import { clearStorage } from '../../utils/data';
 import { PatientContext } from '../../context/patient';
 
@@ -26,12 +27,16 @@ function Header(): JSX.Element {
   const history = useHistory();
   const location = useLocation();
 
-  const handleClick = (event: any) => {
+  const handleClick: MenuClickEventHandler = (event) => {
     const { key } = event;
     if (key === 'log-out') {
-      signOut();
+      signOut()
+        .then((r) => r)
+        .catch((err) => console.error(err));
+
       history.push('/');
     } else {
+      console.log(key);
       history.push(key);
     }
   };
@@ -80,14 +85,16 @@ function Header(): JSX.Element {
           <Menu.Item key="medications" icon={<MedicineBoxOutlined />}>
             Formulary
           </Menu.Item>
-          <Menu.Item key="analytics" icon={<LineChartOutlined />} disabled>
+          <Menu.Item key="analytics" icon={<LineChartOutlined />}>
             Analytics
           </Menu.Item>
           <SubMenu
+            key="submenu"
             className="header-settings"
             icon={<SettingOutlined />}
             title="Settings"
           >
+            <Menu.Item key="change-log">Change Log</Menu.Item>
             <Menu.Item key="log-out">Logout</Menu.Item>
           </SubMenu>
         </Menu>

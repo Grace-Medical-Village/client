@@ -269,20 +269,22 @@ export default function NotesTable(): JSX.Element {
       title: 'Operation',
       dataIndex: 'operation',
       // eslint-disable-next-line react/display-name
-      render: (_: any, record: PatientNoteTableRecord): JSX.Element | null => {
+      render: (_: unknown, record: PatientNoteTableRecord): JSX.Element => {
         return isEditing(record) ? (
-          <span>
-            <Button
-              onClick={() => save(record.key)}
-              style={{ marginRight: 8 }}
-              type="link"
-            >
-              Save
-            </Button>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-              <Button type="link">Cancel</Button>
-            </Popconfirm>
-          </span>
+          <>
+            <span>
+              <Button
+                onClick={() => save(record.key)}
+                style={{ marginRight: 8 }}
+                type="link"
+              >
+                Save
+              </Button>
+              <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+                <Button type="link">Cancel</Button>
+              </Popconfirm>
+            </span>
+          </>
         ) : (
           <>
             <Typography.Link

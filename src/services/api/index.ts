@@ -12,6 +12,7 @@ import {
   GetMedications,
   GetMetrics,
   GetPatient,
+  GetPatientCount,
   GetPatientsByBirthdate,
   GetPatientsByName,
   Medication,
@@ -175,6 +176,22 @@ export const getConditions: GetConditions = async () => {
   return data;
 };
 
+export const getMapPatientCount: GetPatientCount = async () => {
+  const authorization = await getAuthorization();
+  let count = 0;
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/analytics/patients/map/count`,
+      headers: authorization,
+    });
+    count = response?.data?.patientCount ?? 0;
+  } catch (error) {
+    console.error(error);
+  }
+  return count;
+};
+
 export const getMedications: GetMedications = async () => {
   const authorization = await getAuthorization();
   let data: Medication[] = [];
@@ -237,6 +254,22 @@ export const getPatient: GetPatient = async (id) => {
     console.error(error);
   }
   return data;
+};
+
+export const getPatientCount: GetPatientCount = async () => {
+  const authorization = await getAuthorization();
+  let count = 0;
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/analytics/patients/count`,
+      headers: authorization,
+    });
+    count = response?.data?.patientCount ?? 0;
+  } catch (error) {
+    console.error(error);
+  }
+  return count;
 };
 
 export const getPatientsByBirthdate: GetPatientsByBirthdate = async (
