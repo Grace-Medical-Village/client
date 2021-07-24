@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 export const yearMonthDay = 'YYYY-MM-DD';
 export const monthDayYear = 'MM/DD/YYYY';
+export const longDate = 'MMMM D, YYYY';
 
 export const todayAsYearMonthDay = (): string =>
   new Date().toISOString().split('T')[0];
@@ -14,13 +15,9 @@ export const getAge = (birthdate: string): number => {
   return today.diff(birthdate, 'year');
 };
 
-export const monthDayYearFullDate = (date: string): string =>
-  new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC',
-  });
+export const monthDayYearFullDate = (date: string): string => {
+  return dayjs(date).format(longDate);
+};
 
 export const timestampFromDateString = (date: string): number => {
   return new Date(date).getTime();

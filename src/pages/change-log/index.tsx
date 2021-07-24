@@ -15,6 +15,7 @@ function ChangeLog(): JSX.Element {
         'List of MAP Patients in Analytics - let dev team know if there is specific data needed',
         'Blood Pressure Line Graph with Time Range for Patients',
         'Blood Sugar Line Graph with Time Range for Patients',
+        "Make 'Strength' column empty if it's not needed",
         'Dev team needs feedback from medical team on allergy display',
         'Touchpad issue',
       ],
@@ -32,9 +33,9 @@ function ChangeLog(): JSX.Element {
         'Added space between metric value and unit of measure in metric table',
         'Pain Metric added (range 0-10)',
         'PulseOx Metric added (range 50-100)',
-        "Unable to reproduce 'Invalid Date' error for Metrics Table. Confirmed that dates are saving properly in the database. Need additional intel to reproduce",
         'Unique Patients in Analytics',
         'MAP Patients in Analytics',
+        'Fixed Invalid Date Error for Safari Users',
       ],
       devTeam: [
         'Analytics API',

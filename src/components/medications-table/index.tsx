@@ -64,7 +64,7 @@ export default function NotesTable(): JSX.Element {
           const m: PatientMedicationTableRecord = {
             id: med.medicationId,
             key: med.id,
-            date: monthDayYearFullDate(med.createdAt.toString()),
+            date: monthDayYearFullDate(med.createdAt),
             timestamp: timestampFromDateString(med.createdAt),
             name: medication.name,
             strength: medication.strength,
