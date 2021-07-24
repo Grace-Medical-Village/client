@@ -8,13 +8,16 @@ import {
   DeletePatientMetric,
   DeletePatientNote,
   GetConditions,
+  GetMapPatients,
   GetMedicationCategories,
   GetMedications,
   GetMetrics,
   GetPatient,
   GetPatientCount,
+  GetPatientCountByDate,
   GetPatientsByBirthdate,
   GetPatientsByName,
+  MapPatient,
   Medication,
   MedicationCategory,
   Metric,
@@ -176,6 +179,25 @@ export const getConditions: GetConditions = async () => {
   return data;
 };
 
+export const getMapPatientCountByDate: GetPatientCountByDate = async (
+  startDate,
+  endDate
+) => {
+  const authorization = await getAuthorization();
+  let count = 0;
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/analytics/patients/map/count?startDate=${startDate}&endDate=${endDate}`,
+      headers: authorization,
+    });
+    count = response?.data?.patientCount ?? 0;
+  } catch (error) {
+    console.error(error);
+  }
+  return count;
+};
+
 export const getMapPatientCount: GetPatientCount = async () => {
   const authorization = await getAuthorization();
   let count = 0;
@@ -256,6 +278,22 @@ export const getPatient: GetPatient = async (id) => {
   return data;
 };
 
+export const getMapPatients: GetMapPatients = async () => {
+  const authorization = await getAuthorization();
+  let data: MapPatient[] = [];
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/patients/map`,
+      headers: authorization,
+    });
+    data = response?.data;
+  } catch (error) {
+    console.error(error);
+  }
+  return data;
+};
+
 export const getPatientCount: GetPatientCount = async () => {
   const authorization = await getAuthorization();
   let count = 0;
@@ -263,6 +301,25 @@ export const getPatientCount: GetPatientCount = async () => {
     const response: AxiosResponse = await axios({
       method: 'get',
       url: `${REACT_APP_URL}/analytics/patients/count`,
+      headers: authorization,
+    });
+    count = response?.data?.patientCount ?? 0;
+  } catch (error) {
+    console.error(error);
+  }
+  return count;
+};
+
+export const getPatientCountByDate: GetPatientCountByDate = async (
+  startDate,
+  endDate
+) => {
+  const authorization = await getAuthorization();
+  let count = 0;
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/analytics/patients/count?startDate=${startDate}&endDate=${endDate}`,
       headers: authorization,
     });
     count = response?.data?.patientCount ?? 0;

@@ -152,11 +152,17 @@ export default function NotesForm(): JSX.Element {
             placeholder="Select metric"
             style={{ width: '25%' }}
           >
-            {metricsCtx.state.map((metric) => (
-              <Select.Option key={metric.id} value={metric.id}>
-                {metric.metricName}
-              </Select.Option>
-            ))}
+            {metricsCtx.state
+              .sort((a, b) =>
+                a.metricName
+                  .toLowerCase()
+                  .localeCompare(b.metricName.toLowerCase())
+              )
+              .map((metric) => (
+                <Select.Option key={metric.id} value={metric.id}>
+                  {metric.metricName}
+                </Select.Option>
+              ))}
           </Select>
         </Form.Item>
         <Form.Item

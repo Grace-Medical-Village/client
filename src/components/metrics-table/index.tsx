@@ -51,7 +51,7 @@ export default function NotesTable(): JSX.Element {
             date: monthDayYearFullDate(patientMetric.createdAt),
             timestamp: timestampFromDateString(patientMetric.createdAt),
             metric: metric.metricName,
-            value: `${patientMetric.value}${metric.uom}`,
+            value: `${patientMetric.value} ${metric.uom}`,
             comment:
               patientMetric.comment !== null ? patientMetric.comment : '',
           };

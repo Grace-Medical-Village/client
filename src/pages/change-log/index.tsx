@@ -8,29 +8,31 @@ function ChangeLog(): JSX.Element {
 
   const changes: Change[] = [
     {
-      dateRange: 'Next Week',
+      dateRange: 'Upcoming',
       medicalTeam: [
         'Blood Pressure Line Graph with Time Range for Patients',
         'Blood Sugar Line Graph with Time Range for Patients',
         'Clean up Metric Value in Patient Tables',
         'Dev team needs feedback from medical team on allergy display',
+        'Fix Date Filtering for Analytics',
+        "Unable to reproduce 'Invalid Date' error for Metrics Table. Confirmed that dates are saving properly in the database. Need additional intel to reproduce",
+        'Touchpad issue',
       ],
       devTeam: [
-        'Backend Test Suite',
-        'Cron to Improve Performance on Saturdays',
-        'Error Boundaries',
-        'Lazy Loading',
+        'Monitoring & Surveillance',
+        'Performance Improvements',
+        'Test Suite',
       ],
     },
     {
-      dateRange: '7/19/2021 - 7/25/2021',
+      dateRange: 'This Week',
       medicalTeam: [
         'Added Amharic to Language List',
         'Blood Pressure Metric Max Value is 500 (was 300 before)',
         'Pain Metric added (range 0-10)',
         'PulseOx Metric added (range 50-100)',
-        'Unique Patients in Analytics (no date range)',
-        'MAP Patients in Analytics (no date range)',
+        'Unique Patients in Analytics with date range',
+        'MAP Patients in Analytics with date range',
       ],
       devTeam: [
         'Analytics API',

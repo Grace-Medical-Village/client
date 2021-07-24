@@ -40,11 +40,16 @@ export type DeletePatientMedication = (id: number) => Promise<ResponseStatus>;
 export type DeletePatientMetric = (id: number) => Promise<ResponseStatus>;
 export type DeletePatientNote = (id: number) => Promise<ResponseStatus>;
 export type GetConditions = () => Promise<Condition[]>;
+export type GetMapPatients = () => Promise<MapPatient[]>;
 export type GetMedications = () => Promise<Medication[]>;
 export type GetMetrics = () => Promise<Metric[]>;
 export type GetMedicationCategories = () => Promise<MedicationCategory[]>;
 export type GetPatient = (id: number) => Promise<PatientData>;
 export type GetPatientCount = () => Promise<number>;
+export type GetPatientCountByDate = (
+  startDate: string,
+  endDate: string
+) => Promise<number>;
 export type GetPatientsByBirthdate = (
   date: string
 ) => Promise<PatientSearchResult[]>;
@@ -120,6 +125,16 @@ type Key = {
 type Note = {
   note: string;
 };
+
+export type MapPatient = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  birthdate?: string;
+  createdAt: string;
+};
+export type MapPatientTableRecord = MapPatient & Key;
 
 export type MedicationTableRecord = Medication & Key;
 
