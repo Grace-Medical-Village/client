@@ -10,12 +10,12 @@ function ChangeLog(): JSX.Element {
     {
       dateRange: 'Upcoming',
       medicalTeam: [
+        'Finish date range functionality for Analytics',
+        'Last Menstrual Period Date Metric',
+        'List of MAP Patients in Analytics - let dev team know if there is specific data needed',
         'Blood Pressure Line Graph with Time Range for Patients',
         'Blood Sugar Line Graph with Time Range for Patients',
-        'Clean up Metric Value in Patient Tables',
         'Dev team needs feedback from medical team on allergy display',
-        'Fix Date Filtering for Analytics',
-        "Unable to reproduce 'Invalid Date' error for Metrics Table. Confirmed that dates are saving properly in the database. Need additional intel to reproduce",
         'Touchpad issue',
       ],
       devTeam: [
@@ -29,10 +29,12 @@ function ChangeLog(): JSX.Element {
       medicalTeam: [
         'Added Amharic to Language List',
         'Blood Pressure Metric Max Value is 500 (was 300 before)',
+        'Added space between metric value and unit of measure in metric table',
         'Pain Metric added (range 0-10)',
         'PulseOx Metric added (range 50-100)',
-        'Unique Patients in Analytics with date range',
-        'MAP Patients in Analytics with date range',
+        "Unable to reproduce 'Invalid Date' error for Metrics Table. Confirmed that dates are saving properly in the database. Need additional intel to reproduce",
+        'Unique Patients in Analytics',
+        'MAP Patients in Analytics',
       ],
       devTeam: [
         'Analytics API',
