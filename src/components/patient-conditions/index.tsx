@@ -1,4 +1,4 @@
-import { Select } from 'antd';
+import { Select, Space, Col, Row } from 'antd';
 import React, { useContext, useEffect } from 'react';
 import { ConditionsContext } from '../../context/conditions';
 import { PatientContext } from '../../context/patient';
@@ -11,6 +11,7 @@ import {
 import { messageUserResult } from '../../utils/ui';
 import { LabeledValue } from 'antd/es/select';
 import { PatientCondition } from '../../utils/types';
+import PatientAllergies from '../patient-allergies';
 
 export default function PatientConditions(): JSX.Element {
   const { state, update } = useContext(ConditionsContext);
@@ -101,25 +102,34 @@ export default function PatientConditions(): JSX.Element {
   };
 
   return (
-    <Select
-      defaultValue={
-        patientCtx?.state?.conditions
-          ?.map((c) => c.conditionId.toString())
-          .sort() ?? []
-      }
-      mode="tags"
-      onDeselect={handleOnDeselect}
-      onSelect={handleOnSelect}
-      placeholder="Please select"
-      showSearch
-      size="large"
-      style={{ width: '100%' }}
-    >
-      {state.map((c) => (
-        <Select.Option key={c.id} value={c.id.toString()}>
-          {c.conditionName}
-        </Select.Option>
-      ))}
-    </Select>
+    <>
+      <Space direction="vertical" size="large">
+        <Row>
+          <Col span={24}>
+            <Select
+              defaultValue={
+                patientCtx?.state?.conditions
+                  ?.map((c) => c.conditionId.toString())
+                  .sort() ?? []
+              }
+              mode="tags"
+              onDeselect={handleOnDeselect}
+              onSelect={handleOnSelect}
+              placeholder="Select Conditions"
+              showSearch
+              size="large"
+              style={{ width: '100%' }}
+            >
+              {state.map((c) => (
+                <Select.Option key={c.id} value={c.id.toString()}>
+                  {c.conditionName}
+                </Select.Option>
+              ))}
+            </Select>
+          </Col>
+        </Row>
+        <PatientAllergies />
+      </Space>
+    </>
   );
 }

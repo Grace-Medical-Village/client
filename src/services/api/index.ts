@@ -25,6 +25,7 @@ import {
   PatientSearchResult,
   PostMedication,
   PostPatient,
+  PostPatientAllergy,
   PostPatientCondition,
   PostPatientMedication,
   PostPatientMetric,
@@ -428,6 +429,39 @@ export const postPatient: PostPatient = async (newPatient) => {
     console.error(error);
     res.status = error.response.status;
     res.statusText = error.response.statusText;
+  }
+  return res;
+};
+
+export const postPatientAllergy: PostPatientAllergy = async (
+  patientId,
+  allergies
+) => {
+  const authorization = await getAuthorization();
+
+  const res: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'post',
+      url: `${REACT_APP_URL}/patients/allergy`,
+      headers: authorization,
+      data: {
+        patientId,
+        allergies,
+      },
+    });
+    const { data, status, statusText } = response;
+    res.status = status;
+    res.statusText = statusText;
+    if (data.id) {
+      res.id = data.id;
+    }
+  } catch (error) {
+    console.error(error);
   }
   return res;
 };

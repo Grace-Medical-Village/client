@@ -9,16 +9,7 @@ function ChangeLog(): JSX.Element {
   const changes: Change[] = [
     {
       dateRange: 'Upcoming',
-      medicalTeam: [
-        'Finish date range functionality for Analytics',
-        'Last Menstrual Period Date Metric',
-        'List of MAP Patients in Analytics - let dev team know if there is specific data needed',
-        'Blood Pressure Line Graph with Time Range for Patients',
-        'Blood Sugar Line Graph with Time Range for Patients',
-        "Make 'Strength' column empty if it's not needed",
-        'Dev team needs feedback from medical team on allergy display',
-        'Touchpad issue',
-      ],
+      medicalTeam: ['Touchpad issue'],
       devTeam: [
         'Monitoring & Surveillance',
         'Performance Improvements',
@@ -27,6 +18,19 @@ function ChangeLog(): JSX.Element {
     },
     {
       dateRange: 'This Week',
+      medicalTeam: [
+        'Allergy tracking',
+        'Date range for patient count',
+        'List of MAP Patients in Analytics',
+        'Last Menstrual Period Date Metric',
+        'Blood Pressure Line Graph with Time Range for Patients',
+        'Blood Sugar Line Graph with Time Range for Patients',
+        "Make 'Strength' column empty if it's not needed",
+      ],
+      devTeam: [],
+    },
+    {
+      dateRange: 'July 17 - 24, 2021',
       medicalTeam: [
         'Added Amharic to Language List',
         'Blood Pressure Metric Max Value is 500 (was 300 before)',

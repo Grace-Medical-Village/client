@@ -64,6 +64,10 @@ export type PostMedication = (
 export type PostPatient = (
   newPatient: PatientBackground
 ) => Promise<ResponseStatus>;
+export type PostPatientAllergy = (
+  patientId: number,
+  allergies: string
+) => Promise<ResponseStatus>;
 export type PostPatientCondition = (
   patientId: number,
   conditionId: number
@@ -87,6 +91,11 @@ export type PutPatient = (
   id: number,
   patient: PatientBackground
 ) => Promise<ResponseStatus>;
+export type PutPatientAllergy = (
+  patientId: number,
+  allergy: string
+) => Promise<ResponseStatus>;
+
 export type PutPatientNote = (
   id: number,
   note: Note
@@ -178,6 +187,14 @@ export type PatientSearchResult = {
   gender?: string;
 };
 
+export type PatientAllergy = {
+  id: number;
+  allergies: string;
+  patientId: number;
+  createdAt?: string;
+  modifiedAt?: string;
+};
+
 export type PatientCondition = {
   id: number;
   conditionId: number;
@@ -214,6 +231,7 @@ export type PatientNote = {
 };
 
 export type PatientData = {
+  allergies?: PatientAllergy;
   conditions?: PatientCondition[];
   medications?: PatientMedication[];
   metrics?: PatientMetric[];
