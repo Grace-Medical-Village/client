@@ -196,8 +196,9 @@ export default function MedicationsForm(): JSX.Element {
         </Input.Group>
       </Form.Item>
       <Form.Item>
-        <Row style={{ paddingTop: '1rem' }}>
+        <Row>
           <Button
+            ghost
             htmlType="submit"
             style={{ marginRight: '0.5rem' }}
             type="primary"

@@ -11,7 +11,7 @@ import {
   Space,
   notification,
   Divider,
-  Empty,
+  Card,
 } from 'antd';
 import { ExclamationOutlined } from '@ant-design/icons';
 import { Store } from 'antd/lib/form/interface';
@@ -21,19 +21,21 @@ import {
   getPatientCount,
   getPatientCountByDate,
 } from '../../services/api';
-import { monthDayYear, yearMonthDay } from '../../utils/dates';
+import { addDay, monthDayYear, yearMonthDay } from '../../utils/dates';
 import './styles.css';
-// import MapPatients from '../../components/map-patients';
+import MapPatients from '../../components/map-patients';
 
 const { RangePicker } = DatePicker;
 
 function Analytics(): JSX.Element {
   const [form] = Form.useForm();
   const [patientCount, setPatientCount] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [mapPatientCount, setMapPatientCount] = useState(0);
 
   useEffect(() => {
     const buildAnalytics = async (): Promise<void> => {
+      setLoading(true);
       const patientCountResult = await getPatientCount();
       if (patientCountResult > 0) {
         setPatientCount(patientCountResult);
@@ -46,7 +48,12 @@ function Analytics(): JSX.Element {
 
     buildAnalytics()
       .then((r) => r)
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   async function onFinish(data: Store): Promise<void> {
@@ -56,7 +63,7 @@ function Analytics(): JSX.Element {
 
     if (dateRange && dateRange.length === 2) {
       startDate = dateRange[0].format(yearMonthDay);
-      endDate = dateRange[1].format(yearMonthDay);
+      endDate = addDay(dateRange[1].format(yearMonthDay), 1);
     }
 
     if (startDate && endDate) {
@@ -68,7 +75,12 @@ function Analytics(): JSX.Element {
     startDate: string,
     endDate: string
   ): Promise<void> => {
-    const patientCountResult = await getPatientCountByDate(startDate, endDate);
+    setLoading(true);
+    const endDatePlusOneDay = addDay(endDate, 1);
+    const patientCountResult = await getPatientCountByDate(
+      startDate,
+      endDatePlusOneDay
+    );
     setPatientCount(patientCountResult);
     if (patientCountResult > 0) {
       notification['success']({
@@ -86,6 +98,7 @@ function Analytics(): JSX.Element {
       endDate
     );
     setMapPatientCount(mapPatientCountResult);
+    setLoading(false);
     if (mapPatientCountResult > 0) {
       notification['success']({
         message: 'MAP Patients Found',
@@ -121,44 +134,48 @@ function Analytics(): JSX.Element {
         </Row>
         <Row>
           <Col span={6}>
-            <Statistic title="Total Patients" value={patientCount} />
+            <Card>
+              <Statistic
+                title="Total Patients"
+                value={patientCount}
+                loading={loading}
+              />
+            </Card>
           </Col>
-          <Col span={6}>
-            <Statistic
-              title={
-                <>
-                  <Space>
-                    Map Patients
-                    <Popover
-                      content={mapCalculationExplanation}
-                      title="MAP Patient Count Calculation"
-                      trigger="hover"
-                    >
-                      <Button
-                        icon={<ExclamationOutlined />}
-                        shape="circle"
-                        size="small"
-                      />
-                    </Popover>
-                  </Space>
-                </>
-              }
-              value={mapPatientCount}
-            />
+          <Col span={6} style={{ paddingLeft: '0.5rem' }}>
+            <Card>
+              <Statistic
+                title={
+                  <>
+                    <Space>
+                      Map Patients
+                      <Popover
+                        content={mapCalculationExplanation}
+                        title="MAP Patient Count Calculation"
+                        trigger="hover"
+                      >
+                        <Button
+                          icon={<ExclamationOutlined />}
+                          shape="circle"
+                          size="small"
+                        />
+                      </Popover>
+                    </Space>
+                  </>
+                }
+                value={mapPatientCount}
+                loading={loading}
+              />
+            </Card>
           </Col>
         </Row>
         <Row>
           <Form className="analytics-form" form={form} onFinish={onFinish}>
             <Form.Item label="Date Range" name="dateRange">
-              <RangePicker format={monthDayYear} disabled />
+              <RangePicker format={monthDayYear} />
             </Form.Item>
             <Form.Item>
-              <Button
-                className="submit-btn"
-                type="ghost"
-                htmlType="submit"
-                disabled
-              >
+              <Button className="submit-btn" type="ghost" htmlType="submit">
                 Submit
               </Button>
             </Form.Item>
@@ -166,8 +183,7 @@ function Analytics(): JSX.Element {
         </Row>
         <Row gutter={16}>
           <Divider orientation="left">MAP Patients</Divider>
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          {/*<MapPatients />*/}
+          <MapPatients />
         </Row>
       </div>
     </>

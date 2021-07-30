@@ -43,6 +43,7 @@ function Formulary(): JSX.Element {
   const [data, set] = useState<MedicationTableRecord[]>([]);
 
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const [searchText, setSearchText] = useState<React.Key | string>('');
   const [archivedFilters, setArchivedFilters] = useState<ColumnFilterItem[]>(
@@ -53,6 +54,7 @@ function Formulary(): JSX.Element {
   );
   useEffect(() => {
     const buildMedicationState = async (): Promise<MedicationState | void> => {
+      setLoading(true);
       if (state.medications.length === 0 || state.categories.length === 0) {
         const categories = await getMedicationCategories();
         const medications = await getMedications();
@@ -76,7 +78,12 @@ function Formulary(): JSX.Element {
           );
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [state, update]);
 
   useEffect(() => {
@@ -375,6 +382,7 @@ function Formulary(): JSX.Element {
           bordered
           columns={columns}
           dataSource={data}
+          loading={loading}
           pagination={{ pageSize: 50 }}
           rowClassName="editable-row"
         />

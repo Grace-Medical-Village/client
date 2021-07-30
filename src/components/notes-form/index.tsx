@@ -82,19 +82,19 @@ export default function NotesForm(): JSX.Element {
       layout="vertical"
       name="noteForm"
       onFinish={onFinish}
-      style={{ marginTop: '0.5rem' }}
+      style={{ marginTop: '0.5rem', width: '80vw' }}
     >
-      <Form.Item name="note" style={{ margin: 0 }}>
+      <Form.Item name="note">
         <Input.TextArea
-          autoSize={{ minRows: 2, maxRows: 5 }}
+          autoSize={{ minRows: 1, maxRows: 5 }}
           placeholder="Take a note about the patient"
-          showCount={true}
           maxLength={500}
         />
       </Form.Item>
       <Form.Item>
-        <Row style={{ paddingTop: '1rem' }}>
+        <Row>
           <Button
+            ghost
             htmlType="submit"
             style={{ marginRight: '0.5rem' }}
             type="primary"

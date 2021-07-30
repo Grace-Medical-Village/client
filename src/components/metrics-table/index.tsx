@@ -16,15 +16,17 @@ import { deletePatientMetric, getMetrics } from '../../services/api';
 import { ColumnFilterItem } from 'antd/lib/table/interface';
 import { notificationHandler } from '../../utils/ui';
 
-export default function NotesTable(): JSX.Element {
+export default function MetricsTable(): JSX.Element {
   const [data, set] = useState<PatientMetricTableRecord[]>([]);
   const [metricFilters, setMetricFilters] = useState<ColumnFilterItem[]>([]);
   const [dateFilters, setDateFilters] = useState<ColumnFilterItem[]>([]);
+  const [loading, setLoading] = useState(false);
   const metricCtx = useContext(MetricsContext);
   const { state, update } = useContext(PatientContext);
 
   useEffect(() => {
     const buildMetricState = async () => {
+      setLoading(true);
       if (metricCtx.state.length === 0) {
         const metrics = await getMetrics();
         if (metrics.length > 0) metricCtx.update(metrics);
@@ -32,7 +34,10 @@ export default function NotesTable(): JSX.Element {
     };
     buildMetricState()
       .then((r) => r)
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setLoading(false);
+      });
   }, [metricCtx]);
 
   useEffect(() => {
@@ -166,5 +171,5 @@ export default function NotesTable(): JSX.Element {
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  return <Table columns={columns} dataSource={data} loading={loading} />;
 }

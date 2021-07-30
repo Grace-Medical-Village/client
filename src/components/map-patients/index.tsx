@@ -3,14 +3,20 @@ import { Table } from 'antd';
 import { MapPatientTableRecord } from '../../utils/types';
 import { getMapPatients } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
+import {
+  dateToMonthAndYear,
+  getAge,
+  monthDayYearFullDate,
+} from '../../utils/dates';
 
 export default function MapPatients(): JSX.Element {
   const [data, set] = useState<MapPatientTableRecord[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const buildMapPatientTable = async () => {
+      setLoading(true);
       const mapPatients = await getMapPatients();
-
       if (mapPatients?.length > 0) {
         const tableRecords = mapPatients
           .sort((a, b) =>
@@ -18,8 +24,10 @@ export default function MapPatients(): JSX.Element {
           )
           .map((patient, idx) => {
             return {
-              ...patient,
               key: idx,
+              ...patient,
+              age: patient.birthdate ? getAge(patient.birthdate) : 'N/A',
+              patientSince: monthDayYearFullDate(patient.createdAt),
             };
           });
         set(tableRecords);
@@ -30,7 +38,10 @@ export default function MapPatients(): JSX.Element {
 
     buildMapPatientTable()
       .then((r) => r)
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const columns = [
@@ -39,14 +50,22 @@ export default function MapPatients(): JSX.Element {
       dataIndex: 'fullName',
     },
     {
-      title: 'Birthdate',
-      dataIndex: 'birthdate',
+      title: 'Age',
+      dataIndex: 'age',
     },
     {
       title: 'Patient Since',
-      dataIndex: 'createdAt',
+      dataIndex: 'patientSince',
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <Table
+      bordered
+      columns={columns}
+      dataSource={data}
+      loading={loading}
+      style={{ width: '80vw' }}
+    />
+  );
 }

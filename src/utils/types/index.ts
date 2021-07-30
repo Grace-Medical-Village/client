@@ -2,6 +2,7 @@ export enum ItemType {
   METRIC = 'metrics',
   MEDICATION = 'medications',
   NOTE = 'notes',
+  CHART = 'charts',
 }
 
 export type ResponseBody = string;
@@ -35,6 +36,7 @@ export type ResponseStatus = {
 
 // METHODS
 export type DeleteMedication = (id: number) => Promise<ResponseStatus>;
+export type DeletePatientAllergy = (id: number) => Promise<ResponseStatus>;
 export type DeletePatientCondition = (id: number) => Promise<ResponseStatus>;
 export type DeletePatientMedication = (id: number) => Promise<ResponseStatus>;
 export type DeletePatientMetric = (id: number) => Promise<ResponseStatus>;

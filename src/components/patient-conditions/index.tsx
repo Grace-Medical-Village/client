@@ -118,7 +118,7 @@ export default function PatientConditions(): JSX.Element {
               placeholder="Select Conditions"
               showSearch
               size="large"
-              style={{ width: '100%' }}
+              style={{ width: '80vw' }}
             >
               {state.map((c) => (
                 <Select.Option key={c.id} value={c.id.toString()}>

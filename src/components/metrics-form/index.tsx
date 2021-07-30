@@ -186,7 +186,7 @@ export default function NotesForm(): JSX.Element {
           style={{ marginLeft: '0.5rem', width: '35%' }}
         >
           <Input.TextArea
-            autoSize={{ minRows: 2, maxRows: 3 }}
+            autoSize={{ minRows: 1, maxRows: 3 }}
             maxLength={140}
             placeholder="Comments"
             showCount={true}
@@ -194,8 +194,9 @@ export default function NotesForm(): JSX.Element {
         </Form.Item>
       </Input.Group>
       <Form.Item>
-        <Row style={{ paddingTop: '1rem' }}>
+        <Row>
           <Button
+            ghost
             htmlType="submit"
             style={{ marginRight: '0.5rem' }}
             type="primary"

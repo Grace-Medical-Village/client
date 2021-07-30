@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 import {
   Condition,
   DeleteMedication,
+  DeletePatientAllergy,
   DeletePatientCondition,
   DeletePatientMedication,
   DeletePatientMetric,
@@ -32,6 +33,7 @@ import {
   PostPatientNote,
   PutMedication,
   PutPatient,
+  PutPatientAllergy,
   PutPatientNote,
   RequestSuccess,
   ResponseStatus,
@@ -52,6 +54,28 @@ const getAuthorization = async () => {
       .getIdToken()
       .getJwtToken()}`,
   };
+};
+
+export const deletePatientAllergy: DeletePatientAllergy = async (id) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'delete',
+      url: `${REACT_APP_URL}/patients/allergy/${id}`,
+      headers: authorization,
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
 };
 
 export const deletePatientCondition: DeletePatientCondition = async (id) => {
@@ -285,7 +309,7 @@ export const getMapPatients: GetMapPatients = async () => {
   try {
     const response: AxiosResponse = await axios({
       method: 'get',
-      url: `${REACT_APP_URL}/patients/map`,
+      url: `${REACT_APP_URL}/analytics/patients/map`,
       headers: authorization,
     });
     data = response?.data;
@@ -627,6 +651,31 @@ export const putPatient: PutPatient = async (id, patient) => {
       data: patient,
     });
     console.log(response);
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const putPatientAllergy: PutPatientAllergy = async (id, allergies) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'put',
+      url: `${REACT_APP_URL}/patients/allergy/${id}`,
+      headers: authorization,
+      data: {
+        allergies,
+      },
+    });
     responseStatus.status = response.status;
     responseStatus.statusText = response.statusText;
   } catch (error) {

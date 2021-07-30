@@ -9,7 +9,12 @@ function ChangeLog(): JSX.Element {
   const changes: Change[] = [
     {
       dateRange: 'Upcoming',
-      medicalTeam: ['Touchpad issue'],
+      medicalTeam: [
+        'Blood Pressure Line Graph with Time Range for Patients',
+        'Blood Sugar Line Graph with Time Range for Patients',
+        "Make 'Strength' column empty if it's not needed",
+        'Touchpad issue',
+      ],
       devTeam: [
         'Monitoring & Surveillance',
         'Performance Improvements',
@@ -23,9 +28,8 @@ function ChangeLog(): JSX.Element {
         'Date range for patient count',
         'List of MAP Patients in Analytics',
         'Last Menstrual Period Date Metric',
-        'Blood Pressure Line Graph with Time Range for Patients',
-        'Blood Sugar Line Graph with Time Range for Patients',
-        "Make 'Strength' column empty if it's not needed",
+        'Added Loading Indicators to Tables',
+        'Minor style improvements',
       ],
       devTeam: [],
     },

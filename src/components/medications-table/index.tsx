@@ -30,7 +30,7 @@ export default function NotesTable(): JSX.Element {
     []
   );
   const [searchText, setSearchText] = useState<React.Key | string>('');
-
+  const [loading, setLoading] = useState(false);
   const [dateFilters, setDateFilters] = useState<ColumnFilterItem[]>([]);
 
   const medicationCtx = useContext(MedicationsContext);
@@ -38,6 +38,7 @@ export default function NotesTable(): JSX.Element {
 
   useEffect(() => {
     const setMedications = async (): Promise<void> => {
+      setLoading(true);
       const categories = await getMedicationCategories();
       const medications = await getMedications();
       const data: MedicationState = {
@@ -49,7 +50,10 @@ export default function NotesTable(): JSX.Element {
     if (medicationCtx?.state?.medications.length === 0) {
       setMedications()
         .then((r) => r)
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [medicationCtx]);
 
@@ -275,5 +279,5 @@ export default function NotesTable(): JSX.Element {
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  return <Table columns={columns} dataSource={data} loading={loading} />;
 }
