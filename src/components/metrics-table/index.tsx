@@ -24,6 +24,17 @@ export default function MetricsTable(): JSX.Element {
   const metricCtx = useContext(MetricsContext);
   const { state, update } = useContext(PatientContext);
 
+  const buildMetricTableValue = (value: string, uom: string | null): string => {
+    const re = new RegExp('(\\d{4})-(\\d{2})-(\\d{2})');
+    let result = value;
+    if (re.test(value)) {
+      result = monthDayYearFullDate(value);
+    } else if (value && uom) {
+      result = `${value} ${uom}`;
+    }
+    return result;
+  };
+
   useEffect(() => {
     const buildMetricState = async () => {
       setLoading(true);
@@ -50,15 +61,15 @@ export default function MetricsTable(): JSX.Element {
       state?.metrics.forEach((patientMetric: PatientMetric) => {
         const metric = getMetric(patientMetric.metricId);
         if (metric) {
+          const value = buildMetricTableValue(patientMetric.value, metric.uom);
           const m: PatientMetricTableRecord = {
             id: patientMetric.metricId,
             key: patientMetric.id,
             date: monthDayYearFullDate(patientMetric.createdAt),
             timestamp: timestampFromDateString(patientMetric.createdAt),
             metric: metric.metricName,
-            value: `${patientMetric.value} ${metric.uom}`,
-            comment:
-              patientMetric.comment !== null ? patientMetric.comment : '',
+            value,
+            comment: patientMetric?.comment ?? '',
           };
           d.push(m);
         }

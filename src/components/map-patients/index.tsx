@@ -3,11 +3,7 @@ import { Table } from 'antd';
 import { MapPatientTableRecord } from '../../utils/types';
 import { getMapPatients } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
-import {
-  dateToMonthAndYear,
-  getAge,
-  monthDayYearFullDate,
-} from '../../utils/dates';
+import { getAge, monthDayYearFullDate } from '../../utils/dates';
 
 export default function MapPatients(): JSX.Element {
   const [data, set] = useState<MapPatientTableRecord[]>([]);
