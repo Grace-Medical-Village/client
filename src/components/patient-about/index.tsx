@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   Button,
-  DatePicker,
   Descriptions,
   Drawer,
   Form,
@@ -14,12 +13,7 @@ import {
   Switch,
 } from 'antd';
 
-import {
-  getAge,
-  monthDayYear,
-  monthDayYearFullDate,
-  yearMonthDay,
-} from '../../utils/dates';
+import { getAge, monthDayYearFullDate } from '../../utils/dates';
 import { PatientContext } from '../../context/patient';
 import { capitalize } from 'lodash';
 import {
@@ -33,7 +27,6 @@ import {
   nativeLiteracyRatings,
 } from '../../utils/patient';
 import { Store } from 'antd/lib/form/interface';
-import moment from 'moment';
 import { putPatient } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
 import MaskedInput from 'antd-mask-input';
@@ -105,12 +98,11 @@ export default function PatientAbout(): JSX.Element {
   };
 
   async function onFinish(data: Store) {
-    const birthdate: string = data.birthdate.format(yearMonthDay);
     const {
       firstName,
       lastName,
+      birthdate,
       gender,
-      map,
       mobile = '',
       country,
       nativeLanguage,
@@ -124,7 +116,6 @@ export default function PatientAbout(): JSX.Element {
       firstName,
       lastName,
       gender,
-      map,
       mobile: mobileCleaned,
       country,
       nativeLanguage,
@@ -223,12 +214,17 @@ export default function PatientAbout(): JSX.Element {
             />
           </Form.Item>
           <Form.Item
-            initialValue={moment(state.patient?.birthdate, 'YYYY-MM-DD')}
+            initialValue={state.patient?.birthdate}
             label="Birthdate"
             name="birthdate"
             rules={[{ required: true, message: 'Birthdate is required.' }]}
           >
-            <DatePicker format={monthDayYear} placeholder={monthDayYear} />
+            <MaskedInput
+              mask="1111-11-11"
+              name="birthdate"
+              placeholder="YYYY-MM-DD"
+              placeholderChar="X"
+            />
           </Form.Item>
           <Form.Item
             initialValue={state.patient?.gender}

@@ -1,14 +1,5 @@
 import React, { useContext, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  Radio,
-  Rate,
-  Select,
-  Switch,
-} from 'antd';
+import { Button, Form, Input, Radio, Rate, Select, Switch } from 'antd';
 import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
@@ -17,7 +8,6 @@ import {
   languages,
   nativeLiteracyRatings,
 } from '../../utils/patient';
-import { monthDayYear, yearMonthDay } from '../../utils/dates';
 import { Store } from 'antd/lib/form/interface';
 import './styles.css';
 import { getPatient, postPatient, requestSuccess } from '../../services/api';
@@ -48,10 +38,10 @@ function NewPatientForm(): JSX.Element {
   const onReset = () => form.resetFields();
 
   async function onFinish(data: Store) {
-    const birthdate: string = data.birthdate.format(yearMonthDay);
     const {
       firstName,
       lastName,
+      birthdate,
       gender,
       email,
       mobile = '',
@@ -68,7 +58,6 @@ function NewPatientForm(): JSX.Element {
       lastName,
       gender,
       email,
-      map: false,
       mobile: mobileCleaned,
       country,
       nativeLanguage,
@@ -136,7 +125,11 @@ function NewPatientForm(): JSX.Element {
           name="birthdate"
           rules={[{ required: true, message: 'Birthdate is required.' }]}
         >
-          <DatePicker format={monthDayYear} placeholder={monthDayYear} />
+          <MaskedInput
+            mask="1111-11-11"
+            placeholder="YYYY-MM-DD"
+            placeholderChar="X"
+          />
         </Form.Item>
         <Form.Item
           label="Gender"

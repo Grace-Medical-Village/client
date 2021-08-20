@@ -10,6 +10,7 @@ import {
   DeletePatientNote,
   GetConditions,
   GetMapPatients,
+  GetMapPatientsByDate,
   GetMedicationCategories,
   GetMedications,
   GetMetrics,
@@ -310,6 +311,25 @@ export const getMapPatients: GetMapPatients = async () => {
     const response: AxiosResponse = await axios({
       method: 'get',
       url: `${REACT_APP_URL}/analytics/patients/map`,
+      headers: authorization,
+    });
+    data = response?.data;
+  } catch (error) {
+    console.error(error);
+  }
+  return data;
+};
+
+export const getMapPatientsByDate: GetMapPatientsByDate = async (
+  startDate,
+  endDate
+) => {
+  const authorization = await getAuthorization();
+  let data: MapPatient[] = [];
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'get',
+      url: `${REACT_APP_URL}/analytics/patients/map?startDate=${startDate}&endDate=${endDate}`,
       headers: authorization,
     });
     data = response?.data;

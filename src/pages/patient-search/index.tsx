@@ -1,12 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Form, DatePicker, Radio, Input, Card, Empty } from 'antd';
+import { Button, Form, Radio, Input, Card, Empty } from 'antd';
 
-import {
-  monthDayYear,
-  monthDayYearFullDate,
-  toIso8601DateFromDate,
-} from '../../utils/dates';
+import { monthDayYearFullDate } from '../../utils/dates';
 import { Store } from 'antd/lib/form/interface';
 import {
   getPatient,
@@ -17,6 +13,7 @@ import { PatientSearchResult } from '../../utils/types';
 import { capitalize, isEmpty } from 'lodash';
 import { PatientContext } from '../../context/patient';
 import { notificationHandler } from '../../utils/ui';
+import { MaskedInput } from 'antd-mask-input';
 
 const layout = {
   labelCol: { span: 6 },
@@ -80,11 +77,9 @@ function PatientSearch(): JSX.Element {
     }
   };
 
-  const searchPatientsByBirthdate = async (date: Date): Promise<void> => {
+  const searchPatientsByBirthdate = async (date: string): Promise<void> => {
     setSearching(true);
-    const searchResult = await getPatientsByBirthdate(
-      toIso8601DateFromDate(date)
-    );
+    const searchResult = await getPatientsByBirthdate(date);
     if (searchResult.length > 0) {
       setPatientSearchResult(
         searchResult.sort((a, b) => (a.firstName > b.firstName ? 1 : -1))
@@ -131,7 +126,11 @@ function PatientSearch(): JSX.Element {
             name="birthdate"
             rules={[{ required: true, message: 'Birthdate is required.' }]}
           >
-            <DatePicker format={monthDayYear} placeholder={monthDayYear} />
+            <MaskedInput
+              mask="1111-11-11"
+              placeholder="YYYY-MM-DD"
+              placeholderChar="X"
+            />
           </Form.Item>
         )}
         <Form.Item {...tailLayout}>

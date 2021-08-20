@@ -12,7 +12,6 @@ function ChangeLog(): JSX.Element {
       medicalTeam: [
         'Blood Pressure Line Graph with Time Range for Patients',
         'Blood Sugar Line Graph with Time Range for Patients',
-        "Make 'Strength' column empty if it's not needed",
         'Touchpad issue',
       ],
       devTeam: [
@@ -22,7 +21,19 @@ function ChangeLog(): JSX.Element {
       ],
     },
     {
-      dateRange: 'This Week',
+      dateRange: 'August 1 - August 20, 2021',
+      medicalTeam: [
+        'Fixed bug for saving medications with strength value',
+        'Swapped calendar with standard input for birthdays',
+        "Make 'Strength' column empty if it's not needed",
+      ],
+      devTeam: [
+        'Removed map from patient table',
+        'Set medication strength to null where 0',
+      ],
+    },
+    {
+      dateRange: 'July 25 - August 1 2021',
       medicalTeam: [
         'Allergy tracking',
         'Date range for patient count',

@@ -43,6 +43,10 @@ export type DeletePatientMetric = (id: number) => Promise<ResponseStatus>;
 export type DeletePatientNote = (id: number) => Promise<ResponseStatus>;
 export type GetConditions = () => Promise<Condition[]>;
 export type GetMapPatients = () => Promise<MapPatient[]>;
+export type GetMapPatientsByDate = (
+  startDate: string,
+  endDate: string
+) => Promise<MapPatient[]>;
 export type GetMedications = () => Promise<Medication[]>;
 export type GetMetrics = () => Promise<Metric[]>;
 export type GetMedicationCategories = () => Promise<MedicationCategory[]>;
@@ -173,7 +177,6 @@ export type PatientBackground = {
   gender?: string;
   email?: string;
   mobile?: string;
-  map: boolean;
   country?: string;
   nativeLanguage?: string;
   nativeLiteracy?: number;
