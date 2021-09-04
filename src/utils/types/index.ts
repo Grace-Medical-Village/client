@@ -101,7 +101,10 @@ export type PutPatientAllergy = (
   patientId: number,
   allergy: string
 ) => Promise<ResponseStatus>;
-
+export type PutPatientArchive = (
+  patientId: number,
+  archive: boolean
+) => Promise<ResponseStatus>;
 export type PutPatientNote = (
   id: number,
   note: Note

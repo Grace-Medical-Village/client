@@ -12,10 +12,16 @@ import {
   Space,
   Switch,
 } from 'antd';
-
-import { getAge, monthDayYearFullDate } from '../../utils/dates';
-import { PatientContext } from '../../context/patient';
 import { capitalize } from 'lodash';
+
+import {
+  dateToMonthDayYear,
+  getAge,
+  monthDayYear,
+  monthDayYearFullDate,
+  toIso8601DateFromDate,
+} from '../../utils/dates';
+import { PatientContext } from '../../context/patient';
 import {
   PatientBackground,
   PatientData,
@@ -38,6 +44,7 @@ export default function PatientAbout(): JSX.Element {
   const [data, setData] = useState<AboutDescriptionData[]>([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(0);
+  const [otherLanguageSelected, setOtherLanguageSelected] = useState(false);
   const { state, update } = useContext(PatientContext);
   const [form] = Form.useForm();
 
@@ -58,6 +65,13 @@ export default function PatientAbout(): JSX.Element {
 
   useEffect(() => {
     setNativeLiteracyRating(state?.patient?.nativeLiteracy ?? 0);
+    if (
+      state?.patient?.nativeLanguage === 'other' ||
+      languages.filter((lang) => lang === state?.patient?.nativeLanguage)
+        .length === 0
+    ) {
+      setOtherLanguageSelected(true);
+    }
 
     const d: AboutDescriptionData[] = [
       {
@@ -97,32 +111,40 @@ export default function PatientAbout(): JSX.Element {
     setShowDrawer(true);
   };
 
+  const handleLanguageChange = (value: string) => {
+    if (value.toLowerCase() === 'other') setOtherLanguageSelected(true);
+    else setOtherLanguageSelected(false);
+  };
+
   async function onFinish(data: Store) {
     const {
       firstName,
       lastName,
       birthdate,
       gender,
-      mobile = '',
+      mobile,
       country,
       nativeLanguage,
+      otherLanguage,
       smoker,
       zipCode5,
     } = data;
 
-    const mobileCleaned = mobile.replace(mobileCleaner, '');
+    const birthdateFormatted = toIso8601DateFromDate(new Date(birthdate));
+    const language = otherLanguage ? capitalize(otherLanguage) : nativeLanguage;
+    const mobileFormatted = mobile ? mobile.replace(mobileCleaner, '') : '';
 
     const patient: PatientBackground = {
       firstName,
       lastName,
       gender,
-      mobile: mobileCleaned,
+      mobile: mobileFormatted,
       country,
-      nativeLanguage,
+      nativeLanguage: language,
       nativeLiteracy: nativeLiteracyRating,
       zipCode5,
       smoker,
-      birthdate,
+      birthdate: birthdateFormatted,
     };
     if (state.patient?.id) {
       const res = await putPatient(state.patient.id, patient);
@@ -214,15 +236,19 @@ export default function PatientAbout(): JSX.Element {
             />
           </Form.Item>
           <Form.Item
-            initialValue={state.patient?.birthdate}
+            initialValue={
+              state.patient?.birthdate
+                ? dateToMonthDayYear(state.patient.birthdate)
+                : ''
+            }
             label="Birthdate"
             name="birthdate"
             rules={[{ required: true, message: 'Birthdate is required.' }]}
           >
             <MaskedInput
-              mask="1111-11-11"
+              mask="11/11/1111"
               name="birthdate"
-              placeholder="YYYY-MM-DD"
+              placeholder={monthDayYear}
               placeholderChar="X"
             />
           </Form.Item>
@@ -247,11 +273,17 @@ export default function PatientAbout(): JSX.Element {
             <MaskedInput mask="11111" name="zipCode5" placeholderChar="X" />
           </Form.Item>
           <Form.Item
-            initialValue={state.patient?.nativeLanguage}
+            initialValue={
+              languages.filter((lang) => lang === state.patient?.nativeLanguage)
+                .length === 1
+                ? state.patient?.nativeLanguage
+                : 'other'
+            }
             label="Native Language"
             name="nativeLanguage"
           >
             <Select
+              onChange={handleLanguageChange}
               optionFilterProp="children"
               placeholder="Select a person"
               showSearch
@@ -268,6 +300,21 @@ export default function PatientAbout(): JSX.Element {
               ))}
             </Select>
           </Form.Item>
+          {otherLanguageSelected ? (
+            <Form.Item
+              initialValue={
+                languages.filter(
+                  (lang) => lang === state.patient?.nativeLanguage
+                ).length === 0
+                  ? state.patient?.nativeLanguage
+                  : null
+              }
+              label="Other Language"
+              name="otherLanguage"
+            >
+              <Input maxLength={30} placeholder="Other Language" />
+            </Form.Item>
+          ) : null}
           <Form.Item label="Native Language Literacy" name="nativeLiteracy">
             <span>
               <Rate

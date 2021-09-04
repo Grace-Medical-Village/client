@@ -35,6 +35,7 @@ import {
   PutMedication,
   PutPatient,
   PutPatientAllergy,
+  PutPatientArchive,
   PutPatientNote,
   RequestSuccess,
   ResponseStatus,
@@ -694,6 +695,31 @@ export const putPatientAllergy: PutPatientAllergy = async (id, allergies) => {
       headers: authorization,
       data: {
         allergies,
+      },
+    });
+    responseStatus.status = response.status;
+    responseStatus.statusText = response.statusText;
+  } catch (error) {
+    console.error(error);
+  }
+  return responseStatus;
+};
+
+export const putPatientArchive: PutPatientArchive = async (id, archive) => {
+  const authorization = await getAuthorization();
+
+  const responseStatus: ResponseStatus = {
+    status: 400,
+    statusText: 'Server Error',
+  };
+
+  try {
+    const response: AxiosResponse = await axios({
+      method: 'put',
+      url: `${REACT_APP_URL}/patients/archive/${id}`,
+      headers: authorization,
+      data: {
+        archive,
       },
     });
     responseStatus.status = response.status;

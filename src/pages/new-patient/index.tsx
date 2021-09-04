@@ -2,20 +2,21 @@ import React, { useContext, useState } from 'react';
 import { Button, Form, Input, Radio, Rate, Select, Switch } from 'antd';
 import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
+import { Store } from 'antd/lib/form/interface';
+import MaskedInput from 'antd-mask-input';
 
 import {
   countries,
   languages,
   nativeLiteracyRatings,
 } from '../../utils/patient';
-import { Store } from 'antd/lib/form/interface';
 import './styles.css';
 import { getPatient, postPatient, requestSuccess } from '../../services/api';
 import { notificationHandler } from '../../utils/ui';
 import { PatientContext } from '../../context/patient';
 import { PatientBackground } from '../../utils/types';
-import MaskedInput from 'antd-mask-input';
 import { mobileCleaner } from '../../utils/data';
+import { monthDayYear, toIso8601DateFromDate } from '../../utils/dates';
 
 const { Option } = Select;
 
@@ -32,7 +33,13 @@ function NewPatientForm(): JSX.Element {
   const [form] = Form.useForm();
   const history = useHistory();
   const [nativeLiteracyRating, setNativeLiteracyRating] = useState(0);
+  const [otherLanguageSelected, setOtherLanguageSelected] = useState(false);
   const { update } = useContext(PatientContext);
+
+  const handleLanguageChange = (value: string) => {
+    if (value.toLowerCase() === 'other') setOtherLanguageSelected(true);
+    else setOtherLanguageSelected(false);
+  };
 
   const onFinishFailed = () => null; // todo
   const onReset = () => form.resetFields();
@@ -44,26 +51,29 @@ function NewPatientForm(): JSX.Element {
       birthdate,
       gender,
       email,
-      mobile = '',
+      mobile,
       country,
       nativeLanguage,
+      otherLanguage,
       smoker,
       zipCode5,
     } = data;
 
-    const mobileCleaned = mobile.replace(mobileCleaner, '');
+    const birthdateFormatted = toIso8601DateFromDate(new Date(birthdate));
+    const language = otherLanguage ? otherLanguage : nativeLanguage;
+    const mobileFormatted = mobile ? mobile.replace(mobileCleaner, '') : '';
 
     const newPatient: PatientBackground = {
       firstName,
       lastName,
       gender,
       email,
-      mobile: mobileCleaned,
+      mobile: mobileFormatted,
       country,
-      nativeLanguage,
+      nativeLanguage: language,
       nativeLiteracy: nativeLiteracyRating,
       smoker,
-      birthdate,
+      birthdate: birthdateFormatted,
       zipCode5,
     };
     const res = await postPatient(newPatient);
@@ -126,8 +136,8 @@ function NewPatientForm(): JSX.Element {
           rules={[{ required: true, message: 'Birthdate is required.' }]}
         >
           <MaskedInput
-            mask="1111-11-11"
-            placeholder="YYYY-MM-DD"
+            mask="11/11/1111"
+            placeholder={monthDayYear}
             placeholderChar="X"
           />
         </Form.Item>
@@ -154,23 +164,31 @@ function NewPatientForm(): JSX.Element {
           label="Native Language"
           name="nativeLanguage"
         >
-          <Select
-            optionFilterProp="children"
-            placeholder="Select a person"
-            showSearch
-            style={{ textTransform: 'capitalize', width: 200 }}
-          >
-            {languages.map((language) => (
-              <Option
-                key={language}
-                style={{ textTransform: 'capitalize' }}
-                value={language}
-              >
-                {language}
-              </Option>
-            ))}
-          </Select>
+          <span>
+            <Select
+              onChange={handleLanguageChange}
+              optionFilterProp="children"
+              placeholder="Select a person"
+              showSearch
+              style={{ textTransform: 'capitalize', width: 200 }}
+            >
+              {languages.map((language) => (
+                <Option
+                  key={language}
+                  style={{ textTransform: 'capitalize' }}
+                  value={language}
+                >
+                  {language}
+                </Option>
+              ))}
+            </Select>
+          </span>
         </Form.Item>
+        {otherLanguageSelected ? (
+          <Form.Item label="Other Language" name="otherLanguage">
+            <Input maxLength={30} placeholder="Other Language" />
+          </Form.Item>
+        ) : null}
         <Form.Item label="Native Language Literacy" name="nativeLiteracy">
           <span>
             <Rate

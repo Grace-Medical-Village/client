@@ -8,6 +8,10 @@ const yearMonthDay = 'YYYY-MM-DD';
 const todayAsYearMonthDay = (): string =>
   new Date().toISOString().split('T')[0];
 
+const toIso8601DateFromDateString = (date: string): string => {
+  return new Date(date).toISOString().split('T')[0];
+};
+
 const toIso8601DateFromDate = (date: Date): string =>
   date.toISOString().split('T')[0];
 
@@ -22,6 +26,14 @@ const monthDayYearFullDate = (date: string): string => {
 
 const dateToMonthAndYear = (date: string): string => {
   return dayjs(date).format(monthAndYear);
+};
+
+const dateToMonthDayYear = (date: string): string => {
+  return dayjs(date).format(monthDayYear);
+};
+
+const todayAsMonthDayYear = (): string => {
+  return dayjs(new Date()).format(monthDayYear);
 };
 
 const timestampFromDateString = (date: string): number => {
@@ -41,9 +53,12 @@ export {
   yearMonthDay,
   addDay,
   dateToMonthAndYear,
+  dateToMonthDayYear,
   getAge,
   monthDayYearFullDate,
   timestampFromDateString,
   todayAsYearMonthDay,
+  todayAsMonthDayYear,
   toIso8601DateFromDate,
+  toIso8601DateFromDateString,
 };

@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Form, Input, Button, Row, notification } from 'antd';
-import { LoadingOutlined, SaveOutlined } from '@ant-design/icons';
+import { Form, Input, Row, notification } from 'antd';
 import { PatientContext } from '../../context/patient';
 import {
   deletePatientAllergy,
@@ -115,13 +114,9 @@ function PatientAllergies(): JSX.Element {
             <Input.Search
               addonBefore="Allergies"
               defaultValue={state.allergies?.allergies ?? ''}
-              enterButton={
-                <Button
-                  icon={loading ? <LoadingOutlined /> : <SaveOutlined />}
-                  type="ghost"
-                />
-              }
-              placeholder="None"
+              enterButton="Save"
+              loading={loading}
+              placeholder="NKDA"
               maxLength={250}
               onSearch={onSearchHandler}
               size="large"

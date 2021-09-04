@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Form, Radio, Input, Card, Empty } from 'antd';
+import { Button, Form, Radio, Input, Card, Empty, Modal } from 'antd';
 
-import { monthDayYearFullDate } from '../../utils/dates';
+import {
+  monthDayYear,
+  monthDayYearFullDate,
+  toIso8601DateFromDate,
+} from '../../utils/dates';
 import { Store } from 'antd/lib/form/interface';
 import {
   getPatient,
   getPatientsByBirthdate,
   getPatientsByName,
+  putPatientArchive,
 } from '../../services/api';
-import { PatientSearchResult } from '../../utils/types';
+import { PatientData, PatientSearchResult } from '../../utils/types';
 import { capitalize, isEmpty } from 'lodash';
 import { PatientContext } from '../../context/patient';
 import { notificationHandler } from '../../utils/ui';
@@ -34,6 +39,7 @@ function PatientSearch(): JSX.Element {
   const [patientSearchResult, setPatientSearchResult] = useState<
     PatientSearchResult[]
   >([]);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (patientSelected && state?.patient?.id) {
@@ -41,6 +47,29 @@ function PatientSearch(): JSX.Element {
       history.push('/dashboard');
     }
   }, [state, history, patientSelected]);
+
+  const archivePatient = (id: number) => {
+    putPatientArchive(id, true)
+      .then((r) => {
+        if (r.status >= 200 && r.status <= 299) {
+          notificationHandler(r.status, 'Patient Archived', 'bottomRight');
+          const searchResultsWithPatientRemoved = patientSearchResult.filter(
+            (psr) => psr.id !== id
+          );
+          setPatientSearchResult(searchResultsWithPatientRemoved);
+        } else {
+          notificationHandler(
+            r.status,
+            'Failed to Archive Patient',
+            'bottomRight'
+          );
+        }
+        setVisible(false);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const onChange = () => {
     setToggle(!toggle);
@@ -78,8 +107,9 @@ function PatientSearch(): JSX.Element {
   };
 
   const searchPatientsByBirthdate = async (date: string): Promise<void> => {
+    const dateFormatted = toIso8601DateFromDate(new Date(date));
     setSearching(true);
-    const searchResult = await getPatientsByBirthdate(date);
+    const searchResult = await getPatientsByBirthdate(dateFormatted);
     if (searchResult.length > 0) {
       setPatientSearchResult(
         searchResult.sort((a, b) => (a.firstName > b.firstName ? 1 : -1))
@@ -95,6 +125,24 @@ function PatientSearch(): JSX.Element {
       update(result);
       setPatientSelected(true);
     }
+  };
+
+  const showArchiveWarning = (id: number) => {
+    setVisible(true);
+    Modal.confirm({
+      cancelText: 'Cancel',
+      onCancel: () => {
+        setVisible(false);
+      },
+      onOk: () => {
+        archivePatient(id);
+      },
+      okText: 'Archive',
+      okType: 'danger',
+      content: 'You will not be able to search for this patient in the future.',
+      title: 'Are you sure you want to archive this patient?',
+      visible: visible,
+    });
   };
 
   return (
@@ -127,8 +175,8 @@ function PatientSearch(): JSX.Element {
             rules={[{ required: true, message: 'Birthdate is required.' }]}
           >
             <MaskedInput
-              mask="1111-11-11"
-              placeholder="YYYY-MM-DD"
+              mask="11/11/1111"
+              placeholder={monthDayYear}
               placeholderChar="X"
             />
           </Form.Item>
@@ -150,9 +198,22 @@ function PatientSearch(): JSX.Element {
               return (
                 <Card
                   extra={
-                    <Button onClick={() => selectPatient(res.id)} type="link">
-                      Select Patient
-                    </Button>
+                    <>
+                      <Button
+                        ghost
+                        onClick={() => selectPatient(res.id)}
+                        type="primary"
+                      >
+                        Select Patient
+                      </Button>
+                      <Button
+                        danger
+                        onClick={() => showArchiveWarning(res.id)}
+                        type="link"
+                      >
+                        Archive
+                      </Button>
+                    </>
                   }
                   key={i}
                   style={{ marginTop: i > 0 ? 16 : 0 }}
