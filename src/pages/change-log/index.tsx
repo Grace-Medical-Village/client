@@ -27,7 +27,7 @@ function ChangeLog(): JSX.Element {
       ],
     },
     {
-      dateRange: 'August 21 - September 3, 2021',
+      dateRange: 'August 21 - October 31, 2021',
       medicalTeam: [
         'Added new conditions: Abdominal Pain, Anemia, COPD, Hyperthyroidism, Prediabetes, Skin Condition, Obesity',
         'Made conditions sorted A-Z',
