@@ -14,7 +14,7 @@ import {
   getPatientsByName,
   putPatientArchive,
 } from '../../services/api';
-import { PatientData, PatientSearchResult } from '../../utils/types';
+import { PatientSearchResult } from '../../utils/types';
 import { capitalize, isEmpty } from 'lodash';
 import { PatientContext } from '../../context/patient';
 import { notificationHandler } from '../../utils/ui';
