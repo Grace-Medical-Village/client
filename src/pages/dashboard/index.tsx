@@ -44,29 +44,6 @@ export default function Dashboard(): JSX.Element {
     },
   ];
 
-  const tableOptions = [
-    {
-      label: 'Medications',
-      value: ItemType.MEDICATION,
-      disabled: !!(state.medications && state.medications.length === 0),
-    },
-    {
-      label: 'Metrics',
-      value: ItemType.METRIC,
-      disabled: !!(state.metrics && state.metrics.length === 0),
-    },
-    {
-      label: 'Notes',
-      value: ItemType.NOTE,
-      disabled: !!(state.notes && state.notes.length === 0),
-    },
-    {
-      label: 'Charts',
-      value: ItemType.CHART,
-      disabled: true,
-    },
-  ];
-
   function onDataFormChange(e: RadioChangeEvent) {
     const v = e.target.value as ItemType;
     setFormSelection(v);
@@ -98,6 +75,29 @@ export default function Dashboard(): JSX.Element {
         break;
     }
   }
+
+  const tableOptions = [
+    {
+      label: 'Medications',
+      value: ItemType.MEDICATION,
+      disabled: !!(state.medications && state.medications.length === 0),
+    },
+    {
+      label: 'Metrics',
+      value: ItemType.METRIC,
+      disabled: !!(state.metrics && state.metrics.length === 0),
+    },
+    {
+      label: 'Notes',
+      value: ItemType.NOTE,
+      disabled: !!(state.notes && state.notes.length === 0),
+    },
+    {
+      label: 'Charts',
+      value: ItemType.CHART,
+      disabled: true,
+    },
+  ];
 
   return (
     <>
