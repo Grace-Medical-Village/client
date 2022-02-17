@@ -7,12 +7,12 @@ import { ConditionsProvider } from './context/conditions';
 import { MetricsProvider } from './context/metrics';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { config } from './config';
+import { awsConfig } from './aws-config';
 import './index.css';
 import { MedicationsProvider } from './context/medications';
 import { PatientProvider } from './context/patient';
 
-Amplify.configure(config);
+Amplify.configure(awsConfig);
 
 ReactDOM.render(
   // <React.StrictMode>

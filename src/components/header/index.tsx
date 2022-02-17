@@ -65,7 +65,7 @@ function Header(): JSX.Element {
 
   return (
     <Layout.Header className="header">
-      <img alt="GMVC Logo" className="header-logo" src={logo} />
+      <img alt="GVMC Logo" className="header-logo" src={logo} />
       {authenticated ? (
         <Menu
           className="header-menu"
@@ -100,7 +100,7 @@ function Header(): JSX.Element {
         </Menu>
       ) : (
         <Title level={3} style={{ color: 'white', lineHeight: 0, margin: 0 }}>
-          Welcome to Grace Medical Village!
+          Welcome to Grace Village Medical Clinic!
         </Title>
       )}
     </Layout.Header>

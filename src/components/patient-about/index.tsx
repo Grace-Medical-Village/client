@@ -88,7 +88,9 @@ export default function PatientAbout(): JSX.Element {
       },
       {
         title: 'Gender',
-        value: capitalize(state?.patient?.gender) ?? 'N/A',
+        value: state?.patient?.gender
+          ? capitalize(state.patient.gender)
+          : 'N/A',
       },
       {
         title: 'Last Visit',
@@ -96,11 +98,13 @@ export default function PatientAbout(): JSX.Element {
       },
       {
         title: 'Native Language',
-        value: capitalize(state?.patient?.nativeLanguage) ?? 'N/A',
+        value: state?.patient?.nativeLanguage
+          ? capitalize(state.patient.nativeLanguage.toString())
+          : 'N/A',
       },
       {
         title: 'Smoker',
-        value: capitalize(state?.patient?.smoker.toString()) ?? 'N/A',
+        value: state?.patient?.smoker ? 'True' : 'False',
       },
     ];
     setData(d);

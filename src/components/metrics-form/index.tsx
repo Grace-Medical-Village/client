@@ -153,6 +153,7 @@ export default function NotesForm(): JSX.Element {
             style={{ width: '25%' }}
           >
             {metricsCtx.state
+              .filter((metric) => !(metric?.archived ?? false))
               .sort((a, b) =>
                 a.metricName
                   .toLowerCase()

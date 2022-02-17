@@ -166,6 +166,7 @@ export type Metric = {
   pattern: string;
   minValue: number;
   maxValue: number;
+  archived?: boolean;
   createdAt: string;
   modifiedAt: string;
 };
