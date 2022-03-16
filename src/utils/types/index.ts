@@ -2,7 +2,6 @@ export enum ItemType {
   METRIC = 'metrics',
   MEDICATION = 'medications',
   NOTE = 'notes',
-  CHART = 'charts',
 }
 
 export type ResponseBody = string;
@@ -86,7 +85,8 @@ export type PostPatientMetric = (
   patientId: number,
   medicationId: number,
   value: number | string | boolean,
-  comment: string | null
+  comment: string | null,
+  date: string | null
 ) => Promise<ResponseStatus>;
 export type PostPatientNote = (
   patientId: number,
