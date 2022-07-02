@@ -471,9 +471,9 @@ export const postPatient: PostPatient = async (newPatient) => {
       res.id = data.id;
     }
   } catch (error) {
+    res.status = error?.response?.status ?? 400;
+    res.statusText = error?.response?.statusText ?? 'Error';
     console.error(error);
-    res.status = error.response.status;
-    res.statusText = error.response.statusText;
   }
   return res;
 };
@@ -576,7 +576,8 @@ export const postPatientMetric: PostPatientMetric = async (
   patientId,
   metricId,
   value,
-  comment
+  comment,
+  date
 ) => {
   const authorization = await getAuthorization();
 
@@ -595,6 +596,7 @@ export const postPatientMetric: PostPatientMetric = async (
         metricId,
         value: value.toString().trim(),
         comment,
+        date,
       },
     });
     result = buildPostResult(response);

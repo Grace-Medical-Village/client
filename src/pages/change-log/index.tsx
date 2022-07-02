@@ -10,24 +10,23 @@ function ChangeLog(): JSX.Element {
     {
       dateRange: 'Upcoming',
       medicalTeam: [
-        'Blood Pressure Line Graph with Time Range for Patients',
-        'Blood Sugar Line Graph with Time Range for Patients',
-        'Touchpad/scrollbar issue: note this will not work in Firefox or Internet Explorer',
+        'Format metrics entered retroactively',
         'Multi-metric upload',
-        'Add metrics retroactively',
-        'Format metrics entered',
+        'Touchpad/scrollbar issue (for Safari only)',
         'Merge patient records',
-        'Fasting vs. non-fasting metric entry',
       ],
-      devTeam: [
-        'Date validation',
-        'Monitoring & Surveillance',
-        'Performance Improvements',
-        'Test Suite',
-      ],
+      devTeam: ['Date validation', 'Monitoring & Surveillance'],
     },
     {
-      dateRange: 'August 21 - October 31, 2021',
+      dateRange: 'Q1 2022',
+      medicalTeam: [
+        'Add metrics retroactively',
+        'Fasting vs. non-fasting metric entry',
+      ],
+      devTeam: ['Backend Improvements', 'Test Suite'],
+    },
+    {
+      dateRange: '2021',
       medicalTeam: [
         'Added new conditions: Abdominal Pain, Anemia, COPD, Hyperthyroidism, Prediabetes, Skin Condition, Obesity',
         'Made conditions sorted A-Z',
@@ -37,36 +36,15 @@ function ChangeLog(): JSX.Element {
         'Made Save button stand out more for patient allergies',
         'Added ability to archive patients',
         'Save alternative languages',
-      ],
-      devTeam: [''],
-    },
-    {
-      dateRange: 'August 1 - August 20, 2021',
-      medicalTeam: [
         'Fixed bug for saving medications with strength value',
         'Swapped calendar with standard input for birthdays',
         "Make 'Strength' column empty if it's not needed",
-      ],
-      devTeam: [
-        'Removed map from patient table',
-        'Set medication strength to null where 0',
-      ],
-    },
-    {
-      dateRange: 'July 25 - August 1 2021',
-      medicalTeam: [
         'Allergy tracking',
         'Date range for patient count',
         'List of MAP Patients in Analytics',
         'Last Menstrual Period Date Metric',
         'Added Loading Indicators to Tables',
         'Minor style improvements',
-      ],
-      devTeam: [],
-    },
-    {
-      dateRange: 'July 17 - 24, 2021',
-      medicalTeam: [
         'Added Amharic to Language List',
         'Blood Pressure Metric Max Value is 500 (was 300 before)',
         'Added space between metric value and unit of measure in metric table',
@@ -77,6 +55,8 @@ function ChangeLog(): JSX.Element {
         'Fixed Invalid Date Error for Safari Users',
       ],
       devTeam: [
+        'Removed map from patient table',
+        'Set medication strength to null where 0',
         'Analytics API',
         'Change Log',
         'Health Check API',
