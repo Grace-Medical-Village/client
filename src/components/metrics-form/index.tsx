@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Form, Input, Row, Select } from 'antd';
+import { Button, DatePicker, Form, Input, Row, Select } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Store } from 'antd/lib/form/interface';
+import moment from 'moment';
 import { PatientContext } from '../../context/patient';
 import {
   getMetrics,
@@ -11,11 +12,13 @@ import {
 import { messageUserResult } from '../../utils/ui';
 import { MetricsContext } from '../../context/metrics';
 import { PatientMetric, Metric } from '../../utils/types';
+import { todayAsMonthDayYear } from '../../utils/dates';
 
 export default function NotesForm(): JSX.Element {
   const [form] = useForm();
   const [m, setMetric] = useState<Metric | null>(null);
   const [disabled, setDisabled] = useState<boolean>(true);
+  const [metricDate, setMetricDate] = useState<string>(todayAsMonthDayYear());
   const { state, update } = useContext(PatientContext);
   const metricsCtx = useContext(MetricsContext);
 
@@ -45,14 +48,15 @@ export default function NotesForm(): JSX.Element {
       const metricId = data.id;
       const value = data.value;
       const comment = data?.comment ?? null;
+      const date = data?.date ?? null;
+      console.log(date);
       const {
         status,
         id = null,
         error = null,
         createdAt = null,
         modifiedAt = null,
-      } = await postPatientMetric(patientId, metricId, value, comment);
-      console.log(error);
+      } = await postPatientMetric(patientId, metricId, value, comment, date);
       const success = requestSuccess(status);
       handleSaveMetricResult(
         success,
@@ -150,9 +154,10 @@ export default function NotesForm(): JSX.Element {
           <Select
             onChange={handleMetricChange}
             placeholder="Select metric"
-            style={{ width: '25%' }}
+            style={{ width: '20%' }}
           >
             {metricsCtx.state
+              .filter((metric) => !(metric?.archived ?? false))
               .sort((a, b) =>
                 a.metricName
                   .toLowerCase()
@@ -174,11 +179,11 @@ export default function NotesForm(): JSX.Element {
             <Input
               maxLength={10}
               placeholder={m.format}
-              style={{ marginLeft: '0.5rem', width: '25%' }}
+              style={{ marginLeft: '0.5rem', width: '15%' }}
               suffix={m.uom}
             />
           ) : (
-            <Input disabled style={{ marginLeft: '0.5rem', width: '25%' }} />
+            <Input disabled style={{ marginLeft: '0.5rem', width: '15%' }} />
           )}
         </Form.Item>
         <Form.Item
@@ -190,6 +195,15 @@ export default function NotesForm(): JSX.Element {
             maxLength={140}
             placeholder="Comments"
             showCount={true}
+          />
+        </Form.Item>
+        <Form.Item name="date" style={{ marginLeft: '0.5rem', width: '15%' }}>
+          <DatePicker
+            defaultValue={moment(metricDate)}
+            format="MM/DD/YYYY"
+            onChange={(value): void => {
+              setMetricDate(value?.toISOString() ?? todayAsMonthDayYear());
+            }}
           />
         </Form.Item>
       </Input.Group>

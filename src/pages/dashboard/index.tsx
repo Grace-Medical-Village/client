@@ -92,11 +92,6 @@ export default function Dashboard(): JSX.Element {
       value: ItemType.NOTE,
       disabled: !!(state.notes && state.notes.length === 0),
     },
-    {
-      label: 'Charts',
-      value: ItemType.CHART,
-      disabled: true,
-    },
   ];
 
   return (
