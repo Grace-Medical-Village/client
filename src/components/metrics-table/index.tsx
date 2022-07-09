@@ -101,6 +101,15 @@ export default function MetricsTable(): JSX.Element {
     deleteMetricFromContext(id);
   };
 
+  // const handleEdit = async (id: number): Promise<void> => {
+  // TODO
+  // const { status } = await putPatientMetric(id);
+  // const description = 'Metric deleted';
+  // TODO -> remove 400
+  // notificationHandler(400, description, 'bottomRight');
+  // deleteMetricFromContext(id);
+  // };
+
   const deleteMetricFromContext = (id: number): void => {
     const metrics: PatientMetric[] =
       state?.metrics?.filter((metric) => metric.id !== id) ?? [];
@@ -162,6 +171,23 @@ export default function MetricsTable(): JSX.Element {
         },
         multiple: 1,
       },
+    },
+    {
+      title: 'Operation',
+      dataIndex: 'operation',
+      // eslint-disable-next-line react/display-name
+      render: (
+        _: unknown,
+        record: PatientMetricTableRecord
+      ): JSX.Element | null =>
+        data.length >= 1 ? (
+          // TODO -> popconfirm?
+          // <Popconfirm title="Edit?" onConfirm={() => handleEdit(record.key)}>
+          <Button disabled type="link">
+            Edit
+          </Button>
+        ) : // </Popconfirm>
+        null,
     },
     {
       title: 'Operation',

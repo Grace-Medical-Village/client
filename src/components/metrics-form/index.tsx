@@ -154,7 +154,7 @@ export default function NotesForm(): JSX.Element {
           <Select
             onChange={handleMetricChange}
             placeholder="Select metric"
-            style={{ width: '20%' }}
+            style={{ width: '25%' }}
           >
             {metricsCtx.state
               .filter((metric) => !(metric?.archived ?? false))
@@ -186,17 +186,6 @@ export default function NotesForm(): JSX.Element {
             <Input disabled style={{ marginLeft: '0.5rem', width: '15%' }} />
           )}
         </Form.Item>
-        <Form.Item
-          name="comment"
-          style={{ marginLeft: '0.5rem', width: '35%' }}
-        >
-          <Input.TextArea
-            autoSize={{ minRows: 1, maxRows: 3 }}
-            maxLength={140}
-            placeholder="Comments"
-            showCount={true}
-          />
-        </Form.Item>
         <Form.Item name="date" style={{ marginLeft: '0.5rem', width: '15%' }}>
           <DatePicker
             defaultValue={moment(metricDate)}
@@ -204,6 +193,17 @@ export default function NotesForm(): JSX.Element {
             onChange={(value): void => {
               setMetricDate(value?.toISOString() ?? todayAsMonthDayYear());
             }}
+          />
+        </Form.Item>
+        <Form.Item
+          name="comment"
+          style={{ marginLeft: '0.5rem', width: '40%' }}
+        >
+          <Input.TextArea
+            autoSize={{ minRows: 1, maxRows: 3 }}
+            maxLength={140}
+            placeholder="Comments"
+            showCount={true}
           />
         </Form.Item>
       </Input.Group>

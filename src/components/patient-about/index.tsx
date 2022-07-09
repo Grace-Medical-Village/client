@@ -289,7 +289,7 @@ export default function PatientAbout(): JSX.Element {
             <Select
               onChange={handleLanguageChange}
               optionFilterProp="children"
-              placeholder="Select a person"
+              placeholder="Select a Language"
               showSearch
               style={{ textTransform: 'capitalize', width: 200 }}
             >
