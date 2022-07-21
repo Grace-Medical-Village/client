@@ -336,7 +336,7 @@ export default function PatientAbout(): JSX.Element {
             </span>
           </Form.Item>
           <Form.Item
-            initialValue="United States"
+            initialValue={state.patient?.country}
             label="Country of Origin"
             name="country"
           >
