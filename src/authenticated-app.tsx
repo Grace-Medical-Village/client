@@ -15,6 +15,7 @@ import { isEmpty } from 'lodash';
 import { PatientData } from './utils/types';
 import ChangeLog from './pages/change-log';
 import Analytics from './pages/analytics';
+import PatientMerge from './pages/patient-merge';
 
 const { Content } = Layout;
 
@@ -50,6 +51,7 @@ function AuthenticatedApp(): JSX.Element {
                 <Route exact path="/patient" component={Patient} />
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/change-log" component={ChangeLog} />
+                <Route exact path="/patient-merge" component={PatientMerge} />
                 <Route exact path="/" component={Patient} />
               </Switch>
             </Col>
