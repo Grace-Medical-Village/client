@@ -16,6 +16,7 @@ import {
 } from '../../services/api';
 import './styles.css';
 import { MedicationState } from '../../utils/types';
+import { userIsAdmin } from '../../utils/user';
 import { UserLogin } from './types';
 
 const { Title } = Typography;
@@ -30,7 +31,12 @@ function SignIn(): JSX.Element {
   async function signIn(usernameEntered: string, passwordEntered: string) {
     try {
       const user = await Auth.signIn(usernameEntered, passwordEntered);
-      authContext.update({ authenticated: true, username: user.username });
+      authContext.update({
+        authenticated: true,
+        isAdmin: userIsAdmin(user.username),
+        username: user.username,
+      });
+      localStorage.setItem('gvmcUsername', user.username);
       setData();
       history.push('/patient');
     } catch (e) {

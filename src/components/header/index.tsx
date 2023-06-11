@@ -22,7 +22,7 @@ const { Title } = Typography;
 function Header(): JSX.Element {
   const [menuSelection, setMenuSelection] = useState('dashboard');
   const authContext = useContext(AuthContext);
-  const { authenticated } = authContext.state;
+  const { authenticated, isAdmin } = authContext.state;
   const { state } = useContext(PatientContext);
   const history = useHistory();
   const location = useLocation();
@@ -82,9 +82,11 @@ function Header(): JSX.Element {
           <Menu.Item key="patient" icon={<UserAddOutlined />}>
             Patient
           </Menu.Item>
-          <Menu.Item key="medications" icon={<MedicineBoxOutlined />}>
-            Formulary
-          </Menu.Item>
+          {isAdmin ? (
+            <Menu.Item key="medications" icon={<MedicineBoxOutlined />}>
+              Formulary
+            </Menu.Item>
+          ) : null}
           <Menu.Item key="analytics" icon={<LineChartOutlined />}>
             Analytics
           </Menu.Item>
@@ -95,6 +97,9 @@ function Header(): JSX.Element {
             title="Settings"
           >
             <Menu.Item key="change-log">Change Log</Menu.Item>
+            {isAdmin ? (
+              <Menu.Item key="patient-merge">Patient Merge</Menu.Item>
+            ) : null}
             <Menu.Item key="log-out">Logout</Menu.Item>
           </SubMenu>
         </Menu>

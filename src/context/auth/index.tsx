@@ -16,6 +16,7 @@ function createCtx<A>(defaultValue: A) {
 
 const defaultAuthState = {
   authenticated: false,
+  isAdmin: false,
   username: '',
 };
 

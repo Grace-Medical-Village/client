@@ -19,6 +19,7 @@ import { capitalize, isEmpty } from 'lodash';
 import { PatientContext } from '../../context/patient';
 import { notificationHandler } from '../../utils/ui';
 import { MaskedInput } from 'antd-mask-input';
+import { AuthContext } from '../../context/auth';
 
 const layout = {
   labelCol: { span: 6 },
@@ -31,6 +32,8 @@ const tailLayout = {
 
 function PatientSearch(): JSX.Element {
   const { state, update } = useContext(PatientContext);
+  const authContext = useContext(AuthContext);
+  const { isAdmin } = authContext.state;
   const [form] = Form.useForm();
   const history = useHistory();
   const [toggle, setToggle] = useState(true);
@@ -42,6 +45,7 @@ function PatientSearch(): JSX.Element {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    console.log(isAdmin);
     if (patientSelected && state?.patient?.id) {
       localStorage.setItem('patientId', state.patient.id.toString());
       history.push('/dashboard');
@@ -206,13 +210,15 @@ function PatientSearch(): JSX.Element {
                       >
                         Select Patient
                       </Button>
-                      <Button
-                        danger
-                        onClick={() => showArchiveWarning(res.id)}
-                        type="link"
-                      >
-                        Archive
-                      </Button>
+                      {isAdmin ? (
+                        <Button
+                          danger
+                          onClick={() => showArchiveWarning(res.id)}
+                          type="link"
+                        >
+                          Archive
+                        </Button>
+                      ) : null}
                     </>
                   }
                   key={i}

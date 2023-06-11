@@ -37,9 +37,14 @@ import {
 } from '../../utils/types';
 import './styles.css';
 import { capitalize } from 'lodash';
+import { AuthContext } from '../../context/auth';
+import { useHistory } from 'react-router-dom';
 
 function Formulary(): JSX.Element {
   const { state, update } = useContext(MedicationsContext);
+  const authContext = useContext(AuthContext);
+  const { isAdmin } = authContext.state;
+  const history = useHistory();
   const [data, set] = useState<MedicationTableRecord[]>([]);
 
   const [form] = Form.useForm();
@@ -52,6 +57,17 @@ function Formulary(): JSX.Element {
   const [categoryFilters, setCategoryFilters] = useState<ColumnFilterItem[]>(
     []
   );
+
+  useEffect(() => {
+    validateAdmin();
+  }, [isAdmin]);
+
+  const validateAdmin = () => {
+    if (!isAdmin) {
+      history.push('/');
+    }
+  };
+
   useEffect(() => {
     const buildMedicationState = async (): Promise<MedicationState | void> => {
       setLoading(true);
