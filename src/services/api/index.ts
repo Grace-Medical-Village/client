@@ -673,7 +673,6 @@ export const putPatient: PutPatient = async (id, patient) => {
       headers: authorization,
       data: patient,
     });
-    console.log(response);
     responseStatus.status = response.status;
     responseStatus.statusText = response.statusText;
   } catch (error) {

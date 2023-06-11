@@ -34,7 +34,7 @@ function AuthenticatedApp(): JSX.Element {
           update(result);
         }
       })
-      .catch((err) => console.error(err)); // TODO
+      .catch((err) => console.error(err));
   }, [state, update]);
 
   return (
